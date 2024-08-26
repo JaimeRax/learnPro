@@ -1,5 +1,8 @@
 # LearnPro
 
+![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg)
+![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)
+
 **LearnPro** is a comprehensive platform designed to streamline the administrative and academic management of educational institutions. This platform facilitates key functions such as student enrollment, course assignment, fee management, grade tracking, and reporting.
 
 ## Features
