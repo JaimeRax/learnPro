@@ -33,7 +33,7 @@
 2. Navigate to the project directory:
 
     ```bash
-    cd learnpro
+    cd learnPro
     ```
 
 3. Install the dependencies:
