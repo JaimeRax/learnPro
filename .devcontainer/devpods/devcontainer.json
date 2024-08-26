@@ -2,7 +2,7 @@
   "name": "DevPods",
   "dockerComposeFile": ["../../docker-compose.yml"],
   "service": "laravel",
-  "workspaceFolder": "/var/www/learnpro",
+  "workspaceFolder": "/var/www/learnPro",
   "features": {
     "ghcr.io/alanfzf/features/bat:1.0.2": {},
     "ghcr.io/alanfzf/features/neovim:1.0.1": {},
