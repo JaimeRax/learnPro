@@ -6,7 +6,7 @@ branch="main"
 
 if [ ! -f "${PROJECT_H}/.lock" ]; then
     # CLONE THE REPOSITORY
-    git clone -b "$branch" "https://${GIT_TOKEN}@github.com/alanfzf/${GIT_REPO}" ${PROJECT_H} || exit -1
+    git clone -b "$branch" "https://${GIT_TOKEN}@github.com/JaimeRax/${GIT_REPO}" ${PROJECT_H} || exit -1
     # INSTALL THE COMPOSER DEPENDENCIES
     composer install --working-dir="${PROJECT_H}"
     # CREATE LOCK FILE

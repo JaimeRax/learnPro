@@ -14,7 +14,7 @@ services:
     volumes:
       - laravel:/var/www/${LARAVEL_REPO}
     networks:
-      - marco-regulatorio
+      - learnpro
     healthcheck:
       test: ["CMD", "test", "-f", "/tmp/fs_ok.lock"]
       interval: 30s
@@ -45,17 +45,17 @@ services:
     image: mariadb:lts
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: marcoregulatorio
-      MYSQL_USER: marcoregulatorio
-      MYSQL_PASSWORD: marcoregulatorio
+      MYSQL_DATABASE: learnpro
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
       - database:/var/lib/mysql
     networks:
-      - marco-regulatorio
+      - learnpro
 networks:
-  marco-regulatorio:
+  learnpro:
 volumes:
   laravel:
   database:

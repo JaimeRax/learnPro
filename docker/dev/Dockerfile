@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
 RUN sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
 
 # Configure php-ini
-COPY php.ini "$PHP_INI_DIR/conf.d/99-marco-regulatorio.ini"
+COPY php.ini "$PHP_INI_DIR/conf.d/99-learnpro.ini"
 
 # Configure intl
 RUN docker-php-ext-configure intl && \

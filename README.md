@@ -48,6 +48,9 @@
     ```bash
     cp .env.example .env
     ```
+4.1 Configure environment file:
+   - add Token(classic) on GIT_TOKEN 
+   - add credentials of MariaDB
 
     Update the `.env` file with your database and mail server details.
 
