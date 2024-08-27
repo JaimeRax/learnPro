@@ -1,0 +1,46 @@
+{
+  "name": "VSCode container",
+  "dockerComposeFile": ["../../docker-compose.yml"],
+  "service": "backend",
+  "shutdownAction": "none",
+  "workspaceFolder": "/var/www/",
+  "features": {
+    "ghcr.io/alanfzf/features/bat:1.0.2": {},
+    "ghcr.io/alanfzf/features/zoxide:latest": {},
+    "ghcr.io/devcontainers-contrib/features/starship:latest": {},
+    "ghcr.io/devcontainers/features/github-cli:latest": {},
+    "ghcr.io/georgofenbeck/features/lazygit-linuxbinary:latest": {},
+    "ghcr.io/nils-geistmann/devcontainers-features/zsh:latest": {},
+    "ghcr.io/social-anthrax/eza-devcontainer/eza:latest": {},
+    "ghcr.io/alanfzf/features/neovim:1.0.1": {},
+    "ghcr.io/devcontainers-contrib/features/fd:latest": {},
+    "ghcr.io/devcontainers-contrib/features/fzf:latest": {},
+    "ghcr.io/devcontainers-contrib/features/ripgrep:latest": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+        //php
+        "xdebug.php-debug",
+        "bmewburn.vscode-intelephense-client",
+        //laravel
+        "apility.beautify-blade",
+        "shufo.vscode-blade-formatter",
+        "porifa.laravel-intelephense",
+        "codingyu.laravel-goto-view",
+        "TechieCouch.laravel-php-essentials",
+        //identation
+        "EditorConfig.EditorConfig",
+        "junstyle.php-cs-fixer",
+        "mansoorkhan96.php-cs-fixer",
+        "esbenp.prettier-vscode",
+        //git and github
+        "GitHub.vscode-pull-request-github",
+        "eamodio.gitlens"
+      ]
+		}
+  }
+}
+
