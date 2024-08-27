@@ -1,9 +1,9 @@
 {
   "name": "VSCode container",
   "dockerComposeFile": ["../../docker-compose.yml"],
-  "service": "backend",
+  "service": "laravel",
   "shutdownAction": "none",
-  "workspaceFolder": "/var/www/",
+  "workspaceFolder": "/var/www/learnPro",
   "features": {
     "ghcr.io/alanfzf/features/bat:1.0.2": {},
     "ghcr.io/alanfzf/features/zoxide:latest": {},
