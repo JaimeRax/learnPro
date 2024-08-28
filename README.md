@@ -17,10 +17,7 @@
 
 ### Prerequisites
 
-- PHP 8.0+
-- Composer
-- MySQL or MariaDB
-- Node.js & npm
+- Docker 
 
 ### Steps
 
@@ -36,12 +33,7 @@
     cd learnPro
     ```
 
-3. Install the dependencies:
-
-    ```bash
-    composer install
-    npm install
-    ```
+3. run devcontainer on VScode
 
 4. Set up the environment file:
 
@@ -54,24 +46,6 @@
     - add Token(classic) in GIT_TOKEN 
     - add credentials of MariaDB
 
-
-5. Generate the application key:
-
-    ```bash
-    php artisan key:generate
-    ```
-
-6. Run database migrations and seeders:
-
-    ```bash
-    php artisan migrate --seed
-    ```
-
-7. Start the development server:
-
-    ```bash
-    php artisan serve
-    ```
 
 ## Usage
 
