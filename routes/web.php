@@ -9,23 +9,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\logoutController;
 use Illuminate\Support\Facades\Route;
 
+// **** RUTA PARA LOGIN ****
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
-// **** RUTA PARA ITEMS ****
-Route::resource('laws.articles.items', ItemController::class)
-    ->names('items');
-
-// **** RUTA PARA ARTICULOS ****
-Route::patch('laws/{law}/articles/{article}/validate_items', [ArticleController::class, 'validate_items'])
-    ->name('articles.validate_items');
-
-Route::resource('laws.articles', ArticleController::class)
-    ->names('articles');
-
-// **** RUTA PARA LEYES ****
-Route::resource('laws', LawController::class)->names('laws');
 
 Route::get('/register', [RegisterController::class, 'show']);
 Route::post('/register', [RegisterController::class, 'register']);
@@ -39,4 +26,3 @@ Route::get('/caja', [HomeController::class, 'menu3']);
 Route::get('/reporteria', [HomeController::class, 'menu4']);
 
 Route::get('/logout', [logoutController::class, 'logout']);
-

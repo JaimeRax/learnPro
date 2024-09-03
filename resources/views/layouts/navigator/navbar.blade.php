@@ -8,12 +8,14 @@
         </label>
     </div>
     <div class="flex-1">
-        <a class="text-xl btn btn-ghost" href="/">Law Compliance</a>
+        <a class="text-xl btn btn-ghost" href="/">LearnPro</a>
     </div>
 
     <div class="flex-none">
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                <img src="/Imagenes/jv-logo.png" alt="Descripción de la imagen"
+                    style="width: 100%; height: auto; border-radius: 50%;">
 
             </div>
             <ul tabindex="0" class="menu menu-sm dropdown-content bg-neutral rounded-box z-[1] mt-3 w-52 p-2 shadow">
