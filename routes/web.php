@@ -34,9 +34,9 @@ Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/home', [HomeController::class, 'index']);
-Route::get('/menu2', [HomeController::class, 'index']);
-Route::get('/menu3', [HomeController::class, 'menu3']);
-Route::get('/menu4', [HomeController::class, 'menu4']);
+Route::get('/pagos', [HomeController::class, 'menu2']);
+Route::get('/caja', [HomeController::class, 'menu3']);
+Route::get('/reporteria', [HomeController::class, 'menu4']);
 
 Route::get('/logout', [logoutController::class, 'logout']);
 

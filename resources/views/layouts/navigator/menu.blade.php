@@ -34,6 +34,11 @@
             <div class="drawer-side">
                 <label for="main-drawer" aria-label="close sidebar" class="w-full drawer-overlay"></label>
                 <ul class="min-h-full p-4 menu bg-neutral text-neutral-content w-80">
+                    <li><a href="/home">Inicio</a></li>
+                    <li><a href="/pagos">Pagos</a></li>
+                    <li><a href="/caja">Caja</a></li>
+                    <li><a href="/reporteria">Reporteria</a></li>
+
                 </ul>
             </div>
         </div>
