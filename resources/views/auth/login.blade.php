@@ -8,8 +8,9 @@
     </head>
     <body>
         <!-- contenido del gradiante -->
-        <main class="lg:h-screen md:h-screen sm:h-auto bg-gradient-to-tl from-gray-600 to-sky-700">
-            <div class="flex items-center justify-center h-full" id='main-container'>
+        <main class="h-screen bg-gradient-to-tl from-gray-600 to-sky-700 flex flex-col">
+            <!-- Contenedor principal centrado -->
+            <div class="flex flex-1 items-center justify-center">
                 <div class="grid grid-cols-1 m-3 md:grid-cols-2" id="main-grid">
 
                     <!-- contenedor de imágenes y logos -->
@@ -18,7 +19,7 @@
                         <!-- centrador de imágenes y logos -->
                         <div class="flex flex-col items-center justify-center h-full">
                             <img class="h-auto w-36" src="/Imagenes/jv-logo.png" alt="jv-logo" />
-                            <h1 class="text-3xl text-white uppercase">
+                            <h1 class="text-3xl text-white uppercase font-bold">
                                 BASICO J.V.
                             </h1>
                         </div>
@@ -30,16 +31,15 @@
                         <!-- Login Form -->
                         <div class="flex flex-col items-center justify-center h-full p-3" id="login-form">
                             <section class='w-full'>
-
                                 <form method="POST" action="/login">
                                     @csrf
                                     <div class="grid grid-cols-1 gap-3">
                                         <h2 class="text-2xl font-bold text-center text-white">
                                             Bienvenido
                                         </h2>
-                                        <input id="username" type="text" placeholder="Correo electrónico"
-                                            class="input w-full shadow-sm" required />
-                                        <input id="password" type="password" placeholder="Contraseña"
+                                        <input name="username" id="username" type="email"
+                                            placeholder="Correo electrónico" class="input w-full shadow-sm" required />
+                                        <input name="password" id="password" type="password" placeholder="Contraseña"
                                             class="input w-full shadow-sm" required />
                                         <div class="flex items-center justify-between">
                                             <a href="#" id="forgot-password"
@@ -113,31 +113,42 @@
                     </div>
                 </div>
             </div>
-        </main>
-        <script>
-            // // redireccion al login pasado 5 segundos
-            // document.addEventListener('DOMContentLoaded', function() {
-            //     let countdown = 5; // Tiempo inicial en segundos
-            //     const countdownLabel = document.getElementById('countdown-label');
-            //     countdownLabel.textContent = `Regresando al inicio en ${countdown} segundos...`;
-            //
-            //     // Función para actualizar el contador
-            //     const updateCountdown = () => {
-            //         countdown -= 1;
-            //         if (countdown > 0) {
-            //             countdownLabel.textContent = `Regresando al inicio en ${countdown} segundos...`;
-            //         } else {
-            //             countdownLabel.textContent = `Redirigiendo al inicio...`;
-            //             clearInterval(countdownInterval);
-            //             // Redirige a la URL después de 5 segundos
-            //             window.location.href = "/login";
-            //         }
-            //     };
-            //
-            //     // Actualiza el contador cada segundo
-            //     const countdownInterval = setInterval(updateCountdown, 1000);
-            // });
 
+            <!-- Nueva Imagen en la parte inferior -->
+            <div class="flex flex-col items-center justify-center py-3">
+                <img class="w-20 h-auto" src="/Imagenes/umg.svg" alt="UMG Logo" />
+                <h4 class="text-base text-white uppercase mt-4">
+                    UNIVERSIDAD MARIANO GÁLVEZ DE GUATEMALA
+                </h4>
+                <h4 class="text-base text-white uppercase mt-1">
+                    Facultad de Ingeniería en Sistemas
+                </h4>
+            </div>
+        </main>
+
+        <script>
+            // redireccion al login pasado 5 segundos
+            document.addEventListener('DOMContentLoaded', function() {
+                let countdown = 5; // Tiempo inicial en segundos
+                const countdownLabel = document.getElementById('countdown-label');
+                countdownLabel.textContent = `Regresando al inicio en ${countdown} segundos...`;
+
+                // Función para actualizar el contador
+                const updateCountdown = () => {
+                    countdown -= 1;
+                    if (countdown > 0) {
+                        countdownLabel.textContent = `Regresando al inicio en ${countdown} segundos...`;
+                    } else {
+                        countdownLabel.textContent = `Redirigiendo al inicio...`;
+                        clearInterval(countdownInterval);
+                        // Redirige a la URL después de 5 segundos
+                        window.location.href = "/login";
+                    }
+                };
+
+                // Actualiza el contador cada segundo
+                const countdownInterval = setInterval(updateCountdown, 1000);
+            });
 
             function togglePassword() {
                 const passwordField = document.getElementById("password");
@@ -174,50 +185,5 @@
                 showForgotPasswordForm();
             });
         </script>
-
-
-
-        {{-- <section class="bg-gray-50 dark:bg-gray-900"> --}}
-        {{--     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"> --}}
-        {{--         <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"> --}}
-        {{--             <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" --}}
-        {{--                 alt="logo"> --}}
-        {{--             Flowbite --}}
-        {{--         </a> --}}
-        {{--         <h1 --}}
-        {{--             class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"> --}}
-        {{--             Sign in to your account --}}
-        {{--         </h1> --}}
-        {{--         <form class="space-y-4 md:space-y-6" action="/login" method="POST"> --}}
-        {{--             @csrf --}}
-        {{--             <div> --}}
-        {{--                 <label for="username" --}}
-        {{--                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label> --}}
-        {{--                 <input type="text" name="username" id="username" --}}
-        {{--                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" --}}
-        {{--                     required=""> --}}
-        {{--             </div> --}}
-        {{--             <div> --}}
-        {{--                 <label for="password" --}}
-        {{--                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label> --}}
-        {{--                 <input type="password" name="password" id="password" placeholder="••••••••" --}}
-        {{--                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" --}}
-        {{--                     required=""> --}}
-        {{--             </div> --}}
-        {{--             <div class="flex items-center justify-between"> --}}
-        {{--                 <a href="#" --}}
-        {{--                     class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot --}}
-        {{--                     password?</a> --}}
-        {{--             </div> --}}
-        {{--             <button type="submit" --}}
-        {{--                 class="w-full text-white bg-blue-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign --}}
-        {{--                 in</button> --}}
-        {{--             <p class="text-sm font-light text-gray-500 dark:text-gray-400"> --}}
-        {{--                 Don’t have an account yet? <a href="/register" --}}
-        {{--                     class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a> --}}
-        {{--             </p> --}}
-        {{--         </form> --}}
-        {{--     </div> --}}
-        {{-- </section> --}}
     </body>
 </html>
