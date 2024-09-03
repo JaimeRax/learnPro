@@ -32,6 +32,10 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/login', [LoginController::class, 'show']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::get('/forgot-password', [LoginController::class, 'forgotPassword']);
+Route::post('/forgot-password', [LoginController::class, 'PostForgotPassword']);
+Route::get('/reset/{token}', [LoginController::class, 'reset']);
+Route::post('/reset/{token}', [LoginController::class, 'PostReset']);
 
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/menu2', [HomeController::class, 'index']);
@@ -39,4 +43,5 @@ Route::get('/menu3', [HomeController::class, 'menu3']);
 Route::get('/menu4', [HomeController::class, 'menu4']);
 
 Route::get('/logout', [logoutController::class, 'logout']);
+
 
