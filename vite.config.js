@@ -14,6 +14,7 @@ export default defineConfig({
         // javascript
         "resources/js/laws/compliance_chart.js",
         "resources/js/articles/validate.js",
+        "resources/sass/app.scss",
         // stylesheets
         "resources/sass/app.scss",
       ],

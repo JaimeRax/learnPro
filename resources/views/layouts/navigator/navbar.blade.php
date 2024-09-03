@@ -41,10 +41,7 @@
                     </label>
                 </li>
                 <li>
-                    <form id="logout-form" action="{{ url('logout') }}" method="POST">
-                        {{ csrf_field() }}
-                        <button type="submit">Cerrar sesión</button>
-                    </form>
+                    <p><a href="/logout">Logout</a></p>
 
                 </li>
             </ul>
