@@ -19,8 +19,11 @@
                         <!-- centrador de imágenes y logos -->
                         <div class="flex flex-col items-center justify-center h-full">
                             <img class="h-auto w-36" src="/Imagenes/jv-logo.png" alt="jv-logo" />
-                            <h1 class="text-3xl text-white uppercase font-bold">
-                                BASICO J.V.
+                            <h1 class="text-sm text-white uppercase font-bold">
+                                Instituto de Educación Básica por
+                            </h1>
+                            <h1 class="text-sm text-white uppercase font-bold">
+                                Cooperativa de Enseñanza J.V.
                             </h1>
                         </div>
                     </div>
@@ -58,21 +61,6 @@
                                         </button>
                                     </div>
                                 </form>
-                            </section>
-                            <section class="grid grid-cols-4 gap-3 mt-3">
-                                <a href="https://www.facebook.com/basicoporcooperativachamelcoav" target="_blank"
-                                    class="text-white transition hover:text-gray-400">
-                                    <i class="fab fa-facebook fa-2x"></i>
-                                </a>
-                                <a href="#" target="_blank" class="text-white transition hover:text-gray-400">
-                                    <i class="fab fa-whatsapp fa-2x"></i>
-                                </a>
-                                <a href="#" target="_blank" class="text-white transition hover:text-gray-400">
-                                    <i class="fab fa-instagram fa-2x"></i>
-                                </a>
-                                <a href="#" target="_blank" class="text-white transition hover:text-gray-400">
-                                    <i class="fab fa-youtube fa-2x"></i>
-                                </a>
                             </section>
                         </div>
 
