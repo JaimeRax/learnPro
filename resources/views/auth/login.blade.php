@@ -77,8 +77,7 @@
                                     <div class="grid grid-cols-1 gap-3 justify-items-center">
                                         <div class="col-span-1">
                                             <input id="email" type="email" placeholder="Correo electrónico"
-                                                class="input w-full shadow-sm" required autocomplete="email"
-                                                autofocus />
+                                                class="input w-full shadow-sm" required />
                                         </div>
                                         <!-- Campo oculto para la URL -->
                                         <input type="hidden" name="urlForm" value="#">
