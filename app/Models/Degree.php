@@ -12,4 +12,10 @@ class Degree extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function desactivar()
+    {
+        $this->state = 0;
+        $this->save();
+    }
 }

@@ -1,45 +1,31 @@
-@props(['id', 'title' => 'Modal', 'bstyle' => ''])
-
-
+@props(['id', 'title' => 'Modal', 'bstyle' => '', 'closeButtonStyle' => 'btn'])
 
 <!-- The button to open modal -->
-
-<label for="{{ $id }}" class="btn {{ $bstyle }} bg-blue-600 text-white dark:hover:bg-blue-800">{{ $button }}</label>
-
-
+<label for="{{ $id }}" class="btn {{ $bstyle }}">
+    {{ $button }}
+</label>
 
 <!-- Put this part before </body> tag -->
-
-<input type="checkbox" id="{{ $id }}" class="modal-toggle " />
+<input type="checkbox" id="{{ $id }}" class="modal-toggle" />
 
 <div class="modal" role="dialog">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold">{{ $title }}</h3>
+        <section>
+            {{ $body }}
+        </section>
 
-<div class="modal-box">
+        <div class="modal-action">
+            @isset($footer)
+                <section>
+                    {{ $footer }}
+                </section>
+            @endisset
 
-<h3 class="text-lg font-bold">{{ $title }}</h3>
-
-<section>
-
-{{ $body }}
-
-</section>
-
-<div class="modal-action">
-
-@isset($footer)
-
-<section>
-
-{{ $footer }}
-
-</section>
-
-@endisset
-
-<label for="{{ $id }}" class="btn">Cerrar</label>
-
-</div>
-
-</div>
-
+            <!-- Button to close modal -->
+            <label for="{{ $id }}" class="{{ $closeButtonStyle }}">
+                Cerrar
+            </label>
+        </div>
+    </div>
 </div>

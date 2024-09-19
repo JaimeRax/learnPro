@@ -29,11 +29,20 @@ Route::get('/caja', [HomeController::class, 'menu3']);
 Route::get('/reporteria', [HomeController::class, 'menu4']);
 
 //resources
-Route::get('/degrees',[ resourcesController::class,'degrees']);
+Route::get('/degrees',[ resourcesController::class,'listDegrees']);
 Route::post('/newDegree',[ resourcesController::class,'createDegrees']);
-Route::get('/sections',[ resourcesController::class,'Sections']);
+Route::post('/deleteDegree/{id}', [resourcesController::class, 'disableDegrees'])->name('deleteDegree');
+Route::post('/editDegree/{id}', [resourcesController::class, 'editDegrees'])->name('editDegree');
+
+
+Route::get('/sections',[ resourcesController::class,'listSections']);
 Route::post('/newSections',[ resourcesController::class,'createSections']);
-Route::get('/courses',[ resourcesController::class,'courses']);
+Route::post('/deleteSections/{id}', [resourcesController::class, 'disableSections'])->name('deleteSections');
+Route::post('/editSection/{id}', [resourcesController::class, 'editSection'])->name('editSection');
+
+Route::get('/courses',[ resourcesController::class,'listCourses']);
 Route::post('/newCourses',[ resourcesController::class,'createCourses']);
+Route::post('/deleteCourses/{id}', [resourcesController::class, 'disableCourses'])->name('deleteCourses');
+Route::post('/editCourses/{id}', [resourcesController::class, 'editCourses'])->name('editCourses');
 
 
