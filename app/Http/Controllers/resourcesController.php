@@ -15,6 +15,9 @@ use Symfony\Component\Stopwatch\Section;
 
 class resourcesController extends Controller
 {
+
+    //FUNCTIONS COURSES
+
     public function listDegrees()
     {
         $search = request()->query('search');
@@ -51,7 +54,6 @@ class resourcesController extends Controller
         return redirect('/degrees');
     }
 
-
     public function trashDegrees()
     {
         $search = request()->query('search');
@@ -80,6 +82,10 @@ class resourcesController extends Controller
 
         return redirect('/degrees')->with('success', 'Grado actualizado correctamente.');
     }
+
+
+
+     //FUNCTIONS SECTIONS
 
     public function listSections()
     {
@@ -112,6 +118,11 @@ class resourcesController extends Controller
 
         return redirect('/sections')->with('success', 'Grado actualizado correctamente.');
     }
+
+
+
+
+    //FUNCTIONS COURSES
 
     public function listCourses()
     {

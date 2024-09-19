@@ -1,5 +1,5 @@
 <div class="p-4 md:p-5">
-    <form class="space-y-4" action="/newCourses" method="POST">
+    <form class="space-y-4" action="courses/new" method="POST">
         @csrf
         <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Nombre del Curso</label>
