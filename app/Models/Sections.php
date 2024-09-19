@@ -13,9 +13,15 @@ class Sections extends Model
         'name',
     ];
 
-    public function desactivar()
+    public function disable()
     {
         $this->state = 0;
+        $this->save();
+    }
+
+    public function enable()
+    {
+        $this->state = 1;
         $this->save();
     }
 }

@@ -49,6 +49,8 @@ Route::prefix('sections')->group(function () {
     Route::post('/new', [resourcesController::class, 'createSections']);
     Route::post('/delete/{id}', [resourcesController::class, 'disableSections']);
     Route::post('/edit/{id}', [resourcesController::class, 'editSection']);
+    Route::get('/trash', [resourcesController::class, 'trashSections']);
+    Route::post('/restore/{id}', [resourcesController::class, 'activeSections']);
 });
 
 
@@ -58,6 +60,8 @@ Route::get('/',[ resourcesController::class,'listCourses']);
 Route::post('/new',[ resourcesController::class,'createCourses']);
 Route::post('/delete/{id}', [resourcesController::class, 'disableCourses']);
 Route::post('/edit/{id}', [resourcesController::class, 'editCourses']);
+Route::get('/trash', [resourcesController::class, 'trashCourses']);
+Route::post('/restore/{id}', [resourcesController::class, 'activeCourses']);
 });
 
 

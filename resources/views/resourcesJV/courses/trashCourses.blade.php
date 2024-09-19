@@ -13,17 +13,8 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <form class="input-group" action="/degrees" method="get">
-                <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
-
-                <div class="input-group-addon">
-                    <button type="submit" class="input-group-text">
-                        <i class="ti-search"></i>
-                    </button>
-                </div>
-            </form>
-
+            <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
+                wire:model.live.debounce.500ms='valor' />
 
             {{-- @php
 
@@ -33,7 +24,25 @@
 
             @endphp --}}
 
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" />  --}}
+            <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
+
+
+            <x-modal id="createCourses" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
+                <x-slot name="button">
+                    Agregar
+
+                    <x-iconos.ver />
+
+                </x-slot>
+
+                <x-slot name="body">
+
+                    @include('resourcesJV.courses.createCourses')
+
+                </x-slot>
+            </x-modal>
+
+            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
 
         </div>
 
@@ -46,8 +55,8 @@
         </div>
 
 
-
-        {{-- <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
+{{--
+        <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
 
             <li class="me-2">
 
@@ -74,49 +83,41 @@
             </li>
         </ul> --}}
 
-
-
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Cursos</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
             </x-slot>
+
             @php
                 $i = 1;
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($degree as $degrees)
+                @foreach ($courses as $course)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
+                        <x-tablas.td>{{ $course->name }}</x-tablas.td>
                         <x-tablas.td>
-                            <form action="/degrees/restore/{{ $degrees->id }}" method="POST">
-
+                            <form action="/courses/restore/{{ $course->id }}" method="POST">
                                 @csrf
-
                                 {{ @method_field('POST') }}
-
                                 <input type="submit"
                                     class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
                                     value="Restaurar"
-                                    onclick="return confirm('¿Está completamente seguro de querer restaurar este grado?')">
-
+                                    onclick="return confirm('¿Está completamente seguro de querer restaurar esta curso?')">
                             </form>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
-
             </x-slot>
-
-
         </x-tablas.table>
         <div>
-            {{ $degree->links('components.pagination') }}
+            {{ $courses->links('components.pagination') }}
         </div>
     </div>
 @endsection

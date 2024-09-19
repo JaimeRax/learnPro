@@ -18,4 +18,16 @@ class Courses extends Model
         $this->state = 0;
         $this->save();
     }
+
+    public function disable()
+    {
+        $this->state = 0;
+        $this->save();
+    }
+
+    public function enable()
+    {
+        $this->state = 1;
+        $this->save();
+    }
 }

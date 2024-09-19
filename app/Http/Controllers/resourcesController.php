@@ -89,8 +89,19 @@ class resourcesController extends Controller
 
     public function listSections()
     {
-        $sections = DB::table('sections')->where('state', 1)->get();
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $sections = Sections::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 1)
+                ->paginate(2);
+        } else {
+            $sections = Sections::where('state', 1)->paginate(3);
+        }
+
         return view('resourcesJV.sections.listSections', ['sections' => $sections]);
+
     }
 
     public function createSections(DegreeRequest $request)
@@ -102,8 +113,31 @@ class resourcesController extends Controller
     public function disableSections($id)
     {
         $sections = Sections::find($id);
-        $sections->desactivar();
+        $sections->disable();
         return redirect('/sections');
+    }
+
+    public function activeSections($id)
+    {
+        $sections = Sections::find($id);
+        $sections->enable();
+        return redirect('/sections');
+    }
+
+    public function trashSections()
+    {
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $sections = Sections::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 0)
+                ->paginate(2);
+        } else {
+            $sections = Sections::where('state', 0)->paginate(3);
+        }
+
+        return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
     }
 
     public function editSection(SectionsRequest $request, $id)
@@ -126,8 +160,20 @@ class resourcesController extends Controller
 
     public function listCourses()
     {
-        $courses = DB::table('courses')->where('state', 1)->get();
+
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $courses = Courses::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 1)
+                ->paginate(2);
+        } else {
+            $courses = Courses::where('state', 1)->paginate(3);
+        }
+
         return view('resourcesJV.courses.listCourses', ['courses' => $courses]);
+
     }
 
     public function createCourses(CoursesRequest $request)
@@ -141,6 +187,29 @@ class resourcesController extends Controller
         $courses = Courses::find($id);
         $courses->desactivar();
         return redirect('/courses');
+    }
+
+    public function activeCourses($id)
+    {
+        $courses = Courses::find($id);
+        $courses->enable();
+        return redirect('/courses');
+    }
+
+    public function trashCourses()
+    {
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $courses = Courses::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 0)
+                ->paginate(2);
+        } else {
+            $courses = Courses::where('state', 0)->paginate(3);
+        }
+
+        return view('resourcesJV.courses.trashCourses', ['courses' => $courses]);
     }
 
     public function editCourses(DegreeRequest $request, $id)

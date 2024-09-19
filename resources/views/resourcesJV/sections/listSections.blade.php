@@ -13,8 +13,16 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
-                wire:model.live.debounce.500ms='valor' />
+            <form class="input-group" action="/sections" method="get">
+                <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
+                    value="{{ request()->query('search') }}" class="mt-6" />
+
+                <div class="input-group-addon">
+                    <button type="submit" class="input-group-text">
+                        <i class="ti-search"></i>
+                    </button>
+                </div>
+            </form>
 
             {{-- @php
 
@@ -57,21 +65,20 @@
 
         </div>
 
+        <div class="flex justify-end col-md-2">
+            <x-button-link href="/sections/trash" class="text-white bg-green-600">
+                <x-iconos.basurero /> Papelera
+            </x-button-link>
+        </div>
 
 
-        <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
+        {{-- <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
 
             <li class="me-2">
 
-                {{-- <button wire:click.prevent="setSearchType('active')" @class([
+                <button wire:click.prevent="setSearchType('active')" @class([
                     'btn-success' => $searchType === 'active'
                 ])>
-
-                    Activos
-
-                </button> --}}
-
-                <button wire:click.prevent="setSearchType('active')" @class([])>
 
                     Activos
 
@@ -82,7 +89,7 @@
             <li class="me-2">
 
                 <button wire:click.prevent="setSearchType('trash')" @class([
-                    // 'btn-success' => $searchType === 'trash'
+                    'btn-success' => $searchType === 'trash'
                 ])>
 
                     Inactivos
@@ -90,7 +97,7 @@
                 </button>
 
             </li>
-        </ul>
+        </ul> --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
@@ -157,13 +164,8 @@
                 @endforeach
             </x-slot>
         </x-tablas.table>
-
-
-        {{-- <div>
-
-            {{ $clientes->links('components.pagination') }}
-
-        </div> --}}
-
+        <div>
+            {{ $sections->links('components.pagination') }}
+        </div>
     </div>
 @endsection
