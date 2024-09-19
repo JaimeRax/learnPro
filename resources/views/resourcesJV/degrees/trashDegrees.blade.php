@@ -3,14 +3,12 @@
 
 
 @section('header')
-
-<route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
-
+    {{-- <x-route route="/" previousRouteName="Inicio" currentRouteName="clientes" /> --}}
 @endsection
 
 
-@section('main')
 
+@section('main')
     <div class="grid grid-cols-1 gap-2">
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
@@ -62,12 +60,6 @@
             {{-- <x-line-loader /> --}}
 
         </div>
-        <div class="flex justify-end col-md-2">
-            <x-button-link href="{{ route('trashDegree') }}" class="text-white bg-green-600">
-                <x-iconos.basurero /> Papelera
-            </x-button-link>
-        </div>
-
 
 
 
@@ -119,46 +111,18 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
-                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
-                                <x-slot name="button">
-                                    <x-iconos.basurero />
-                                </x-slot>
+                            <form action="{{ route('enableDegree', ['id' => $degrees->id]) }}" method="post">
 
-                                <x-slot name="body">
-                                    <form action="{{ route('deleteDegree', ['id' => $degrees->id]) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn-error">
-                                            Dar de Baja al Grado
-                                        </button>
-                                    </form>
-                                </x-slot>
-                            </x-modal>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar el Grado?"
-                                bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
-                                <x-slot name="button">
-                                    <x-iconos.editar />
-                                </x-slot>
+                                @csrf
 
-                                <x-slot name="body">
-                                    <form action="{{ route('editDegree', ['id' => $degrees->id]) }}" method="post">
-                                        @csrf
-                                        <div>
-                                            <label for="email"
-                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre del
-                                                Grado</label>
-                                            <input type="text" name="name" id="name"
-                                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
-                                                required value="{{ $degrees->name }}" />
-                                        </div>
+                                {{ @method_field('POST') }}
 
-                                        <button type="submit"
-                                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
+                                <input type="submit"
+                                    class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
+                                    value="Restaurar"
+                                    onclick="return confirm('¿Está completamente seguro de querer restaurar este grado?')">
 
-                                    </form>
-                                </x-slot>
-                            </x-modal>
-
+                            </form>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach

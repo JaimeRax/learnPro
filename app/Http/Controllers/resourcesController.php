@@ -17,20 +17,55 @@ class resourcesController extends Controller
 {
     public function listDegrees()
     {
-        $degree = DB::table('degrees')->where('state', 1)->get();
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $degree = Degree::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 1)
+                ->paginate(2);
+        } else {
+            $degree = Degree::where('state', 1)->paginate(3);
+        }
+
         return view('resourcesJV.degrees.listDegrees', ['degree' => $degree]);
     }
 
-    public function createDegrees(DegreeRequest $request){
+    public function createDegrees(DegreeRequest $request)
+    {
         $degree = Degree::create($request->validated());
         return redirect('/degrees');
     }
 
     public function disableDegrees($id)
     {
-            $degree = Degree::find($id);
-            $degree->desactivar();
-            return redirect('/degrees');
+        $degree = Degree::find($id);
+        $degree->disable();
+        return redirect('/degrees');
+    }
+
+    public function activeDegrees($id)
+    {
+        $degree = Degree::find($id);
+        $degree->enable();
+        return redirect('/degrees');
+    }
+
+
+    public function trashDegrees()
+    {
+        $search = request()->query('search');
+
+        if ($search) {
+            // Corrección en la interpolación de la variable en la consulta
+            $degree = Degree::where('name', 'LIKE', "%{$search}%")
+                ->where('state', 0)
+                ->paginate(2);
+        } else {
+            $degree = Degree::where('state', 0)->paginate(3);
+        }
+
+        return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
     }
 
     public function editDegrees(DegreeRequest $request, $id)
@@ -46,29 +81,24 @@ class resourcesController extends Controller
         return redirect('/degrees')->with('success', 'Grado actualizado correctamente.');
     }
 
-
-
-    public function listSections() {
-
+    public function listSections()
+    {
         $sections = DB::table('sections')->where('state', 1)->get();
-        return view('resourcesJV.sections.listSections',['sections'=>$sections]);
-
+        return view('resourcesJV.sections.listSections', ['sections' => $sections]);
     }
 
-    public function createSections(DegreeRequest $request) {
-
+    public function createSections(DegreeRequest $request)
+    {
         $sections = Sections::create($request->validated());
         return redirect('/sections');
-
     }
 
     public function disableSections($id)
     {
-            $sections = Sections::find($id);
-            $sections->desactivar();
-            return redirect('/sections');
+        $sections = Sections::find($id);
+        $sections->desactivar();
+        return redirect('/sections');
     }
-
 
     public function editSection(SectionsRequest $request, $id)
     {
@@ -83,25 +113,23 @@ class resourcesController extends Controller
         return redirect('/sections')->with('success', 'Grado actualizado correctamente.');
     }
 
-    public function listCourses() {
-
+    public function listCourses()
+    {
         $courses = DB::table('courses')->where('state', 1)->get();
-        return view('resourcesJV.courses.listCourses',['courses'=>$courses]);
-
+        return view('resourcesJV.courses.listCourses', ['courses' => $courses]);
     }
 
-    public function createCourses(CoursesRequest $request) {
-
+    public function createCourses(CoursesRequest $request)
+    {
         $courses = Courses::create($request->validated());
         return redirect('/courses');
-
     }
 
     public function disableCourses($id)
     {
-            $courses = Courses::find($id);
-            $courses->desactivar();
-            return redirect('/courses');
+        $courses = Courses::find($id);
+        $courses->desactivar();
+        return redirect('/courses');
     }
 
     public function editCourses(DegreeRequest $request, $id)

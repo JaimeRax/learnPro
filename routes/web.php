@@ -33,6 +33,8 @@ Route::get('/degrees',[ resourcesController::class,'listDegrees']);
 Route::post('/newDegree',[ resourcesController::class,'createDegrees']);
 Route::post('/deleteDegree/{id}', [resourcesController::class, 'disableDegrees'])->name('deleteDegree');
 Route::post('/editDegree/{id}', [resourcesController::class, 'editDegrees'])->name('editDegree');
+Route::get('/trashDegrees', [resourcesController::class, 'trashDegrees'])->name('trashDegree');
+Route::post('/restoreDegree/{id}', [resourcesController::class, 'activeDegrees'])->name('enableDegree');
 
 
 Route::get('/sections',[ resourcesController::class,'listSections']);
