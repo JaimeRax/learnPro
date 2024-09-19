@@ -3,14 +3,11 @@
 
 
 @section('header')
-
-<route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
-
+    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
 
 
 @section('main')
-
     <div class="grid grid-cols-1 gap-2">
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
@@ -63,7 +60,7 @@
 
         </div>
         <div class="flex justify-end col-md-2">
-            <x-button-link href="{{ route('trashDegree') }}" class="text-white bg-green-600">
+            <x-button-link href="/degrees/trash" class="text-white bg-green-600">
                 <x-iconos.basurero /> Papelera
             </x-button-link>
         </div>
@@ -126,7 +123,7 @@
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="{{ route('deleteDegree', ['id' => $degrees->id]) }}" method="post">
+                                    <form action="/degrees/delete/{{ $degrees->id }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn-error">
                                             Dar de Baja al Grado
@@ -141,7 +138,7 @@
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="{{ route('editDegree', ['id' => $degrees->id]) }}" method="post">
+                                    <form action="/degrees/edit/{{ $degrees->id }}" method="POST">
                                         @csrf
                                         <div>
                                             <label for="email"

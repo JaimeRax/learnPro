@@ -111,7 +111,7 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
                         <x-tablas.td>
-                            <form action="{{ route('enableDegree', ['id' => $degrees->id]) }}" method="post">
+                            <form action="/degrees/restore/{{ $degrees->id }}" method="POST">
 
                                 @csrf
 

@@ -14,8 +14,7 @@
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
-
-            wire:model.live.debounce.500ms='valor' />
+                wire:model.live.debounce.500ms='valor' />
 
             {{-- @php
 
@@ -46,7 +45,7 @@
 
 
 
-                {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
+            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
 
         </div>
 
@@ -72,9 +71,7 @@
 
                 </button> --}}
 
-                <button wire:click.prevent="setSearchType('active')" @class([
-
-                ])>
+                <button wire:click.prevent="setSearchType('active')" @class([])>
 
                     Activos
 
@@ -112,18 +109,18 @@
             <x-slot name="tbody">
 
                 @foreach ($sections as $section)
-
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $section->name }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja a la Seccions?" bstyle="border-none bg-red-600 text-white hover:bg-red-800">
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja a la Seccions?"
+                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="{{ route('deleteSections', ['id' => $section->id]) }}" method="post">
+                                    <form action="/sections/delete/{{ $section->id }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn-error">
                                             Dar de Baja a la Seccion
@@ -138,11 +135,12 @@
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="{{ route('editSection', ['id' => $section->id]) }}" method="post">
+                                    <form action="/sections/edit/{{ $section->id }}" method="POST">
                                         @csrf
                                         <div>
                                             <label for="email"
-                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre de la Seccion</label>
+                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre de la
+                                                Seccion</label>
                                             <input type="text" name="name" id="name"
                                                 class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
                                                 required value="{{ $section->name }}" />
@@ -161,7 +159,7 @@
         </x-tablas.table>
 
 
-       {{-- <div>
+        {{-- <div>
 
             {{ $clientes->links('components.pagination') }}
 

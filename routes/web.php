@@ -37,18 +37,18 @@ Route::get('/reporteria', [HomeController::class, 'menu4']);
 Route::prefix('degrees')->group(function () {
     Route::get('/', [resourcesController::class, 'listDegrees']);
     Route::post('/new', [resourcesController::class, 'createDegrees']);
-    Route::post('/delete/{id}', [resourcesController::class, 'disableDegrees'])->name('deleteDegree');
-    Route::post('/edit/{id}', [resourcesController::class, 'editDegrees'])->name('editDegree');
-    Route::get('/trash', [resourcesController::class, 'trashDegrees'])->name('trashDegree');
-    Route::post('/restore/{id}', [resourcesController::class, 'activeDegrees'])->name('enableDegree');
+    Route::post('/delete/{id}', [resourcesController::class, 'disableDegrees']);
+    Route::post('/edit/{id}', [resourcesController::class, 'editDegrees']);
+    Route::get('/trash', [resourcesController::class, 'trashDegrees']);
+    Route::post('/restore/{id}', [resourcesController::class, 'activeDegrees']);
 });
 
 // ROUTES SECTIONS
 Route::prefix('sections')->group(function () {
     Route::get('/', [resourcesController::class, 'listSections']);
     Route::post('/new', [resourcesController::class, 'createSections']);
-    Route::post('/delete/{id}', [resourcesController::class, 'disableSections'])->name('deleteSections');
-    Route::post('/edit/{id}', [resourcesController::class, 'editSection'])->name('editSection');
+    Route::post('/delete/{id}', [resourcesController::class, 'disableSections']);
+    Route::post('/edit/{id}', [resourcesController::class, 'editSection']);
 });
 
 
@@ -56,8 +56,8 @@ Route::prefix('sections')->group(function () {
 Route::prefix('courses')->group(function () {
 Route::get('/',[ resourcesController::class,'listCourses']);
 Route::post('/new',[ resourcesController::class,'createCourses']);
-Route::post('/deleteCourses/{id}', [resourcesController::class, 'disableCourses'])->name('deleteCourses');
-Route::post('/editCourses/{id}', [resourcesController::class, 'editCourses'])->name('editCourses');
+Route::post('/delete/{id}', [resourcesController::class, 'disableCourses']);
+Route::post('/edit/{id}', [resourcesController::class, 'editCourses']);
 });
 
 
