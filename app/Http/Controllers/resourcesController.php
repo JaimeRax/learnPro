@@ -24,9 +24,9 @@ class resourcesController extends Controller
         if ($search) {
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $degree = Degree::where('state', 1)->paginate(3);
+            $degree = Degree::where('state', 1)->paginate(10);
         }
 
         return view('resourcesJV.degrees.listDegrees', ['degree' => $degree]);
@@ -59,9 +59,9 @@ class resourcesController extends Controller
         if ($search) {
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $degree = Degree::where('state', 0)->paginate(3);
+            $degree = Degree::where('state', 0)->paginate(10);
         }
 
         return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
@@ -92,9 +92,9 @@ class resourcesController extends Controller
         if ($search) {
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $sections = Sections::where('state', 1)->paginate(3);
+            $sections = Sections::where('state', 1)->paginate(10);
         }
 
         return view('resourcesJV.sections.listSections', ['sections' => $sections]);
@@ -127,9 +127,9 @@ class resourcesController extends Controller
         if ($search) {
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $sections = Sections::where('state', 0)->paginate(3);
+            $sections = Sections::where('state', 0)->paginate(10);
         }
 
         return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
@@ -168,7 +168,7 @@ class resourcesController extends Controller
                 ->when($search, function($query) use ($search) {
                     return $query->where('name', 'LIKE', "%{$search}%");
                 })
-                ->paginate(3)
+                ->paginate(10)
                 ->appends([
                     'degree_id' => $degreeId,
                     'search' => $search
@@ -176,7 +176,7 @@ class resourcesController extends Controller
 
 
             } else {
-                $courses = Courses::where('state', 1)->paginate(3);
+                $courses = Courses::where('state', 1)->paginate(10);
             }
 
             $degrees = Degree::all();
@@ -236,7 +236,7 @@ class resourcesController extends Controller
                 ->when($search, function($query) use ($search) {
                     return $query->where('name', 'LIKE', "%{$search}%");
                 })
-                ->paginate(3)
+                ->paginate(10)
                 ->appends([
                     'degree_id' => $degreeId,
                     'search' => $search
@@ -244,7 +244,7 @@ class resourcesController extends Controller
 
 
             } else {
-                $courses = Courses::where('state', 0)->paginate(3);
+                $courses = Courses::where('state', 0)->paginate(10);
             }
 
             $degrees = Degree::all();
