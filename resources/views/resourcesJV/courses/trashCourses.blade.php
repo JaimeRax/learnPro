@@ -14,14 +14,26 @@
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             {{-- filtro de busqueda por nombre --}}
-            <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
-                wire:model.live.debounce.500ms='valor' />
+            <form class="input-group" action="/courses/trash" method="get">
+                <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
+                    value="{{ request()->query('search') }}" class="mt-6" />
+
+                <div class="input-group-addon">
+                    <button type="submit" class="input-group-text">
+                        <i class="ti-search"></i>
+                    </button>
+                </div>
+            </form>
 
 
             {{-- filtro de seleccion por grado --}}
-            <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
+            <form method="GET" action="/courses/trash" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                    required onchange="document.getElementById('degreeForm').submit()" />
+            </form>
 
         </div>
+
 
         {{-- tabla de cursos desactivados --}}
 
@@ -69,3 +81,7 @@
         </div>
     </div>
 @endsection
+
+
+
+<script src="{{ asset('js/reloadPage.js') }}"></script>

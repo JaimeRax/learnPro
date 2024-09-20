@@ -13,7 +13,7 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            {{-- filtro por busqueda --}}
+            {{-- filtro por busqueda de nombre--}}
 
             <form class="input-group" action="/courses" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."

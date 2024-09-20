@@ -224,18 +224,41 @@ class resourcesController extends Controller
 
     public function trashCourses()
     {
-        $search = request()->query('search');
+        try {
+            $degreeId = request()->query('degree_id');
+            $search = request()->query('search');
 
-        if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
-            $courses = Courses::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 0)
-                ->paginate(2);
-        } else {
-            $courses = Courses::where('state', 0)->paginate(3);
+            if ($degreeId || $search) {
+                $courses = Courses::where('state', 0)
+                ->when($degreeId, function($query) use ($degreeId) {
+                    return $query->where('degree_id', $degreeId);
+                })
+                ->when($search, function($query) use ($search) {
+                    return $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->paginate(3)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'search' => $search
+                ]);
+
+
+            } else {
+                $courses = Courses::where('state', 0)->paginate(3);
+            }
+
+            $degrees = Degree::all();
+
+            return view('resourcesJV.courses.trashCourses', [
+                'courses' => $courses,
+                'degrees' => $degrees,
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Ocurrió un problema.');
         }
 
-        return view('resourcesJV.courses.trashCourses', ['courses' => $courses]);
+
     }
 
     public function editCourses(DegreeRequest $request, $id)
