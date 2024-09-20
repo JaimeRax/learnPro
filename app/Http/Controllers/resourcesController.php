@@ -15,7 +15,6 @@ use Symfony\Component\Stopwatch\Section;
 
 class resourcesController extends Controller
 {
-
     //FUNCTIONS COURSES
 
     public function listDegrees()
@@ -83,9 +82,7 @@ class resourcesController extends Controller
         return redirect('/degrees')->with('success', 'Grado actualizado correctamente.');
     }
 
-
-
-     //FUNCTIONS SECTIONS
+    //FUNCTIONS SECTIONS
 
     public function listSections()
     {
@@ -101,7 +98,6 @@ class resourcesController extends Controller
         }
 
         return view('resourcesJV.sections.listSections', ['sections' => $sections]);
-
     }
 
     public function createSections(DegreeRequest $request)
@@ -153,21 +149,32 @@ class resourcesController extends Controller
         return redirect('/sections')->with('success', 'Grado actualizado correctamente.');
     }
 
-
-
-
     //FUNCTIONS COURSES
 
     public function listCourses()
     {
         try {
+            $degreeId = request()->query('degree_id');
             $search = request()->query('search');
 
-            if ($search) {
-                $courses = Courses::where('name', 'LIKE', "%{$search}%")
-                    ->where('state', 1)
-                    ->paginate(2);
+            if ($degreeId || $search) {
+                // Si hay algún filtro aplicado
+                $courses = Courses::where('state', 1)
+                ->when($degreeId, function($query) use ($degreeId) {
+                    return $query->where('degree_id', $degreeId);
+                })
+                ->when($search, function($query) use ($search) {
+                    return $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->paginate(3)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'search' => $search
+                ]);
+
+
             } else {
+                // Si no hay filtros, cargar todos los cursos
                 $courses = Courses::where('state', 1)->paginate(3);
             }
 
@@ -176,19 +183,20 @@ class resourcesController extends Controller
             return view('resourcesJV.courses.listCourses', [
                 'courses' => $courses,
                 'degrees' => $degrees,
-                'message' => 'Cursos listados con éxito.'
             ]);
+
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'El curso ya existe');
+            return redirect('/courses')->with('error', 'Ocurrió un problema.');
         }
     }
+
 
     public function createCourses(CoursesRequest $request)
     {
         try {
             $request->validate([
                 'name' => 'required|unique:courses,name',
-                'degree_id' => 'required|exists:degrees,id',
+                'degree_id' => 'required|exists:degrees,id'
             ]);
 
             Courses::create($request->validated());

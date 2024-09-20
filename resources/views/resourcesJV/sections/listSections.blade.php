@@ -113,7 +113,7 @@
             </x-slot>
         </x-tablas.table>
         <div>
-            {{ $sections->links('components.pagination') }}
+            {{ $sections->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     </div>
 @endsection

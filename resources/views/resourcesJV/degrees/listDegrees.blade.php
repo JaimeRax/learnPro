@@ -114,7 +114,6 @@
 
         </x-tablas.table>
         <div>
-            {{ $degree->links('components.pagination') }}
+            {{ $degree->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
-    </div>
 @endsection
