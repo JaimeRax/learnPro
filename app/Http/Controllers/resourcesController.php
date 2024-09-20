@@ -22,7 +22,6 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
                 ->paginate(2);
@@ -58,7 +57,6 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
                 ->paginate(2);
@@ -82,6 +80,9 @@ class resourcesController extends Controller
         return redirect('/degrees')->with('success', 'Grado actualizado correctamente.');
     }
 
+
+
+
     //FUNCTIONS SECTIONS
 
     public function listSections()
@@ -89,7 +90,6 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
                 ->paginate(2);
@@ -125,7 +125,6 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
                 ->paginate(2);
@@ -149,6 +148,10 @@ class resourcesController extends Controller
         return redirect('/sections')->with('success', 'Grado actualizado correctamente.');
     }
 
+
+
+
+
     //FUNCTIONS COURSES
 
     public function listCourses()
@@ -158,7 +161,6 @@ class resourcesController extends Controller
             $search = request()->query('search');
 
             if ($degreeId || $search) {
-                // Si hay algún filtro aplicado
                 $courses = Courses::where('state', 1)
                 ->when($degreeId, function($query) use ($degreeId) {
                     return $query->where('degree_id', $degreeId);
@@ -174,7 +176,6 @@ class resourcesController extends Controller
 
 
             } else {
-                // Si no hay filtros, cargar todos los cursos
                 $courses = Courses::where('state', 1)->paginate(3);
             }
 
