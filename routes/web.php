@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ItemController;
-use App\Http\Controllers\resourcesController;
+use App\Http\Controllers\degreesController;
 use App\Http\Controllers\LawController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\coursesController;
+use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\logoutController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,33 +37,33 @@ Route::get('/reporteria', [HomeController::class, 'menu4']);
 
 // ROUTES DEGRES
 Route::prefix('degrees')->group(function () {
-    Route::get('/', [resourcesController::class, 'listDegrees']);
-    Route::post('/new', [resourcesController::class, 'createDegrees']);
-    Route::post('/delete/{id}', [resourcesController::class, 'disableDegrees']);
-    Route::post('/edit/{id}', [resourcesController::class, 'editDegrees']);
-    Route::get('/trash', [resourcesController::class, 'trashDegrees']);
-    Route::post('/restore/{id}', [resourcesController::class, 'activeDegrees']);
+    Route::get('/', [degreesController::class, 'listDegrees']);
+    Route::post('/new', [degreesController::class, 'createDegrees']);
+    Route::post('/delete/{id}', [degreesController::class, 'disableDegrees']);
+    Route::post('/edit/{id}', [degreesController::class, 'editDegrees']);
+    Route::get('/trash', [degreesController::class, 'trashDegrees']);
+    Route::post('/restore/{id}', [degreesController::class, 'activeDegrees']);
 });
 
 // ROUTES SECTIONS
 Route::prefix('sections')->group(function () {
-    Route::get('/', [resourcesController::class, 'listSections']);
-    Route::post('/new', [resourcesController::class, 'createSections']);
-    Route::post('/delete/{id}', [resourcesController::class, 'disableSections']);
-    Route::post('/edit/{id}', [resourcesController::class, 'editSection']);
-    Route::get('/trash', [resourcesController::class, 'trashSections']);
-    Route::post('/restore/{id}', [resourcesController::class, 'activeSections']);
+    Route::get('/', [sectionsController::class, 'listSections']);
+    Route::post('/new', [sectionsController::class, 'createSections']);
+    Route::post('/delete/{id}', [sectionsController::class, 'disableSections']);
+    Route::post('/edit/{id}', [sectionsController::class, 'editSection']);
+    Route::get('/trash', [sectionsController::class, 'trashSections']);
+    Route::post('/restore/{id}', [sectionsController::class, 'activeSections']);
 });
 
 
 //ROUTES COURSES
 Route::prefix('courses')->group(function () {
-Route::get('/',[ resourcesController::class,'listCourses']);
-Route::post('/new',[ resourcesController::class,'createCourses']);
-Route::post('/delete/{id}', [resourcesController::class, 'disableCourses']);
-Route::post('/edit/{id}', [resourcesController::class, 'editCourses']);
-Route::get('/trash', [resourcesController::class, 'trashCourses']);
-Route::post('/restore/{id}', [resourcesController::class, 'activeCourses']);
+Route::get('/',[ coursesController::class,'listCourses']);
+Route::post('/new',[ coursesController::class,'createCourses']);
+Route::post('/delete/{id}', [coursesController::class, 'disableCourses']);
+Route::post('/edit/{id}', [coursesController::class, 'editCourses']);
+Route::get('/trash', [coursesController::class, 'trashCourses']);
+Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 });
 
 
