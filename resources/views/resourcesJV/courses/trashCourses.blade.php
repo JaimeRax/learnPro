@@ -27,20 +27,7 @@
             <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
 
 
-            <x-modal id="createCourses" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
-                <x-slot name="button">
-                    Agregar
 
-                    <x-iconos.ver />
-
-                </x-slot>
-
-                <x-slot name="body">
-
-                    @include('resourcesJV.courses.createCourses')
-
-                </x-slot>
-            </x-modal>
 
             {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
 

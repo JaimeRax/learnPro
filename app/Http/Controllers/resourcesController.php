@@ -199,9 +199,6 @@ class resourcesController extends Controller
         }
     }
 
-
-
-
     public function disableCourses($id)
     {
         $courses = Courses::find($id);
