@@ -13,6 +13,11 @@ class Degree extends Model
         'name',
     ];
 
+    public function courses()
+    {
+        return $this->hasMany('Courses', 'degree_id', 'id');
+    }
+
     public function disable()
     {
         $this->state = 0;

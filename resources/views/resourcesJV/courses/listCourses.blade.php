@@ -27,7 +27,7 @@
             <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
 
 
-            <x-modal id="createCourses" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
+            <x-modal id="createCourses" title="Curso" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
                     Agregar
 
@@ -40,7 +40,9 @@
                     @include('resourcesJV.courses.createCourses')
 
                 </x-slot>
+
             </x-modal>
+
 
             {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
 
@@ -93,8 +95,12 @@
 
             </li>
         </ul> --}}
+        <div>
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
+
+        </div>
+
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
@@ -163,3 +169,5 @@
         </div>
     </div>
 @endsection
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

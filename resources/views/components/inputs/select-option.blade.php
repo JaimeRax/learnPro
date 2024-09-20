@@ -7,9 +7,8 @@
         </span>
         {{ $slot ?? '' }}
     </label>
-    <select id="{{ $id }}" name="{{ $id }}" value="{{ $value }}"
-        {{ $attributes->merge(['class' => 'select w-full shadow-sm']) }}>
-        <option value="{{ null }}">Seleccionar una opción</option>
+    <select id="{{ $id }}" name="{{ $id }}" {{ $attributes->merge(['class' => 'select w-full shadow-sm']) }}>
+        <option value="">Seleccionar una opción</option>
         @foreach ($options as $key => $val)
             <option value="{{ $key }}" @selected($key == $value)>{{ $val }}</option>
         @endforeach

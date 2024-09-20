@@ -131,6 +131,7 @@
                                     </form>
                                 </x-slot>
                             </x-modal>
+
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar el Grado?"
                                 bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
                                 <x-slot name="button">

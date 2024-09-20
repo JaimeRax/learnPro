@@ -160,32 +160,52 @@ class resourcesController extends Controller
 
     public function listCourses()
     {
+        try {
+            $search = request()->query('search');
 
-        $search = request()->query('search');
+            if ($search) {
+                $courses = Courses::where('name', 'LIKE', "%{$search}%")
+                    ->where('state', 1)
+                    ->paginate(2);
+            } else {
+                $courses = Courses::where('state', 1)->paginate(3);
+            }
 
-        if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
-            $courses = Courses::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 1)
-                ->paginate(2);
-        } else {
-            $courses = Courses::where('state', 1)->paginate(3);
+            $degrees = Degree::all();
+
+            return view('resourcesJV.courses.listCourses', [
+                'courses' => $courses,
+                'degrees' => $degrees,
+                'message' => 'Cursos listados con éxito.'
+            ]);
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'El curso ya existe');
         }
-
-        return view('resourcesJV.courses.listCourses', ['courses' => $courses]);
-
     }
 
     public function createCourses(CoursesRequest $request)
     {
-        $courses = Courses::create($request->validated());
-        return redirect('/courses');
+        try {
+            $request->validate([
+                'name' => 'required|unique:courses,name',
+                'degree_id' => 'required|exists:degrees,id',
+            ]);
+
+            Courses::create($request->validated());
+
+            return redirect('/courses')->with('message', 'Curso creado con éxito.');
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'El curso ya existe');
+        }
     }
+
+
+
 
     public function disableCourses($id)
     {
         $courses = Courses::find($id);
-        $courses->desactivar();
+        $courses->disable();
         return redirect('/courses');
     }
 
