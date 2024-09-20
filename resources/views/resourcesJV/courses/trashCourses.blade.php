@@ -13,75 +13,29 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
-                wire:model.live.debounce.500ms='valor' />
+            {{-- filtro de busqueda por nombre --}}
+            <form class="input-group" action="/courses/trash" method="get">
+                <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
+                    value="{{ request()->query('search') }}" class="mt-6" />
 
-            {{-- @php
-
-                $listaregistros = array_map(function ($tipo) {
-                    return ucwords(strtolower($tipo));
-                }, Constantes::LISTAR_REGISTROS);
-
-            @endphp --}}
-
-            <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
+                <div class="input-group-addon">
+                    <button type="submit" class="input-group-text">
+                        <i class="ti-search"></i>
+                    </button>
+                </div>
+            </form>
 
 
-            <x-modal id="createCourses" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
-                <x-slot name="button">
-                    Agregar
-
-                    <x-iconos.ver />
-
-                </x-slot>
-
-                <x-slot name="body">
-
-                    @include('resourcesJV.courses.createCourses')
-
-                </x-slot>
-            </x-modal>
-
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
+            {{-- filtro de seleccion por grado --}}
+            <form method="GET" action="/courses/trash" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                    required onchange="document.getElementById('degreeForm').submit()" />
+            </form>
 
         </div>
 
 
-
-        <div wire:loading.block wire:target='valor,porPagina,gotoPage'>
-
-            {{-- <x-line-loader /> --}}
-
-        </div>
-
-
-{{--
-        <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('active')" @class([
-                    'btn-success' => $searchType === 'active'
-                ])>
-
-                    Activos
-
-                </button>
-
-            </li>
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('trash')" @class([
-                    'btn-success' => $searchType === 'trash'
-                ])>
-
-                    Inactivos
-
-                </button>
-
-            </li>
-        </ul> --}}
+        {{-- tabla de cursos desactivados --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
@@ -103,6 +57,8 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $course->name }}</x-tablas.td>
                         <x-tablas.td>
+
+                            {{-- modal para restaurar un curso --}}
                             <form action="/courses/restore/{{ $course->id }}" method="POST">
                                 @csrf
                                 {{ @method_field('POST') }}
@@ -111,13 +67,21 @@
                                     value="Restaurar"
                                     onclick="return confirm('¿Está completamente seguro de querer restaurar esta curso?')">
                             </form>
+
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
             </x-slot>
         </x-tablas.table>
+
+        {{-- paginacion --}}
+
         <div>
-            {{ $courses->links('components.pagination') }}
+            {{ $courses->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     </div>
 @endsection
+
+
+
+<script src="{{ asset('js/reloadPage.js') }}"></script>

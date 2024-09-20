@@ -23,16 +23,6 @@
                 </div>
             </form>
 
-
-            {{-- @php
-
-                $listaregistros = array_map(function ($tipo) {
-                    return ucwords(strtolower($tipo));
-                }, Constantes::LISTAR_REGISTROS);
-
-            @endphp --}}
-
-            <!-- Llamada al componente del modal -->
             <x-modal id="createDegrees" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
                     Agregar
@@ -47,55 +37,13 @@
 
                 </x-slot>
             </x-modal>
-
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" />  --}}
-
         </div>
 
-
-
-        <div wire:loading.block wire:target='valor,porPagina,gotoPage'>
-
-            {{-- <x-line-loader /> --}}
-
-        </div>
         <div class="flex justify-end col-md-2">
             <x-button-link href="/degrees/trash" class="text-white bg-green-600">
                 <x-iconos.basurero /> Papelera
             </x-button-link>
         </div>
-
-
-
-
-        {{-- <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('active')" @class([
-                    'btn-success' => $searchType === 'active'
-                ])>
-
-                    Activos
-
-                </button>
-
-            </li>
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('trash')" @class([
-                    'btn-success' => $searchType === 'trash'
-                ])>
-
-                    Inactivos
-
-                </button>
-
-            </li>
-        </ul> --}}
-
-
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
@@ -131,6 +79,7 @@
                                     </form>
                                 </x-slot>
                             </x-modal>
+
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar el Grado?"
                                 bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
                                 <x-slot name="button">
@@ -165,7 +114,6 @@
 
         </x-tablas.table>
         <div>
-            {{ $degree->links('components.pagination') }}
+            {{ $degree->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
-    </div>
 @endsection

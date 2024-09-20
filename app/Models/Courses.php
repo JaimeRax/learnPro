@@ -11,12 +11,12 @@ class Courses extends Model
 
     protected $fillable = [
         'name',
+        'degree_id',
     ];
 
-    public function desactivar()
+    public function degree()
     {
-        $this->state = 0;
-        $this->save();
+        return $this->belongsTo('Degree', 'degree_id', 'id');
     }
 
     public function disable()

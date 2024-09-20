@@ -15,7 +15,6 @@ use Symfony\Component\Stopwatch\Section;
 
 class resourcesController extends Controller
 {
-
     //FUNCTIONS COURSES
 
     public function listDegrees()
@@ -23,12 +22,11 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $degree = Degree::where('state', 1)->paginate(3);
+            $degree = Degree::where('state', 1)->paginate(10);
         }
 
         return view('resourcesJV.degrees.listDegrees', ['degree' => $degree]);
@@ -59,12 +57,11 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $degree = Degree::where('state', 0)->paginate(3);
+            $degree = Degree::where('state', 0)->paginate(10);
         }
 
         return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
@@ -85,23 +82,22 @@ class resourcesController extends Controller
 
 
 
-     //FUNCTIONS SECTIONS
+
+    //FUNCTIONS SECTIONS
 
     public function listSections()
     {
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $sections = Sections::where('state', 1)->paginate(3);
+            $sections = Sections::where('state', 1)->paginate(10);
         }
 
         return view('resourcesJV.sections.listSections', ['sections' => $sections]);
-
     }
 
     public function createSections(DegreeRequest $request)
@@ -129,12 +125,11 @@ class resourcesController extends Controller
         $search = request()->query('search');
 
         if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
             $sections = Sections::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 0)
-                ->paginate(2);
+                ->paginate(10);
         } else {
-            $sections = Sections::where('state', 0)->paginate(3);
+            $sections = Sections::where('state', 0)->paginate(10);
         }
 
         return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
@@ -156,36 +151,67 @@ class resourcesController extends Controller
 
 
 
+
     //FUNCTIONS COURSES
 
     public function listCourses()
     {
+        try {
+            $degreeId = request()->query('degree_id');
+            $search = request()->query('search');
 
-        $search = request()->query('search');
+            if ($degreeId || $search) {
+                $courses = Courses::where('state', 1)
+                ->when($degreeId, function($query) use ($degreeId) {
+                    return $query->where('degree_id', $degreeId);
+                })
+                ->when($search, function($query) use ($search) {
+                    return $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->paginate(10)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'search' => $search
+                ]);
 
-        if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
-            $courses = Courses::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 1)
-                ->paginate(2);
-        } else {
-            $courses = Courses::where('state', 1)->paginate(3);
+
+            } else {
+                $courses = Courses::where('state', 1)->paginate(10);
+            }
+
+            $degrees = Degree::all();
+
+            return view('resourcesJV.courses.listCourses', [
+                'courses' => $courses,
+                'degrees' => $degrees,
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Ocurrió un problema.');
         }
-
-        return view('resourcesJV.courses.listCourses', ['courses' => $courses]);
-
     }
+
 
     public function createCourses(CoursesRequest $request)
     {
-        $courses = Courses::create($request->validated());
-        return redirect('/courses');
+        try {
+            $request->validate([
+                'name' => 'required|unique:courses,name',
+                'degree_id' => 'required|exists:degrees,id'
+            ]);
+
+            Courses::create($request->validated());
+
+            return redirect('/courses')->with('message', 'Curso creado con éxito.');
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'El curso ya existe');
+        }
     }
 
     public function disableCourses($id)
     {
         $courses = Courses::find($id);
-        $courses->desactivar();
+        $courses->disable();
         return redirect('/courses');
     }
 
@@ -198,18 +224,41 @@ class resourcesController extends Controller
 
     public function trashCourses()
     {
-        $search = request()->query('search');
+        try {
+            $degreeId = request()->query('degree_id');
+            $search = request()->query('search');
 
-        if ($search) {
-            // Corrección en la interpolación de la variable en la consulta
-            $courses = Courses::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 0)
-                ->paginate(2);
-        } else {
-            $courses = Courses::where('state', 0)->paginate(3);
+            if ($degreeId || $search) {
+                $courses = Courses::where('state', 0)
+                ->when($degreeId, function($query) use ($degreeId) {
+                    return $query->where('degree_id', $degreeId);
+                })
+                ->when($search, function($query) use ($search) {
+                    return $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->paginate(10)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'search' => $search
+                ]);
+
+
+            } else {
+                $courses = Courses::where('state', 0)->paginate(10);
+            }
+
+            $degrees = Degree::all();
+
+            return view('resourcesJV.courses.trashCourses', [
+                'courses' => $courses,
+                'degrees' => $degrees,
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Ocurrió un problema.');
         }
 
-        return view('resourcesJV.courses.trashCourses', ['courses' => $courses]);
+
     }
 
     public function editCourses(DegreeRequest $request, $id)
