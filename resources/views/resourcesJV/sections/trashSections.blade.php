@@ -14,28 +14,7 @@
             <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
                 wire:model.live.debounce.500ms='valor' />
 
-            {{-- @php
-
-                $listaregistros = array_map(function ($tipo) {
-                    return ucwords(strtolower($tipo));
-                }, Constantes::LISTAR_REGISTROS);
-
-            @endphp --}}
-
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
-
         </div>
-
-
-
-        <div wire:loading.block wire:target='valor,porPagina,gotoPage'>
-
-            {{-- <x-line-loader /> --}}
-
-        </div>
-
-
-
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">

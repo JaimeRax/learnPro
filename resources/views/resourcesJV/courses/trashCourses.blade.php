@@ -16,59 +16,9 @@
             <x-inputs.general id="busqueda-cliente" placeholder="Busque por cualquier campo..."
                 wire:model.live.debounce.500ms='valor' />
 
-            {{-- @php
-
-                $listaregistros = array_map(function ($tipo) {
-                    return ucwords(strtolower($tipo));
-                }, Constantes::LISTAR_REGISTROS);
-
-            @endphp --}}
-
             <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
 
-
-
-
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
-
         </div>
-
-
-
-        <div wire:loading.block wire:target='valor,porPagina,gotoPage'>
-
-            {{-- <x-line-loader /> --}}
-
-        </div>
-
-
-{{--
-        <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('active')" @class([
-                    'btn-success' => $searchType === 'active'
-                ])>
-
-                    Activos
-
-                </button>
-
-            </li>
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('trash')" @class([
-                    'btn-success' => $searchType === 'trash'
-                ])>
-
-                    Inactivos
-
-                </button>
-
-            </li>
-        </ul> --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">

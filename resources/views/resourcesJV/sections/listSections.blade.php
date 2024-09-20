@@ -24,18 +24,6 @@
                 </div>
             </form>
 
-            {{-- @php
-
-                $listaregistros = array_map(function ($tipo) {
-                    return ucwords(strtolower($tipo));
-                }, Constantes::LISTAR_REGISTROS);
-
-            @endphp --}}
-
-            <x-inputs.select-option id="por-pagina" wire:model.live='porPagina' :required="true" />
-
-
-            <!-- Llamada al componente del modal -->
             <x-modal id="createSections" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
                     Agregar
@@ -51,18 +39,6 @@
                 </x-slot>
             </x-modal>
 
-
-
-            {{-- <x-reporte-fecha titulo="Reporte Cliente" titleButton="Reporte Cliente" /> --}}
-
-        </div>
-
-
-
-        <div wire:loading.block wire:target='valor,porPagina,gotoPage'>
-
-            {{-- <x-line-loader /> --}}
-
         </div>
 
         <div class="flex justify-end col-md-2">
@@ -70,34 +46,6 @@
                 <x-iconos.basurero /> Papelera
             </x-button-link>
         </div>
-
-
-        {{-- <ul class="flex flex-wrap gap-2 my-2 font-medium text-center text-gray-500 text-md">
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('active')" @class([
-                    'btn-success' => $searchType === 'active'
-                ])>
-
-                    Activos
-
-                </button>
-
-            </li>
-
-            <li class="me-2">
-
-                <button wire:click.prevent="setSearchType('trash')" @class([
-                    'btn-success' => $searchType === 'trash'
-                ])>
-
-                    Inactivos
-
-                </button>
-
-            </li>
-        </ul> --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
