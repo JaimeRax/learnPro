@@ -117,3 +117,4 @@
             {{ $degree->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
 @endsection
+<script src="{{ asset('js/reloadPage.js') }}"></script>

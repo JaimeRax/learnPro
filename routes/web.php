@@ -10,6 +10,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\coursesController;
 use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\logoutController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 // **** RUTA PARA LOGIN ****
@@ -66,4 +67,11 @@ Route::get('/trash', [coursesController::class, 'trashCourses']);
 Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 });
 
+
+//ROUTES STUDENT
+Route::prefix('student')->group(function () {
+    Route::get('/',[ StudentController::class,'listStudent']);
+    Route::get('/new', [StudentController::class, 'showCreateForm']);
+    Route::post('/new', [StudentController::class, 'createStudent']);
+});
 
