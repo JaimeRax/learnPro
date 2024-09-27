@@ -17,7 +17,7 @@
 @endif
     <div class="grid grid-cols-1 gap-2">
         <div class="container-sm">
-            <form action="{{ url('student/newN') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('student/newStudent') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <ol class="relative text-gray-500 border-gray-200 border-s dark:border-gray-700 dark:text-gray-400">

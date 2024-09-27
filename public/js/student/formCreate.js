@@ -45,32 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-function tipoAccionista() {
-    const accionistaIndividual = document.getElementById('accionista_individual').checked;
-    const accionistaEmpresarial = document.getElementById('accionista_empresarial').checked;
-
-    const formEmpresarial = document.getElementById('form_empresarial');
-    const contMonthlyIncome = document.getElementById('cont_monthly_income');
-    const estado_cuenta_empresa = document.getElementById('estado_cuenta_empresa');
-    const estado_cuenta = document.getElementById('estado_cuenta');
-    const employmentStatus = document.getElementById('employment_status');
-
-    if (accionistaEmpresarial) {
-        formEmpresarial.classList.remove('invisible');
-        contMonthlyIncome.classList.add('invisible');
-        estado_cuenta_empresa.classList.remove('invisible');
-        estado_cuenta.classList.add('invisible');
-        employmentStatus.classList.add('invisible');
-    } else if (accionistaIndividual) {
-        formEmpresarial.classList.add('invisible');
-        contMonthlyIncome.classList.remove('invisible');
-        estado_cuenta_empresa.classList.add('invisible');
-        estado_cuenta.classList.remove('invisible');
-        employmentStatus.classList.remove('invisible');
-    }
-}
-
 function mostrarDoc() {
     const docDpi = document.getElementById('doc_dpi').checked;
     const uno = document.getElementById('dorso');

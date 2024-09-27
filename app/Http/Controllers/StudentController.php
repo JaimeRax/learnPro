@@ -129,11 +129,11 @@ class StudentController extends Controller
 
             if ($request->has('charge_first_name_3') && !empty($request->charge_first_name_3)) {
                 $request->validate([
-                    'charge_first_name_3' => 'required|string|max:255',
-                    'charge_first_lastname_3' => 'required|string|max:255',
-                    'charge_dpi_3' => 'required|string|min:13|max:13',
-                    'charge_phone_3' => 'required|integer',
-                    'charge_address_3' => 'required|string|max:255'
+                    'charge_first_name_3' => 'nullable|string|max:255',
+                    'charge_first_lastname_3' => 'nullable|string|max:255',
+                    'charge_dpi_3' => 'nullable|string|min:13|max:13',
+                    'charge_phone_3' => 'nullable|integer',
+                    'charge_address_3' => 'nullable|string|max:255'
                 ]);
 
                 $inCharge3 = In_charge::create([
