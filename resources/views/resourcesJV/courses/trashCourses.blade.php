@@ -35,6 +35,17 @@
         </div>
 
 
+        {{-- BOTON PARA VOLVER --}}
+
+        <div class="flex justify-end col-md-2">
+            <x-button-link href="/courses" class="mt-2 text-white bg-orange-400">
+
+                <x-iconos.volver /> Volver
+
+            </x-button-link>
+        </div>
+
+
         {{-- tabla de cursos desactivados --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">

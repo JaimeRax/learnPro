@@ -10,6 +10,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\coursesController;
 use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\logoutController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 // **** RUTA PARA LOGIN ****
@@ -64,6 +65,18 @@ Route::post('/delete/{id}', [coursesController::class, 'disableCourses']);
 Route::post('/edit/{id}', [coursesController::class, 'editCourses']);
 Route::get('/trash', [coursesController::class, 'trashCourses']);
 Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
+});
+
+
+// Rutas para el estudiante
+Route::prefix('student')->group(function () {
+    Route::get('/', [StudentController::class, 'listStudent']);
+    Route::get('/viewForm', [StudentController::class, 'showCreateForm']);
+    Route::post('/newStudent', [StudentController::class, 'createStudent']);
+    Route::post('/delete/{id}', [StudentController::class, 'disableStudent']);
+    Route::get('/edit/{id}', [StudentController::class, 'editStudent']);
+    Route::post('/restore/{id}', [StudentController::class, 'activeStudent']);
+    Route::get('/trash', [StudentController::class, 'trashStudent']);
 });
 
 

@@ -117,3 +117,4 @@
         </div>
     </div>
 @endsection
+<script src="{{ asset('js/reloadPage.js') }}"></script>
