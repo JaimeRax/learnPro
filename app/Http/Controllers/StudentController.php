@@ -107,11 +107,11 @@ class StudentController extends Controller
 
             // Validación y creación del segundo encargado
             $request->validate([
-                'charge_first_name_2' => 'required|string|max:255',
-                'charge_first_lastname_2' => 'required|string|max:255',
-                'charge_dpi_2' => 'required|string|min:13|max:13',
-                'charge_phone_2' => 'required|integer',
-                'charge_address_2' => 'required|string|max:255'
+                'charge_first_name_2' => 'nullable|string|max:255',
+                'charge_first_lastname_2' => 'nullable|string|max:255',
+                'charge_dpi_2' => 'nullable|string|min:13|max:13',
+                'charge_phone_2' => 'nullable|integer',
+                'charge_address_2' => 'nullable|string|max:255'
             ]);
 
             $inCharge2 = In_charge::create([

@@ -36,7 +36,7 @@
 
             {{-- BOTON PARA AGREGAR --}}
 
-            <x-button-link href="student/new" class="mt-2 btn-primary">
+            <x-button-link href="student/viewForm" class="mt-2 btn-primary">
 
                 <x-iconos.agregar /> Inscripciòn
 

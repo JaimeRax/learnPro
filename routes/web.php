@@ -71,7 +71,7 @@ Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 // Rutas para el estudiante
 Route::prefix('student')->group(function () {
     Route::get('/', [StudentController::class, 'listStudent']);
-    Route::get('/new', [StudentController::class, 'showCreateForm']);
+    Route::get('/viewForm', [StudentController::class, 'showCreateForm']);
     Route::post('/newStudent', [StudentController::class, 'createStudent']);
     Route::post('/delete/{id}', [StudentController::class, 'disableStudent']);
     Route::get('/edit/{id}', [StudentController::class, 'editStudent']);
