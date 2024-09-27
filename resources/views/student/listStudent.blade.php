@@ -25,16 +25,16 @@
                 </div>
             </form>
 
-               {{-- filtro por seleccion de grado --}}
+
+            {{-- filtro por seleccion de grado --}}
 
                <form method="GET" action="/student" id="degreeForm" class="mt-6">
                 <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
             </form>
 
+
             {{-- BOTON PARA AGREGAR --}}
-
-
 
             <x-button-link href="student/new" class="mt-2 btn-primary">
 
@@ -43,8 +43,6 @@
             </x-button-link>
 
         </div>
-
-
 
         <div class="flex justify-end col-md-2">
             <x-button-link href="/student/trash" class="text-white bg-green-600">
@@ -89,30 +87,11 @@
                                 </x-slot>
                             </x-modal>
 
-                        <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar el Grado?"
-                                bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
-                                <x-slot name="button">
-                                    <x-iconos.editar />
-                                </x-slot>
+                            <x-button-link href="/student/edit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
 
-                                <x-slot name="body">
-                                    <form action="/student/edit/{{ $studens->id }}" method="POST">
-                                        @csrf
-                                        <div>
-                                            <label for="email"
-                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre del
-                                                Grado</label>
-                                            <input type="text" name="name" id="name"
-                                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
-                                                required value="{{ $studens->first_name }}" />
-                                        </div>
+                                <x-iconos.editar />
 
-                                        <button type="submit"
-                                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Editar</button>
-
-                                    </form>
-                                </x-slot>
-                            </x-modal>
+                            </x-button-link>
 
                     </x-tablas.td>
                 </x-tablas.tr>

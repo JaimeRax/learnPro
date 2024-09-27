@@ -7,6 +7,7 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Requests\StudentRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
 use App\Models\In_charge;
 use Illuminate\Http\Request;
@@ -212,4 +213,16 @@ class StudentController extends Controller
 
     }
 
+    public function editStudent(Request $request, $id)
+    {
+        $student = Student::find($id);
+
+        if (!$student) {
+            return redirect('/student')->with('error', 'Estudiante no encontrado.');
+        }
+
+        $student->update($request->validated());
+
+        return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
+    }
 }
