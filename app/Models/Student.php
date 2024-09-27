@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    protected $table = 'tb_student';
     use HasFactory;
 
     protected $fillable = [
@@ -18,11 +19,17 @@ class Student extends Model
         'gender',
         'birthdate',
         'town_ethnicity',
+        'degree_id',
     ];
 
     public function in_charge()
     {
         return $this->hasMany('tb_in_charge', 'student_id', 'id');
+    }
+
+    public function degree()
+    {
+        return $this->belongsTo('degrees', 'degree_id', 'id');
     }
 
     public function disable()

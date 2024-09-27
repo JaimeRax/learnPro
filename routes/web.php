@@ -68,10 +68,15 @@ Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 });
 
 
-//ROUTES STUDENT
+// Rutas para el estudiante
 Route::prefix('student')->group(function () {
-    Route::get('/',[ StudentController::class,'listStudent']);
+    Route::get('/', [StudentController::class, 'listStudent']);
     Route::get('/new', [StudentController::class, 'showCreateForm']);
-    Route::post('/new', [StudentController::class, 'createStudent']);
+    Route::post('/newN', [StudentController::class, 'createStudent']);
+    Route::post('/delete/{id}', [StudentController::class, 'disableStudent']);
+    Route::post('/restore/{id}', [StudentController::class, 'activeStudent']);
+    Route::get('/trash', [StudentController::class, 'trashStudent']);
+
 });
+
 

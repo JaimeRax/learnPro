@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class In_charge extends Model
 {
     use HasFactory;
+    protected $table = 'tb_in_charge';
     protected $fillable = [
-        'first_name',
-        'second_name',
-        'first_lastname',
-        'second_lastname',
-        'dpi',
-        'address',
-        'relationship',
-        'comment',
+        'charge_first_name',
+        'charge_second_name',
+        'charge_first_lastname',
+        'charge_second_lastname',
+        'charge_dpi',
+        'charge_phone',
+        'charge_address',
+        'charge_relationship',
+        'charge_comment',
+        'student_id',
     ];
 
     public function student()

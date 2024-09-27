@@ -18,6 +18,11 @@ class Degree extends Model
         return $this->hasMany('Courses', 'degree_id', 'id');
     }
 
+    public function student()
+    {
+        return $this->hasMany('tb_student', 'degree_id', 'id');
+    }
+
     public function disable()
     {
         $this->state = 0;

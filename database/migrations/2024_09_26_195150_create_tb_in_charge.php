@@ -12,21 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tb_in_charge', function (Blueprint $table) {
+
             $table->id();
-            $table->string('first_name');
-            $table->string('second_name');
-            $table->string('first_lastname');
-            $table->string('second_lastname');
-            $table->integer('dpi');
-            $table->integer('phone');
-            $table->string('address');
-            $table->string('relationship')->nullable();
-            $table->string('comment')->nullable();
-            $table->boolean('state')->default(1);
+            $table->string('charge_first_name');
+            $table->string('charge_second_name')->nullable();
+            $table->string('charge_first_lastname');
+            $table->string('charge_second_lastname')->nullable();
+            $table->string('charge_dpi');
+            $table->integer('charge_phone');
+            $table->string('charge_address');
+            $table->string('charge_relationship')->nullable();
+            $table->string('charge_comment')->nullable();
+            $table->boolean('charge_state')->default(1);
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('tb_student')->onDelete('cascade');
             $table->timestamps();
-        });
+            });
     }
 
     /**

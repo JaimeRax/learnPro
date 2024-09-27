@@ -22,7 +22,7 @@
         </details>
 
         </li>
-    <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Inscripcion</a></li>
+    <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
     <li><a href="#"><i class="fa-solid fa-map-location-dot"></i> Docentes</a></li>
 

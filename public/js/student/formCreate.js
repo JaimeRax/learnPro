@@ -1,13 +1,14 @@
-function toggleComentario() {
-    var select = document.getElementById("parentesco");
-    var comentarioGroup = document.getElementById("comentario");
+function toggleComentario(selectElement) {
+    // Obtener el div 'comentario' relacionado con el select
+    var comentarioGroup = selectElement.closest('.group').nextElementSibling;
 
-    if (select.value == "OTROS") { // "otros" tiene valor 9
+    if (selectElement.value === "OTROS") {
         comentarioGroup.style.display = "block";
     } else {
         comentarioGroup.style.display = "none";
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const steps = ['step-1', 'step-2', 'step-3', 'step-4'];

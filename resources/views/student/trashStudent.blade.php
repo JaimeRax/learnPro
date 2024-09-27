@@ -3,9 +3,8 @@
 
 
 @section('header')
-    {{-- <x-route route="/" previousRouteName="Inicio" currentRouteName="clientes" /> --}}
+    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
-
 
 
 @section('main')
@@ -13,7 +12,9 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <form class="input-group" action="/degrees" method="get">
+            {{-- filtro por busqueda de nombre --}}
+
+            <form class="input-group" action="/student/trash" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
 
@@ -24,26 +25,32 @@
                 </div>
             </form>
 
+            {{-- BUSQUEDA POR GRADO --}}
+
+            <form method="GET" action="/student/trash" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                    required onchange="document.getElementById('degreeForm').submit()" />
+            </form>
+
         </div>
 
 
         {{-- BOTON PARA VOLVER --}}
 
         <div class="flex justify-end col-md-2">
-            <x-button-link href="/degrees" class="mt-2 text-white bg-orange-400">
+            <x-button-link href="/student" class="mt-2 text-white bg-orange-400">
 
                 <x-iconos.volver /> Volver
 
             </x-button-link>
         </div>
 
-
-
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Nombre del estudiante</x-tablas.th>
+                    <x-tablas.th>CUI</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -53,22 +60,19 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($degree as $degrees)
+                @foreach ($student as $studens)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
                         <x-tablas.td>
-                            <form action="/degrees/restore/{{ $degrees->id }}" method="POST">
-
+                            <form action="/student/restore/{{ $studens->id }}" method="POST">
                                 @csrf
-
                                 {{ @method_field('POST') }}
-
                                 <input type="submit"
                                     class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
                                     value="Restaurar"
-                                    onclick="return confirm('¿Está completamente seguro de querer restaurar este grado?')">
-
+                                    onclick="return confirm('¿Está completamente seguro de querer restaurar al estudiante?')">
                             </form>
                         </x-tablas.td>
                     </x-tablas.tr>
@@ -79,7 +83,9 @@
 
         </x-tablas.table>
         <div>
-            {{ $degree->links('components.pagination') }}
+            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
-    </div>
-@endsection
+    @endsection
+
+
+    <script src="{{ asset('js/reloadPage.js') }}"></script>
