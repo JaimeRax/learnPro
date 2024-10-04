@@ -81,5 +81,6 @@ Route::prefix('student')->group(function () {
 
 // Routes to Reports
 Route::prefix('report')->group(function () {
+    // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket']);
 });

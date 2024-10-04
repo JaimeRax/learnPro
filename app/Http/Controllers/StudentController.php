@@ -229,6 +229,7 @@ class StudentController extends Controller
         return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
     }
 
+    // TODO: mover esta funcion al controlador correspondiente y corregir la ruta
     public function paymentTicket()
     {
         $uuid = (string) Str::uuid();
