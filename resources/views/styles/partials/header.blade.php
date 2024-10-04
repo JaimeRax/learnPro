@@ -11,7 +11,7 @@
     }
 
     .title {
-        font-size: 18px;
+        font-size: 14px;
         vertical-align: middle;
         display: inline-block;
     }
@@ -28,18 +28,21 @@
     }
 
     .text-container .title {
-        margin-bottom: 9px;
+        margin-bottom: 2px;
     }
 </style>
 <div class="header">
     <div class="contact-info lato-regular">
-        <p>10 avenida 0001 01-008 Zona 2, Cobán Alta Verapaz</p>
-        <p>www.finanssoreal.com | contacto@finanssoreal.com</p>
-        <p>Tel. (+502) 5001 3354</p>
+        <p>4 avenida 0-37 zona 4 finca municipal sesibchè</p>
+        <p>San Juan Chamelco Alta Verapaz</p>
+        <p>institutobasicojv.chamelco@gmail.com</p>
+        <p>Tel. (+502) 5991 0548</p>
     </div>
-    {{-- <img src="{{ public_path('/Images/iconlogo.png') }}" alt="logo" class="logo"> --}}
+    <img src="/Imagenes/jv-logo.png" alt="logo" class="logo">
     <div class="text-container ">
-        <p class="title lato-bold">FINANSSOREAL S.A.</p>
-        <p class="lato-regular-italic">Soluciones empresariales</p>
+        <p class="title lato-bold">INSTITUTO DE EDUCACION BASICA</p>
+        <p class="title lato-bold">POR EL SISTEMA DE COOPERATIVA</p>
+        <p class="title lato-bold">DE ENSEÑANZA</p>
+        <p class="lato-regular-italic">Educar es transformar vidas xd</p>
     </div>
 </div>

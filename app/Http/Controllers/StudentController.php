@@ -229,7 +229,7 @@ class StudentController extends Controller
         return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
     }
 
-    public function paymentAccountStatus()
+    public function paymentTicket()
     {
         $uuid = (string) Str::uuid();
         $date = Carbon::now();
