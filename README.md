@@ -5,6 +5,7 @@
 
 **LearnPro** is a comprehensive platform designed to streamline the administrative and academic management of educational institutions. This platform facilitates key functions such as student enrollment, course assignment, fee management, grade tracking, and reporting.
 
+
 ## Features
 
 - **Student Enrollment**: Easy management of student admissions and registrations.
