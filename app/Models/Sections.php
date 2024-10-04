@@ -24,4 +24,9 @@ class Sections extends Model
         $this->state = 1;
         $this->save();
     }
+
+    public function student()
+    {
+        return $this->hasMany('tb_student', 'section_id', 'id');
+    }
 }

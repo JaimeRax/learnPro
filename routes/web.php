@@ -10,6 +10,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\coursesController;
 use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\logoutController;
+use App\Http\Controllers\paymentsController;
+use App\Http\Controllers\assignmentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,7 +70,7 @@ Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 });
 
 
-// Rutas para el estudiante
+// ROUTES STUDENT
 Route::prefix('student')->group(function () {
     Route::get('/', [StudentController::class, 'listStudent']);
     Route::get('/viewForm', [StudentController::class, 'showCreateForm']);
@@ -79,4 +81,14 @@ Route::prefix('student')->group(function () {
     Route::get('/trash', [StudentController::class, 'trashStudent']);
 });
 
+//ROUTES PAYMENTS
+Route::prefix('payments')->group(function () {
+    Route::get('/', [paymentsController::class, 'listPayments']);
+    Route::get('/new/{id}', [paymentsController::class, 'createPayments']);
 
+});
+
+//ROUTES ASSIGNMENTO
+Route::prefix('assignment')->group(function () {
+    Route::get('/', [assignmentController::class, 'listAssignment']);
+});

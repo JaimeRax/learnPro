@@ -20,6 +20,7 @@ class Student extends Model
         'birthdate',
         'town_ethnicity',
         'degree_id',
+        'section_id'
     ];
 
     public function in_charge()
@@ -30,6 +31,11 @@ class Student extends Model
     public function degree()
     {
         return $this->belongsTo('degrees', 'degree_id', 'id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo('sections', 'section_id', 'id');
     }
 
     public function disable()

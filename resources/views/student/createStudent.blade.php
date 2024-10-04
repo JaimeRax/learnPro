@@ -148,7 +148,6 @@
                                         </div>
                                         <span class="text-error" id="error_estado_civil"></span>
                                     </div>
-                                    <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" required />
                                 </div>
                                 <div class="group">
                                     <!--[if BLOCK]><![endif]--> <button
@@ -444,19 +443,14 @@
                                                 <option value="AMIGO">amigo</option>
                                                 <option value="CUÑADA">cuñada</option>
                                                 <option value="CUÑADO">cuñado</option>
-                                                <option value="ESPOSA">esposa</option>
-                                                <option value="ESPOSO">esposo</option>
                                                 <option value="HERMANA">hermana</option>
                                                 <option value="HERMANO">hermano</option>
                                                 <option value="HIJA">hija</option>
                                                 <option value="HIJO">hijo</option>
                                                 <option value="MADRE">madre</option>
-                                                <option value="NINGUNO">ninguno</option>
                                                 <option value="PADRE">padre</option>
                                                 <option value="PRIMA">prima</option>
                                                 <option value="PRIMO">primo</option>
-                                                <option value="SUEGRA">suegra</option>
-                                                <option value="SUEGRO">suegro</option>
                                                 <option value="TIA">tia</option>
                                                 <option value="TIO">tio</option>
                                                 <option value="OTROS">otros</option>
