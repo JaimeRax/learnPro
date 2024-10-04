@@ -30,8 +30,8 @@
 
 @section('content')
     <div class="container-sm">
-        <h3 class="text-bold reduce-line-height">No. {{ $payment->id }}</h3>
-        <p class="text-regular reduce-line-height-next">serie: {{ $payment->payment_uuid }}</p>
+        <h3 class="text-bold reduce-line-height">No. 000</h3>
+        <p class="text-regular reduce-line-height-next">serie: 23kfasfwo233l2rj2</p>
 
         <h2 class="text-center text-bold">INFORMACIÓN DE PAGO</h2>
 
@@ -39,16 +39,15 @@
             <tbody>
                 <tr>
                     <td class="text-bold">Fecha de documento</td>
-                    <td class="text-right text-regular">{{ $payment->transaction_date }}</td>
+                    <td class="text-right text-regular">04/10/2024</td>
                 </tr>
                 <tr>
                     <td class="text-bold">Nombre cliente</td>
-                    <td class="text-right text-regular">{{ $client->primer_nombre }} {{ $client->segundo_nombre }}
-                        {{ $client->primer_apellido }} {{ $client->segundo_apellido }}</td>
+                    <td class="text-right text-regular">Jaime Rax</td>
                 </tr>
                 <tr>
                     <td class="text-bold">Tipo de pago</td>
-                    <td class="text-right text-regular">{{ $payment_type->name }}</td>
+                    <td class="text-right text-regular">Pago Mensualidad</td>
                 </tr>
                 <tr>
                     <td class="text-bold">Metodo de pago</td>
@@ -56,7 +55,7 @@
                 </tr>
                 <tr>
                     <td class="text-bold">Total de abonado</td>
-                    <td class="text-right text-regular">{{ Utils::money($payment->transaction_total) }}</td>
+                    <td class="text-right text-regular">Q 75.00</td>
                 </tr>
             </tbody>
         </table>

@@ -240,9 +240,9 @@ class StudentController extends Controller
         $data['name'] = $name;
 
         // Cargar la vista con los datos y generar el PDF
-        $pdf = PDF::loadView('Reports.Payment.paymentAccountStatus', $data)
+        $pdf = PDF::loadView('Reports.Payment.paymentTicket', $data)
             ->setPaper('letter', 'portrait')
-            ->stream('Reporte_historial_de_pagos.pdf');
+            ->stream('ticket_payment.pdf');
 
         return $pdf;
     }

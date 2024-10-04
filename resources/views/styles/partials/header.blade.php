@@ -37,10 +37,9 @@
         <p>www.finanssoreal.com | contacto@finanssoreal.com</p>
         <p>Tel. (+502) 5001 3354</p>
     </div>
-    <img src="{{ public_path('/Images/iconlogo.png') }}" alt="logo" class="logo">
+    {{-- <img src="{{ public_path('/Images/iconlogo.png') }}" alt="logo" class="logo"> --}}
     <div class="text-container ">
         <p class="title lato-bold">FINANSSOREAL S.A.</p>
         <p class="lato-regular-italic">Soluciones empresariales</p>
     </div>
-
 </div>
