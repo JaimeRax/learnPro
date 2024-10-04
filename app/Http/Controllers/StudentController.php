@@ -10,8 +10,11 @@ use App\Http\Requests\StudentRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
 use App\Models\In_charge;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class StudentController extends Controller
 {
@@ -23,10 +26,10 @@ class StudentController extends Controller
 
             if ($degreeId || $search) {
                 $student = Student::where('state', 1)
-                ->when($degreeId, function($query) use ($degreeId) {
+                ->when($degreeId, function ($query) use ($degreeId) {
                     return $query->where('degree_id', $degreeId);
                 })
-                ->when($search, function($query) use ($search) {
+                ->when($search, function ($query) use ($search) {
                     return $query->where('name', 'LIKE', "%{$search}%");
                 })
                 ->paginate(10)
@@ -57,7 +60,7 @@ class StudentController extends Controller
     public function showCreateForm()
     {
         $degrees = Degree::all();
-        return view('student.createStudent',[   'degrees' => $degrees,]);
+        return view('student.createStudent', [   'degrees' => $degrees,]);
     }
 
     public function createStudent(Request $request)
@@ -183,10 +186,10 @@ class StudentController extends Controller
 
             if ($degreeId || $search) {
                 $student = Student::where('state', 0)
-                ->when($degreeId, function($query) use ($degreeId) {
+                ->when($degreeId, function ($query) use ($degreeId) {
                     return $query->where('degree_id', $degreeId);
                 })
-                ->when($search, function($query) use ($search) {
+                ->when($search, function ($query) use ($search) {
                     return $query->where('name', 'LIKE', "%{$search}%");
                 })
                 ->paginate(10)
@@ -225,4 +228,24 @@ class StudentController extends Controller
 
         return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
     }
+
+    public function paymentAccountStatus()
+    {
+        $uuid = (string) Str::uuid();
+        $date = Carbon::now();
+        $name = 'Jaime Rax';
+
+        $data['uuid'] = $uuid;
+        $data['date'] = $date;
+        $data['name'] = $name;
+
+        // Cargar la vista con los datos y generar el PDF
+        $pdf = PDF::loadView('Reports.Payment.paymentAccountStatus', $data)
+            ->setPaper('letter', 'portrait')
+            ->stream('Reporte_historial_de_pagos.pdf');
+
+        return $pdf;
+    }
+
+
 }
