@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
+use App\Models\Payments;
 use App\Models\User;
 use App\Models\Sections;
 
@@ -70,6 +72,19 @@ class paymentsController extends Controller
              'sections' => $sections,
              'users' => $users,
          ]);
+    }
+
+    public function pdf_generator_get(){
+        $payments= Student::all();
+        $data=[
+            'title' => 'welcome to payments',
+            'date' => date('m/d/y'),
+            'payments' => $payments
+        ];
+
+        $pdf= PDF::loadview('pdf.myPDF', $data);
+        return $pdf->download('pagos.pdf');
+
     }
 
 }

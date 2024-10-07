@@ -29,7 +29,7 @@ class StudentController extends Controller
                 ->when($search, function($query) use ($search) {
                     return $query->where('first_name', 'LIKE', "%{$search}%");
                 })
-                ->paginate(10)
+                ->paginate(2)
                 ->appends([
                     'degree_id' => $degreeId,
                     'search' => $search
@@ -37,7 +37,7 @@ class StudentController extends Controller
 
 
             } else {
-                $student = Student::whereIn('state', [1,2])->paginate(10);
+                $student = Student::whereIn('state', [1,2])->paginate(2);
             }
 
             $degrees = Degree::all();
