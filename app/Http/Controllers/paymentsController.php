@@ -11,6 +11,8 @@ use App\Models\Degree;
 use App\Models\Payments;
 use App\Models\User;
 use App\Models\Sections;
+use NumberFormatter;
+
 
 class paymentsController extends Controller
 {
@@ -74,17 +76,24 @@ class paymentsController extends Controller
          ]);
     }
 
-    public function pdf_generator_get(){
-        $payments= Student::all();
-        $data=[
-            'title' => 'welcome to payments',
-            'date' => date('m/d/y'),
-            'payments' => $payments
-        ];
+    public function pdf_generator_get($id){
+
+        $payments= Student::findOrFail($id);
+
+    // Crear datos para el PDF
+    $data = [
+        'title' => 'Welcome to Payments',
+        'date' => date('m/d/y'),
+        'payments' => collect([$payments]) // Envolver el estudiante en una colección
+    ];
 
         $pdf= PDF::loadview('pdf.myPDF', $data);
         return $pdf->download('pagos.pdf');
 
+    }
+
+    public static function money($number) {
+        return NumberFormatter::create('es_GT', NumberFormatter::CURRENCY)->format($number);
     }
 
 }
