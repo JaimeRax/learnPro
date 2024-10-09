@@ -86,7 +86,7 @@ Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments']);
     Route::get('/new/{id}', [paymentsController::class, 'ShowcreatePayments']);
     Route::post('/newForm/{id}', [paymentsController::class, 'createPayments']);
-    Route::get('/pdf_generator/{id}', [paymentsController::class, 'pdf_generator_get']);
+
 
 });
 

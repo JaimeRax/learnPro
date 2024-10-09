@@ -119,26 +119,4 @@ class paymentsController extends Controller
     }
 }
 
-
-    public function pdf_generator_get($id)
-    {
-        $payments = Student::findOrFail($id);
-        $pay = Payments::findOrFail($id);
-        $users = User::all();
-
-        $data = [
-            'title' => 'Welcome to Payments',
-            'date' => date('m/d/y'),
-            'payments' => collect([$payments]),
-            'users' => $users,
-            'pay' => collect([$pay])
-        ];
-        $pdf = PDF::loadview('pdf.myPDF', $data);
-        return $pdf->download('pagos.pdf');
-    }
-
-    public static function money($number)
-    {
-        return NumberFormatter::create('es_GT', NumberFormatter::CURRENCY)->format($number);
-    }
 }

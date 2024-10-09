@@ -31,7 +31,7 @@
 
 
         <input name="mood_payment" class="hidden w-full shadow-sm input" readonly type="text" value="Efectivo">
-        <input name="uuid" class="hidden w-full shadow-sm input" readonly type="text" value="0011">
+        <input name="uuid" class="hidden w-full shadow-sm input" readonly type="text" value="0012">
         <input type="hidden" name="student_id" value="{{ $student->id }}">
 
 
