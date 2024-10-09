@@ -13,6 +13,7 @@
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             {{-- filtro por busqueda de nombre --}}
+
             <form class="input-group" action="/student" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
@@ -55,7 +56,6 @@
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Nombre del estudiante</x-tablas.th>
                     <x-tablas.th>Codigo Estudiantil</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -70,16 +70,20 @@
                     <x-tablas.td>{{ $i++ }}</x-tablas.td>
                     <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
                     <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
-                    <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
                     <x-tablas.td>
+                        <x-button-link href="#" class="mt-2 text-white bg-orange-500">
+
+                            Asignar
+
+                          </x-button-link>
                         <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
-                                    <x-iconos.basurero />
+                                    <x-iconos.basurero /> Eliminar
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="/student/delete/{{ $studens->id }}" method="POST">
+                                    <form action="#" method="POST">
                                         @csrf
                                         <button type="submit" class="btn-error">
                                             Dar de Baja al Estudiante
@@ -88,11 +92,7 @@
                                 </x-slot>
                             </x-modal>
 
-                            <x-button-link href="/student/edit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
 
-                                <x-iconos.editar />
-
-                            </x-button-link>
 
                     </x-tablas.td>
                 </x-tablas.tr>

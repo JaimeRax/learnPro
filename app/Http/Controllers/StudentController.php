@@ -25,14 +25,14 @@ class StudentController extends Controller
             $search = request()->query('search');
 
             if ($degreeId || $search) {
-                $student = Student::where('state', 1)
-                ->when($degreeId, function ($query) use ($degreeId) {
+                $student = Student::whereIn('state', [1,2])
+                ->when($degreeId, function($query) use ($degreeId) {
                     return $query->where('degree_id', $degreeId);
                 })
-                ->when($search, function ($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
+                ->when($search, function($query) use ($search) {
+                    return $query->where('first_name', 'LIKE', "%{$search}%");
                 })
-                ->paginate(10)
+                ->paginate(2)
                 ->appends([
                     'degree_id' => $degreeId,
                     'search' => $search
@@ -40,7 +40,7 @@ class StudentController extends Controller
 
 
             } else {
-                $student = Student::where('state', 1)->paginate(10);
+                $student = Student::whereIn('state', [1,2])->paginate(2);
             }
 
             $degrees = Degree::all();
@@ -51,7 +51,7 @@ class StudentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema.');
+            return redirect('/student')->with('error', 'Ocurrió un problema.');
         }
 
 
@@ -77,7 +77,6 @@ class StudentController extends Controller
                 'birthdate' => 'required|date',
                 'gender' => 'required',
                 'town_ethnicity' => 'nullable',
-                'degree_id' => 'required'
             ]);
 
             // Crear el estudiante
@@ -154,7 +153,7 @@ class StudentController extends Controller
             }
 
             // Redirigir a la vista de estudiantes con mensaje de éxito
-            return redirect('/student')->with('success', 'Estudiante y encargados creados correctamente');
+            return redirect('/payments')->with('success', 'Estudiante y encargados creados correctamente');
         } catch (\Exception $e) {
             Log::error('Error al crear el estudiante o el encargado: ' . $e->getMessage());
             return redirect()
