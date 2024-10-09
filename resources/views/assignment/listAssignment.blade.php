@@ -56,7 +56,6 @@
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Nombre del estudiante</x-tablas.th>
                     <x-tablas.th>Codigo Estudiantil</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -69,9 +68,8 @@
                 @foreach ($student as $studens)
                 <x-tablas.tr>
                     <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                    <x-tablas.td></x-tablas.td>
-                    <x-tablas.td></x-tablas.td>
-                    <x-tablas.td></x-tablas.td>
+                    <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
+                    <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
                     <x-tablas.td>
                         <x-button-link href="#" class="mt-2 text-white bg-orange-500">
 

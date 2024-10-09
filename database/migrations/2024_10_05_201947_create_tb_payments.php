@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('tb_payments', function (Blueprint $table) {
             $table->id();
             $table->string('type_payment');
+            $table->string('mood_payment');
             $table->date('payment_date');
-            $table->string('uuid')->unique();
+            $table->string('uuid');
             $table->string('amount');
             $table->string('bank')->nullable();
+            $table->string('month')->nullable();
             $table->string('document_number')->nullable();
             $table->string('comment')->nullable();
-            $table->unsignedBigInteger('month_id');
-            $table->foreign('month_id')->references('id')->on('tb_months')->onDelete('cascade');
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('tb_student')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');

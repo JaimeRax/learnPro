@@ -84,7 +84,8 @@ Route::prefix('student')->group(function () {
 //ROUTES PAYMENTS
 Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments']);
-    Route::get('/new/{id}', [paymentsController::class, 'createPayments']);
+    Route::get('/new/{id}', [paymentsController::class, 'ShowcreatePayments']);
+    Route::post('/newForm/{id}', [paymentsController::class, 'createPayments']);
     Route::get('/pdf_generator/{id}', [paymentsController::class, 'pdf_generator_get']);
 
 });
@@ -92,4 +93,6 @@ Route::prefix('payments')->group(function () {
 //ROUTES ASSIGNMENTO
 Route::prefix('assignment')->group(function () {
     Route::get('/', [assignmentController::class, 'listAssignment']);
+    Route::get('/form',[ assignmentController::class,'ShowcreateAssignment']);
+
 });

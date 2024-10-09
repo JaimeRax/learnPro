@@ -28,14 +28,19 @@ class Student extends Model
         return $this->hasMany('tb_in_charge', 'student_id', 'id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany('tb_payments', 'student_id', 'id');
+    }
+
     public function degree()
     {
-        return $this->belongsTo('degrees', 'degree_id', 'id');
+        return $this->belongsTo(Degree::class, 'degree_id', 'id');
     }
 
     public function section()
     {
-        return $this->belongsTo('sections', 'section_id', 'id');
+        return $this->belongsTo(Sections::class, 'section_id', 'id');
     }
 
     public function disable()

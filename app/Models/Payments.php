@@ -9,15 +9,26 @@ class Payments extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'student_id',
-        'payment_type',
-        'payment_date',
-        'grade_id',
-        'section_id',
-        'payment_months',
-        'total_amount',
+    protected $table = 'tb_payments';
 
+    protected $fillable = [
+        'type_payment',
+        'mood_payment',
+        'payment_date',
+        'uuid',
+        'amount',
+        'bank',
+        'month',
+        'document_number',
+        'comment',
+        'student_id',
+        'user_id',
     ];
+
+    public function student()
+    {
+        return $this->belongsTo('tb_student', 'student_id', 'id');
+    }
+
 
 }
