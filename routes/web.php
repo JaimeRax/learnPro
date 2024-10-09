@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\degreesController;
-use App\Http\Controllers\LawController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -81,7 +78,6 @@ Route::prefix('student')->group(function () {
     Route::get('/trash', [StudentController::class, 'trashStudent']);
 });
 
-<<<<<<< HEAD
 //ROUTES PAYMENTS
 Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments']);
@@ -94,12 +90,11 @@ Route::prefix('payments')->group(function () {
 //ROUTES ASSIGNMENTO
 Route::prefix('assignment')->group(function () {
     Route::get('/', [assignmentController::class, 'listAssignment']);
-    Route::get('/form',[ assignmentController::class,'ShowcreateAssignment']);
+    Route::get('/form', [ assignmentController::class,'ShowcreateAssignment']);
+});
 
-=======
 // Routes to Reports
 Route::prefix('report')->group(function () {
     // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket']);
->>>>>>> main
 });
