@@ -61,12 +61,12 @@ Route::prefix('sections')->group(function () {
 
 //ROUTES COURSES
 Route::prefix('courses')->group(function () {
-Route::get('/',[ coursesController::class,'listCourses']);
-Route::post('/new',[ coursesController::class,'createCourses']);
-Route::post('/delete/{id}', [coursesController::class, 'disableCourses']);
-Route::post('/edit/{id}', [coursesController::class, 'editCourses']);
-Route::get('/trash', [coursesController::class, 'trashCourses']);
-Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
+    Route::get('/', [ coursesController::class,'listCourses']);
+    Route::post('/new', [ coursesController::class,'createCourses']);
+    Route::post('/delete/{id}', [coursesController::class, 'disableCourses']);
+    Route::post('/edit/{id}', [coursesController::class, 'editCourses']);
+    Route::get('/trash', [coursesController::class, 'trashCourses']);
+    Route::post('/restore/{id}', [coursesController::class, 'activeCourses']);
 });
 
 
@@ -81,6 +81,7 @@ Route::prefix('student')->group(function () {
     Route::get('/trash', [StudentController::class, 'trashStudent']);
 });
 
+<<<<<<< HEAD
 //ROUTES PAYMENTS
 Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments']);
@@ -95,4 +96,10 @@ Route::prefix('assignment')->group(function () {
     Route::get('/', [assignmentController::class, 'listAssignment']);
     Route::get('/form',[ assignmentController::class,'ShowcreateAssignment']);
 
+=======
+// Routes to Reports
+Route::prefix('report')->group(function () {
+    // TODO: change controller
+    Route::get('/ticket', [StudentController::class, 'paymentTicket']);
+>>>>>>> main
 });
