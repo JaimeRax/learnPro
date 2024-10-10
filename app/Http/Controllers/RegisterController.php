@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\RegisterRequest;
-use lluminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use PhpParser\Node\Expr\FuncCall;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use lluminate\Http\RedirectResponse;
+use App\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
@@ -15,12 +16,17 @@ class RegisterController extends Controller
         if(Auth::check()){
             return redirect('/home');
         }
-        return view('auth.register');
+
+        $roles = Role::all()->pluck('name','id')->toArray(); // Convertir a array antes de pasar a la vista
+        return view('auth.register' , compact('roles'));
     }
+
 
     public function register(RegisterRequest $request){
         $user = User::create($request->validated());
-        return redirect('/login');
+        $roles = $request->input('roles', []);
+        $user->syncRoles($roles);
+        return redirect('/login', $user->id)->with('success', 'Usuario creado correctamente');
     }
 
 
