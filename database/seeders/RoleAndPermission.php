@@ -19,7 +19,7 @@ class RoleAndPermission extends Seeder
         ]);
 
         $roleteacher = Role::firstOrCreate([
-            'name' => 'teaching',
+            'name' => 'docente',
         ]);
 
         Permission::firstOrCreate([

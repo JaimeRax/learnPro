@@ -46,6 +46,7 @@
                         <x-inputs.select-option class="text-black" id="roles" titulo="Roles" name="roles" :options="$roles" required />
 
 
+
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
                                 <input id="terms" aria-describedby="terms" type="checkbox"
