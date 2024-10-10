@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\degreesController;
-use App\Http\Controllers\RegisterController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\coursesController;
-use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\logoutController;
-use App\Http\Controllers\paymentsController;
-use App\Http\Controllers\assignmentController;
+use App\Http\Controllers\coursesController;
+use App\Http\Controllers\degreesController;
 use App\Http\Controllers\StudentController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\paymentsController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\sectionsController;
+use App\Http\Controllers\TeachersController;
+use App\Http\Controllers\assignmentController;
 
 // **** RUTA PARA LOGIN ****
 Route::get('/', function () {
@@ -97,4 +98,12 @@ Route::prefix('assignment')->group(function () {
 Route::prefix('report')->group(function () {
     // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket']);
+});
+
+// ROUTES TEACHERS
+Route::prefix('teachers')->group(function () {
+    Route::get('/', [TeachersController::class, 'listTeachers']);
+    Route::get('/showForm/{id}', [TeachersController::class, 'showEdit']);
+    Route::post('/edit/{user}', [TeachersController::class, 'editTeacher']);
+
 });

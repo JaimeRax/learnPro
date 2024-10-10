@@ -50,4 +50,16 @@ class User extends Authenticatable
     public function setPasswordAttribute($value){
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function disable()
+    {
+        $this->state = 0;
+        $this->save();
+    }
+
+    public function enable()
+    {
+        $this->state = 1;
+        $this->save();
+    }
 }
