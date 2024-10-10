@@ -1,11 +1,8 @@
 @extends('layouts.base')
 
-
-
 @section('header')
     <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
-
 
 @section('main')
     <div class="grid grid-cols-1 gap-2">
@@ -27,7 +24,7 @@
 
             {{-- filtro por seleccion de grado --}}
 
-               <form method="GET" action="/student" id="degreeForm" class="mt-6">
+            <form method="GET" action="/student" id="degreeForm" class="mt-6">
                 <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
             </form>
@@ -66,13 +63,13 @@
 
             <x-slot name="tbody">
                 @foreach ($student as $studens)
-                <x-tablas.tr>
-                    <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                    <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                    <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
-                    <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
-                    <x-tablas.td>
-                        <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
+                    <x-tablas.tr>
+                        <x-tablas.td>{{ $i++ }}</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
+                        <x-tablas.td>
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
@@ -94,8 +91,8 @@
 
                             </x-button-link>
 
-                    </x-tablas.td>
-                </x-tablas.tr>
+                        </x-tablas.td>
+                    </x-tablas.tr>
                 @endforeach
 
             </x-slot>

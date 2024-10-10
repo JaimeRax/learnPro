@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\InChargeRequest;
 use App\Models\Student;
 use Illuminate\Support\Facades\Log;
 
-use App\Http\Requests\StudentRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
 use App\Models\In_charge;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
@@ -26,10 +22,10 @@ class StudentController extends Controller
 
             if ($degreeId || $search) {
                 $student = Student::whereIn('state', [1,2])
-                ->when($degreeId, function($query) use ($degreeId) {
+                ->when($degreeId, function ($query) use ($degreeId) {
                     return $query->where('degree_id', $degreeId);
                 })
-                ->when($search, function($query) use ($search) {
+                ->when($search, function ($query) use ($search) {
                     return $query->where('first_name', 'LIKE', "%{$search}%");
                 })
                 ->paginate(2)
@@ -40,7 +36,7 @@ class StudentController extends Controller
 
 
             } else {
-                $student = Student::whereIn('state', [1,2])->paginate(2);
+                $student = Student::whereIn('state', [1])->paginate(2);
             }
 
             $degrees = Degree::all();
@@ -53,19 +49,17 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             return redirect('/student')->with('error', 'Ocurrió un problema.');
         }
-
-
     }
 
     public function showCreateForm()
     {
         $degrees = Degree::all();
-        return view('student.createStudent', [   'degrees' => $degrees,]);
+        $familiares = Constants::FAMILIARES;
+        return view('student.createStudent', ['degrees' => $degrees, 'familiares' => $familiares]);
     }
 
     public function createStudent(Request $request)
     {
-
         try {
             // Validación de los datos del estudiante
             $validatedStudent = $request->validate([
