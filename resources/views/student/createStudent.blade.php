@@ -55,7 +55,6 @@
                                                 <span class="label-text">
                                                     Primer Apellido *
                                                 </span>
-
                                             </label>
                                             <input id="first_lastname" required name="first_lastname"
                                                 class="w-full shadow-sm input" type="text" value="">
@@ -270,6 +269,7 @@
                                 </div>
                             </div>
                         </section>
+                        </section>
                     </div>
 
                     {{-- SEGUNDO ENCARGADO --}}
@@ -398,6 +398,7 @@
                                     </button>
                                 </div>
                             </div>
+                        </section>
                         </section>
                     </div>
 
@@ -532,14 +533,13 @@
                 </ol>
             </form>
         </div>
-    </div>
 
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
-@endsection
+        <style>
+            .hidden {
+                display: none;
+            }
+        </style>
+    @endsection
 
-<script src="{{ asset('js/reloadPage.js') }}"></script>
-<script src="{{ asset('js/student/formCreate.js') }}"></script>
+    <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="{{ asset('js/student/formCreate.js') }}"></script>
