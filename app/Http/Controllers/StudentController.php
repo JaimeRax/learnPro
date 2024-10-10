@@ -75,17 +75,25 @@ class StudentController extends Controller
 
             // Crear el estudiante
             $student = Student::create($validatedStudent);
-
-            // Usar el ID del estudiante recién creado
             $studentId = $student->id;
 
             // Validación y creación de los encargados
             $request->validate([
                 'charge_first_name' => 'required|string|max:255',
                 'charge_first_lastname' => 'required|string|max:255',
-                'charge_dpi' => 'required|string|min:13|max:13',
-                'charge_phone' => 'required|integer',
-                'charge_address' => 'required|string|max:255'
+                'charge_dpi' => 'required|numeric',
+                'charge_phone' => 'required|numeric',
+                'charge_address' => 'required|string|max:255',
+                'charge_first_name_2' => 'nullable|string|max:255',
+                'charge_first_lastname_2' => 'nullable|string|max:255',
+                'charge_dpi_2' => 'nullable|numeric',
+                'charge_phone_2' => 'nullable|numeric',
+                'charge_address_2' => 'nullable|string|max:255',
+                'charge_first_name_3' => 'nullable|string|max:255',
+                'charge_first_lastname_3' => 'nullable|string|max:255',
+                'charge_dpi_3' => 'nullable|numeric',
+                'charge_phone_3' => 'nullable|numeric',
+                'charge_address_3' => 'nullable|string|max:255'
             ]);
 
             $inCharge1 = In_charge::create([
@@ -98,53 +106,26 @@ class StudentController extends Controller
                 'charge_address' => $request->charge_address,
                 'charge_relationship' => $request->charge_relationship,
                 'charge_comment' => $request->charge_comment,
+                'charge_first_name_2' => $request->charge_first_name_2,
+                'charge_second_name_2' => $request->charge_second_name_2 ?: null,
+                'charge_first_lastname_2' => $request->charge_first_lastname_2,
+                'charge_second_lastname_2' => $request->charge_second_lastname_2 ?: null,
+                'charge_dpi_2' => $request->charge_dpi_2,
+                'charge_phone_2' => $request->charge_phone_2,
+                'charge_address_2' => $request->charge_address_2,
+                'charge_relationship_2' => $request->charge_relationship_2,
+                'charge_comment_2' => $request->charge_comment_2,
+                'charge_first_name_3' => $request->charge_first_name_3,
+                'charge_second_name_3' => $request->charge_second_name_3 ?: null,
+                'charge_first_lastname_3' => $request->charge_first_lastname_3,
+                'charge_second_lastname_3' => $request->charge_second_lastname_3 ?: null,
+                'charge_dpi_3' => $request->charge_dpi_3,
+                'charge_phone_3' => $request->charge_phone_3,
+                'charge_address_3' => $request->charge_address_3,
+                'charge_relationship_3' => $request->charge_relationship_3,
+                'charge_comment_3' => $request->charge_comment_3,
                 'student_id' => $studentId // Usa el ID del estudiante creado
             ]);
-
-            // Validación y creación del segundo encargado
-            $request->validate([
-                'charge_first_name_2' => 'nullable|string|max:255',
-                'charge_first_lastname_2' => 'nullable|string|max:255',
-                'charge_dpi_2' => 'nullable|string|min:13|max:13',
-                'charge_phone_2' => 'nullable|integer',
-                'charge_address_2' => 'nullable|string|max:255'
-            ]);
-
-            $inCharge2 = In_charge::create([
-                'charge_first_name' => $request->charge_first_name_2,
-                'charge_second_name' => $request->charge_second_name_2 ?: null,
-                'charge_first_lastname' => $request->charge_first_lastname_2,
-                'charge_second_lastname' => $request->charge_second_lastname_2 ?: null,
-                'charge_dpi' => $request->charge_dpi_2,
-                'charge_phone' => $request->charge_phone_2,
-                'charge_address' => $request->charge_address_2,
-                'charge_relationship' => $request->charge_relationship_2,
-                'charge_comment' => $request->charge_comment_2,
-                'student_id' => $studentId // Usa el ID del estudiante creado
-            ]);
-
-            if ($request->has('charge_first_name_3') && !empty($request->charge_first_name_3)) {
-                $request->validate([
-                    'charge_first_name_3' => 'nullable|string|max:255',
-                    'charge_first_lastname_3' => 'nullable|string|max:255',
-                    'charge_dpi_3' => 'nullable|string|min:13|max:13',
-                    'charge_phone_3' => 'nullable|integer',
-                    'charge_address_3' => 'nullable|string|max:255'
-                ]);
-
-                $inCharge3 = In_charge::create([
-                    'charge_first_name' => $request->charge_first_name_3,
-                    'charge_second_name' => $request->charge_second_name_3 ?: null,
-                    'charge_first_lastname' => $request->charge_first_lastname_3,
-                    'charge_second_lastname' => $request->charge_second_lastname_3 ?: null,
-                    'charge_dpi' => $request->charge_dpi_3,
-                    'charge_phone' => $request->charge_phone_3,
-                    'charge_address' => $request->charge_address_3,
-                    'charge_relationship' => $request->charge_relationship_3,
-                    'charge_comment' => $request->charge_comment_3,
-                    'student_id' => $studentId
-                ]);
-            }
 
             // Redirigir a la vista de estudiantes con mensaje de éxito
             return redirect('/payments')->with('success', 'Estudiante y encargados creados correctamente');

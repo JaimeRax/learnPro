@@ -6,13 +6,6 @@
 
 
 @section('main')
-    @if ($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
     <div class="grid grid-cols-1 gap-2">
         <div class="container-sm">
             <form action="{{ url('student/newStudent') }}" method="POST" enctype="multipart/form-data">
@@ -37,7 +30,7 @@
                                                 </span>
                                             </label>
                                             <input id="first_name" required name="first_name" class="w-full shadow-sm input"
-                                                type="text" value="">
+                                                type="text" value="{{ old('first_name') }}">
                                         </div>
                                     </div>
                                     <div>
@@ -47,7 +40,7 @@
                                             </span>
                                         </label>
                                         <input id="second_name" name="second_name" class="w-full shadow-sm input"
-                                            type="text" value="">
+                                            type="text" value="{{ old('second_name') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -57,9 +50,9 @@
                                                 </span>
                                             </label>
                                             <input id="first_lastname" required name="first_lastname"
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('first_lastname') }}">
                                         </div>
-                                        <span class="text-error" id="error_primer_apellido_cliente"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="second_lastname">
@@ -68,7 +61,7 @@
                                             </span>
                                         </label>
                                         <input id="second_lastname" name="second_lastname" class="w-full shadow-sm input"
-                                            type="text" value="">
+                                            type="text" value="{{ old('second_lastname') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -78,13 +71,9 @@
                                                 </span>
                                             </label>
                                             <input id="personal_code" required name="personal_code"
-                                                class="w-full shadow-sm input" type="text" pattern="^\d{13}$"
-                                                placeholder="Ingrese el número de documento"
+                                                class="w-full shadow-sm input" type="text"
                                                 value="{{ old('personal_code') }}">
                                         </div>
-                                        @error('personal_code')
-                                            <span class="text-error" id="error_codigo_personal">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                     <div class="group">
                                         <div>
@@ -94,9 +83,8 @@
                                                 </span>
                                             </label>
                                             <input id="birthdate" required name="birthdate" class="w-full shadow-sm input"
-                                                type="date" value="">
+                                                type="date" value="{{ old('birthdate') }}">
                                         </div>
-                                        <span class="text-error" id="error_fecha_nacimiento"></span>
                                     </div>
                                     <div class="group">
                                         <div class="form-control">
@@ -105,14 +93,13 @@
                                                     Género *
                                                 </span>
                                             </label>
-                                            <select id="gender" name="gender" value="" required
+                                            <select id="gender" name="gender" value="{{ old('gender') }}" required
                                                 class="w-full shadow-sm select">
                                                 <option value="">Seleccionar una opción</option>
                                                 <option value="MASCULINO">Masculino</option>
                                                 <option value="FEMENINO">Femenino</option>
                                             </select>
                                         </div>
-                                        <span class="text-error" id="error_genero"></span>
                                     </div>
                                     <div class="group">
                                         <div class="form-control">
@@ -121,8 +108,9 @@
                                                     Pueblo/Etnia *
                                                 </span>
                                             </label>
-                                            <select id="town_ethnicity" name="town_ethnicity" value=""
-                                                class="w-full shadow-sm select" type="text" required>
+                                            <select id="town_ethnicity" name="town_ethnicity"
+                                                value="{{ old('town_ethnicity') }}" class="w-full shadow-sm select"
+                                                type="text" required>
                                                 <option value="">Seleccionar una opción</option>
                                                 <option value="MAYA">maya</option>
                                                 <option value="XINKA">Xinca</option>
@@ -130,7 +118,6 @@
                                                 <option value="LADINO">Ladino</option>
                                             </select>
                                         </div>
-                                        <span class="text-error" id="error_estado_civil"></span>
                                     </div>
                                 </div>
                                 <div class="group">
@@ -164,9 +151,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_first_name" name="charge_first_name" required
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_first_name') }}">
                                         </div>
-                                        <span class="text-error" id="error_primer_nombre_cliente"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_name">
@@ -175,7 +162,8 @@
                                             </span>
                                         </label>
                                         <input id="charge_second_name" name="charge_second_name"
-                                            class="w-full shadow-sm input" type="text" value="">
+                                            class="w-full shadow-sm input" type="text"
+                                            value="{{ old('charge_second_name') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -185,9 +173,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_first_lastname" name="charge_first_lastname"
-                                                class="w-full shadow-sm input" type="text" value="" required>
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_first_lastname') }}" required>
                                         </div>
-                                        <span class="text-error" id="error_primer_apellido_cliente"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_lastname">
@@ -196,7 +184,8 @@
                                             </span>
                                         </label>
                                         <input id="charge_second_lastname" name="charge_second_lastname"
-                                            class="w-full shadow-sm input" type="text" value="">
+                                            class="w-full shadow-sm input" type="text"
+                                            value="{{ old('charge_second_lastname') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -206,10 +195,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_dpi" name="charge_dpi" class="w-full shadow-sm input"
-                                                type="number" placeholder="XXXX XXXXX XXXX" required maxlength="13"
-                                                value="">
+                                                type="text" placeholder="XXXX XXXXX XXXX" required maxlength="13"
+                                                pattern="\d{13}" value="{{ old('charge_dpi') }}">
                                         </div>
-                                        <span class="text-error" id="error_dpi_cliente"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -219,9 +207,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_phone" name="charge_phone" class="w-full shadow-sm input"
-                                                type="number" min="10000000" max="99999999" value="" required>
+                                                type="number" maxlength="8" value="{{ old('charge_phone') }}"
+                                                required>
                                         </div>
-                                        <span class="text-error" id="error_telefono"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -231,16 +219,16 @@
                                                 </span>
                                             </label>
                                             <input id="charge_address" name="charge_address" required
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_address') }}">
                                         </div>
-                                        <span class="text-error" id="error_referencia_casa"></span>
                                     </div>
                                     <div class="group">
                                         <div class="form-control">
                                             <label class="mb-0 font-bold label" for="charge_relationship">
                                                 <span class="label-text">Parentesco *</span>
                                             </label>
-                                            <select name="charge_relationship"class="w-full shadow-sm select parentesco"
+                                            <select name="charge_relationship" class="w-full shadow-sm select parentesco"
                                                 onchange="toggleComentario(this)" required>
                                                 <option value="">Seleccionar una opción</option>
                                                 @foreach ($familiares as $familiar)
@@ -248,14 +236,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <span class="text-error" id="error_parentesco"></span>
                                     </div>
                                     <div class="group charge_comment" style="display: none;">
                                         <label class="mb-0 font-bold label" for="charge_comment">
                                             <span class="label-text">Especifique *</span>
                                         </label>
                                         <input name="charge_comment" class="w-full shadow-sm input" type="text"
-                                            value="">
+                                            value="{{ old('charge_comment') }}">
                                     </div>
                                 </div>
                                 <div class="group">
@@ -293,9 +280,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_first_name_2" name="charge_first_name_2"
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_first_name_2') }}">
                                         </div>
-                                        <span class="text-error" id="error_charge_first_name_2"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_name_2">
@@ -304,7 +291,8 @@
                                             </span>
                                         </label>
                                         <input id="charge_second_name_2" name="charge_second_name_2"
-                                            class="w-full shadow-sm input" type="text" value="">
+                                            class="w-full shadow-sm input" type="text"
+                                            value="{{ old('charge_second_name_2') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -314,9 +302,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_first_lastname_2" name="charge_first_lastname_2"
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_first_lastname_2') }}">
                                         </div>
-                                        <span class="text-error" id="error_charge_first_lastname_2"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_lastname_2">
@@ -325,7 +313,8 @@
                                             </span>
                                         </label>
                                         <input id="charge_second_lastname_2" name="charge_second_lastname_2"
-                                            class="w-full shadow-sm input" type="text" value="">
+                                            class="w-full shadow-sm input" type="text"
+                                            value="{{ old('charge_second_lastname_2') }}">
                                     </div>
                                     <div class="group">
                                         <div>
@@ -335,10 +324,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_dpi_2" name="charge_dpi_2" class="w-full shadow-sm input"
-                                                type="number" placeholder="XXXX XXXXX XXXX" maxlength="13"
-                                                value="">
+                                                type="text" placeholder="XXXX XXXXX XXXX" maxlength="13"
+                                                pattern="\d{13}" value="{{ old('charge_dpi_2') }}">
                                         </div>
-                                        <span class="text-error" id="error_charge_dpi_2"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -348,10 +336,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_phone_2" name="charge_phone_2"
-                                                class="w-full shadow-sm input" type="number" min="10000000"
-                                                max="99999999" value="">
+                                                class="w-full shadow-sm input" type="number" maxlength="8"
+                                                value="{{ old('charge_phone_2') }}">
                                         </div>
-                                        <span class="text-error" id="error_telefono"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -361,9 +348,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_address_2" name="charge_address_2"
-                                                class="w-full shadow-sm input" type="text" value="">
+                                                class="w-full shadow-sm input" type="text"
+                                                value="{{ old('charge_address_2') }}">
                                         </div>
-                                        <span class="text-error" id="error_charge_address_2"></span>
                                     </div>
                                     <div class="group">
                                         <div class="form-control">
@@ -378,14 +365,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <span class="text-error" id="error_charge_relationship_2"></span>
                                     </div>
                                     <div class="group charge_comment_2" style="display: none;">
                                         <label class="mb-0 font-bold label" for="charge_comment_2">
                                             <span class="label-text">Especifique *</span>
                                         </label>
                                         <input name="charge_comment_2" class="w-full shadow-sm input" type="text"
-                                            value="">
+                                            value="{{ old('charge_comment_2') }}">
                                     </div>
                                 </div>
                                 <div class="group">
@@ -425,7 +411,6 @@
                                             <input id="charge_first_name_3" name="charge_first_name_3"
                                                 class="w-full shadow-sm input" type="text" value="">
                                         </div>
-                                        <span class="text-error" id="error_charge_first_name_3"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_name_3">
@@ -446,7 +431,6 @@
                                             <input id="charge_first_lastname_3" name="charge_first_lastname_3"
                                                 class="w-full shadow-sm input" type="text" value="">
                                         </div>
-                                        <span class="text-error" id="error_charge_first_lastname_3"></span>
                                     </div>
                                     <div>
                                         <label class="mb-0 font-bold label " for="charge_second_lastname_3">
@@ -465,10 +449,9 @@
                                                 </span>
                                             </label>
                                             <input id="charge_dpi_3" name="charge_dpi_3" class="w-full shadow-sm input"
-                                                type="number" placeholder="XXXX XXXXX XXXX" maxlength="13"
-                                                value="">
+                                                type="text" placeholder="XXXX XXXXX XXXX" maxlength="13"
+                                                pattern="\d{13}" value="">
                                         </div>
-                                        <span class="text-error" id="error_charge_dpi_3"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -481,7 +464,6 @@
                                                 class="w-full shadow-sm input" type="number" min="10000000"
                                                 max="99999999" value="">
                                         </div>
-                                        <span class="text-error" id="error_charge_phone_3"></span>
                                     </div>
                                     <div class="group">
                                         <div>
@@ -493,7 +475,6 @@
                                             <input id="charge_address_3" name="charge_address_3"
                                                 class="w-full shadow-sm input" type="text" value="">
                                         </div>
-                                        <span class="text-error" id="error_charge_address_3"></span>
                                     </div>
                                     <div class="group">
                                         <div class="form-control">
@@ -508,7 +489,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <span class="text-error" id="error_charge_relationship_3"></span>
                                     </div>
                                     <div class="group charge_comment_3" style="display: none;">
                                         <label class="mb-0 font-bold label" for="charge_comment_3">
