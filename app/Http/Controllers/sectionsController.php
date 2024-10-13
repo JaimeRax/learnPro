@@ -30,7 +30,7 @@ class sectionsController extends Controller
         return view('resourcesJV.sections.listSections', ['sections' => $sections]);
     }
 
-    public function createSections(DegreeRequest $request)
+    public function createSections(SectionsRequest $request)
     {
         $sections = Sections::create($request->validated());
         return redirect('/sections');
