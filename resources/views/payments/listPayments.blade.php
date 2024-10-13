@@ -25,25 +25,23 @@
                 </div>
             </form>
 
-
             {{-- filtro por seleccion de grado --}}
 
             <form method="GET" action="/payments" id="degreeForm" class="mt-6">
                 <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
             </form>
-
-
         </div>
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Nombre del estudiante</x-tablas.th>
+                    <x-tablas.th>Nombre</x-tablas.th>
+                    <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Sección</x-tablas.th>
                     <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
-
                 </x-tablas.tr>
             </x-slot>
             @php
@@ -55,25 +53,29 @@
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->degree->name }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->section->name }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="createPayment-{{ $studens->id }}" title="Pagos" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
+                            <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
+                                bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                                 <x-slot name="button">
                                     <x-iconos.ver />
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    @include('payments.newPayment', ['student' => $studens, 'user' => $users, 'degree'=> $degrees, 'sections'=> $sections])
+                                    @include('payments.newPayment', [
+                                        'student' => $studens,
+                                        'user' => $users,
+                                        'degree' => $degrees,
+                                        'sections' => $sections
+                                    ])
                                 </x-slot>
                             </x-modal>
                         </x-tablas.td>
-
                     </x-tablas.tr>
                 @endforeach
-
             </x-slot>
-
-
         </x-tablas.table>
         <div>
             {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}

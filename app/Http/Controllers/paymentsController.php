@@ -32,13 +32,16 @@ class paymentsController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('first_name', 'LIKE', "%{$search}%");
                     })
+                    ->with(['degree', 'section'])
                     ->paginate(10)
                     ->appends([
                         'degree_id' => $degreeId,
                         'search' => $search
                     ]);
             } else {
-                $student = Student::whereIn('state', [1, 2])->paginate(10);
+                $student = Student::whereIn('state', [1, 2])
+                    ->with(['degree', 'section'])
+                    ->paginate(10);
             }
 
             $degrees = Degree::all();
@@ -72,51 +75,52 @@ class paymentsController extends Controller
     }
 
     public function createPayments(Request $request, $id)
-{
-    try {
-        // Validación de los datos del estudiante
-        $validatedData = $request->validate([
-            'payment_date' => 'required|date',
-            'type_payment' => 'required',
-            'mood_payment' => 'required|string',
-            'uuid' => 'required|string',
-            'month' => 'string',
-            'amount' => 'required|integer',
-            'bank' => 'nullable|string',
-            'document_number' => 'required|integer',
-            'comment' => 'nullable|string',
-            'student_id' => 'required|integer',
-            'user_id' => 'required|integer'
-        ]);
+    {
+        dd($request->toArray());
+        try {
+            // Validación de los datos del estudiante
+            $validatedData = $request->validate([
+                'payment_date' => 'required|date',
+                'type_payment' => 'required',
+                'mood_payment' => 'required|string',
+                'uuid' => 'required|string',
+                'month' => 'string',
+                'amount' => 'required|integer',
+                'bank' => 'nullable|string',
+                'document_number' => 'required|integer',
+                'comment' => 'nullable|string',
+                'student_id' => 'required|integer',
+                'user_id' => 'required|integer'
+            ]);
 
-        // Crear el pago
-        $payment = Payments::create($validatedData);
+            // Crear el pago
+            $payment = Payments::create($validatedData);
 
-        $student = Student::findOrFail($validatedData['student_id']);
-        $student->state = 1;
-        $student->save();
+            $student = Student::findOrFail($validatedData['student_id']);
+            $student->state = 1;
+            $student->save();
 
-        $users = User::all();
+            $users = User::all();
 
-        // Generar los datos para el PDF
-        $data = [
-            'title' => 'Welcome to Payments',
-            'date' => date('m/d/y'),
-            'payments' => collect([$student]),
-            'users' => $users,
-            'pay' => collect([$payment])
-        ];
+            // Generar los datos para el PDF
+            $data = [
+                'title' => 'Welcome to Payments',
+                'date' => date('m/d/y'),
+                'payments' => collect([$student]),
+                'users' => $users,
+                'pay' => collect([$payment])
+            ];
 
-        // Generar el PDF
-        $pdf = PDF::loadview('pdf.myPDF', $data);
-        return $pdf->download('pagos.pdf');
-    } catch (\Exception $e) {
-        Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
-        return redirect()
-            ->back()
-            ->with('error', 'Ocurrió un error al crear el pago o actualizar el estudiante: ' . $e->getMessage())
-            ->withInput();
+            // Generar el PDF
+            $pdf = PDF::loadview('pdf.myPDF', $data);
+            return $pdf->download('pagos.pdf');
+        } catch (\Exception $e) {
+            Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Ocurrió un error al crear el pago o actualizar el estudiante: ' . $e->getMessage())
+                ->withInput();
+        }
     }
-}
 
 }

@@ -10,7 +10,10 @@
 
 <div class="modal" role="dialog">
     <div class="modal-box">
-        <h3 class="text-lg font-bold">{{ $title }}</h3>
+        <div
+            style="background-color: blue; color:white; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; height: 30px;">
+            <h3 class="text-lg font-bold">{{ $title }}</h3>
+        </div>
         <section>
             {{ $body }}
         </section>
@@ -23,7 +26,8 @@
             @endisset
 
             <!-- Button to close modal -->
-            <label for="{{ $id }}" class="{{ $closeButtonStyle }}">
+            <label for="{{ $id }}" style="background-color: red; color:white;"
+                class="{{ $closeButtonStyle }}">
                 Cerrar
             </label>
         </div>
