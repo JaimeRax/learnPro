@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $table = 'tb_student';
     use HasFactory;
+    protected $table = 'tb_student';
 
     protected $fillable = [
         'first_name',
@@ -30,7 +30,7 @@ class Student extends Model
 
     public function payments()
     {
-        return $this->hasMany('tb_payments', 'student_id', 'id');
+        return $this->hasMany(Payments::class, 'student_id', 'id');
     }
 
     public function degree()

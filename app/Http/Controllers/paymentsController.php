@@ -10,6 +10,8 @@ use App\Models\Degree;
 use App\Models\Payments;
 use App\Models\User;
 use App\Models\Sections;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class paymentsController extends Controller
 {
@@ -79,25 +81,47 @@ class paymentsController extends Controller
 
     public function createPayments(Request $request, $id)
     {
-        dd($request->toArray());
         try {
             // Validación de los datos del estudiante
             $validatedData = $request->validate([
-                'payment_date' => 'required|date',
                 'type_payment' => 'required',
                 'mood_payment' => 'required|string',
-                'uuid' => 'required|string',
-                'month' => 'string',
+                'payment_date' => 'required|date',
                 'amount' => 'required|integer',
                 'bank' => 'nullable|string',
-                'document_number' => 'required|integer',
+                'month' => 'nullable|string',
+                'document_number' => 'nullable|integer',
                 'comment' => 'nullable|string',
                 'student_id' => 'required|integer',
-                'user_id' => 'required|integer'
             ]);
 
-            // Crear el pago
-            $payment = Payments::create($validatedData);
+            $today = Carbon::now();
+            $currentYear = $today->year;
+
+            if (empty($validatedData['month'])) {
+                $validatedData['month'] = [0]; // Asigna un array con 0
+            }
+
+            $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
+
+            foreach ($validatedData['month'] as $month) {
+                $uuid = Str::uuid();
+                $payment = Payments::create([
+                    'payment_date' => $validatedData['payment_date'],
+                    'type_payment' => $validatedData['type_payment'],
+                    'mood_payment' => $validatedData['mood_payment'],
+                    'uuid' => $uuid,
+                    'month' => $month,
+                    'year' => $currentYear,
+                    'amount' => $validatedData['amount'],
+                    'bank' => $validatedData['bank'],
+                    'document_number' => $validatedData['document_number'],
+                    'comment' => $validatedData['comment'],
+                    'student_id' => $validatedData['student_id'],
+                    'user_id' => $request->user()->id
+                ]);
+            }
+
 
             $student = Student::findOrFail($validatedData['student_id']);
             $student->state = 1;
