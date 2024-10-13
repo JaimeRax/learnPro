@@ -512,8 +512,8 @@
                     </div>
                 </ol>
             </form>
+            <x-alert-message />
         </div>
-
         <style>
             .hidden {
                 display: none;
