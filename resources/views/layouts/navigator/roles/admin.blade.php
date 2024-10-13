@@ -28,7 +28,7 @@
 
     <li><a href="{{ '/assignment' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones</a></li>
 
-    <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-plus"></i> Docentes</a></li>
+    <li><a href="{{ '/users' }}"><i class="fa-solid fa-user-plus"></i> Usuarios</a></li>
 
     <li><a href="#"> <i class="fa-solid fa-file-pdf"></i> Reportes</a></li>
 

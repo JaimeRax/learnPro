@@ -10,7 +10,7 @@
                         </span>
                     </label>
                     <input readonly="" id="name" name="name" class="w-full shadow-sm input" type="text"
-                        value="{{ strtoupper("{$teacher->username} ") }}"> <!-- Cambiado aquí -->
+                        value="{{ strtoupper("{$user->username} ") }}"> <!-- Cambiado aquí -->
                 </div>
             </div>
             <div class="form-row">
@@ -22,7 +22,7 @@
                             </span>
                         </label>
                         <input readonly="" id="nombres" name="nombres" class="w-full shadow-sm input" type="text"
-                            value="Ricardo Ramiro Coc Quim">
+                            value="{{ strtoupper("{$user->first_name} {$user->second_name} {$user->first_lastname} {$user->second_lastname}") }}">
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                         </span>
                     </label>
                     <input readonly="" id="dpi" name="dpi" class="w-full shadow-sm input" type="text"
-                    value="2459455611890"> <!-- Cambiado aquí -->
+                    value="{{ $user->dpi }}">
                 </div>
             </div>
             <div class="form-group col-md-4">
@@ -45,7 +45,7 @@
                         </span>
                     </label>
                     <input readonly="" id="telefono" name="telefono" class="w-full shadow-sm input" type="text"
-                        value="57544786">
+                        value="{{ $user->phone }}">
                 </div>
             </div>
 
@@ -53,11 +53,11 @@
                 <div class="form-control">
                     <label class="mb-0 font-bold label " for="correo">
                         <span class="label-text">
-                            Correo
+                            Correo electrònico
                         </span>
                     </label>
                     <input readonly="" id="correo" name="correo" class="w-full shadow-sm input" type="text"
-                        value="{{ $teacher->email }}">
+                        value="{{ $user->email }}">
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                     </span>
                 </label>
                 <input readonly="" id="profesion" name="profesion" class="w-full shadow-sm input"
-                    type="text" value="Licenciado">
+                    type="text" value="{{ $user->academic_degree }}">
             </div>
         </div>
 
@@ -83,7 +83,7 @@
                     </span>
                 </label>
                 <input readonly="" id="servie" name="service" class="w-full shadow-sm input"
-                    type="text" value="3 años">
+                    type="text" value="{{ $user->service_time }}">
             </div>
         </div>
         <div class="form-row">
@@ -95,7 +95,7 @@
                         </span>
                     </label>
                     <input readonly="" id="direccion" name="direccion" class="w-full shadow-sm input"
-                        type="text" value="ALDEA CHIRREQUICHE, SAN PEDRO CARCHÁ, ALTA VERAPAZ">
+                        type="text" value="{{ $user->address }}">
                 </div>
             </div>
         </div>

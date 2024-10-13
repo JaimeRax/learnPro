@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\logoutController;
 use App\Http\Controllers\coursesController;
 use App\Http\Controllers\degreesController;
+use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\paymentsController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\assignmentController;
@@ -19,8 +20,20 @@ Route::get('/', function () {
 });
 
 //ROUTES REGISTER
-Route::get('/register', [RegisterController::class, 'show']);
-Route::post('/register', [RegisterController::class, 'register']);
+Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'listUsers'])->name('users.index');
+
+Route::get('/register', [UserController::class, 'show']);
+Route::post('/register', [UserController::class, 'register']);
+Route::get('/viewForm', [UserController::class, 'showCreateForm']);
+Route::post('/newUser', [UserController::class, 'createUser']);
+Route::get('/showForm/{id}', [UserController::class, 'showEdit']);
+Route::post('/delete/{id}', [UserController::class, 'disableUser']);
+Route::post('/edit/{user}', [UserController::class, 'editUsers']);
+Route::get('/trash', [UserController::class, 'trashUsers']);
+Route::post('/restore/{id}', [UserController::class, 'activeUser']);
+});
+
 
 
 //ROUTES LOGIN-LOGOUT
@@ -83,7 +96,7 @@ Route::prefix('student')->group(function () {
 Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments']);
     Route::get('/new/{id}', [paymentsController::class, 'ShowcreatePayments']);
-    Route::post('/newForm/{id}', [paymentsController::class, 'createPayments']);
+    Route::post('/newForm/{id}', [paymentsController::class, 'createPayments'])->name('payments.list');
 
 
 });
@@ -105,5 +118,11 @@ Route::prefix('teachers')->group(function () {
     Route::get('/', [TeachersController::class, 'listTeachers']);
     Route::get('/showForm/{id}', [TeachersController::class, 'showEdit']);
     Route::post('/edit/{user}', [TeachersController::class, 'editTeacher']);
+
+});
+
+// ROUTES RATINGS
+Route::prefix('ratings')->group(function () {
+    Route::get('/', [RatingsController::class, 'listRatings']);
 
 });
