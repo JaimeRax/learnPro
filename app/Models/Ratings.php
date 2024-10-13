@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ratings extends Model
 {
+    protected $table = 'tb_ratings';
     use HasFactory;
 
     protected $fillable = [

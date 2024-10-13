@@ -27,7 +27,7 @@
                 <x-slot name="button">
                     Agregar
 
-                    <x-iconos.ver />
+                    <x-iconos.agregar />
 
                 </x-slot>
 
@@ -50,6 +50,7 @@
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Secciòn</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -63,6 +64,8 @@
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
+                        <x-tablas.td>{{ $degrees->section->name ?? 'Sin sección' }}</x-tablas.td>
+
                         <x-tablas.td>
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">

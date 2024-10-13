@@ -20,21 +20,30 @@ class degreesController extends Controller
     public function listDegrees()
     {
         $search = request()->query('search');
+        $sections = Sections::all();
 
         if ($search) {
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
+                ->with('section')
                 ->paginate(10);
         } else {
-            $degree = Degree::where('state', 1)->paginate(10);
+            $degree = Degree::where('state', 1)
+                ->with('section')
+                ->paginate(10);
         }
 
-        return view('resourcesJV.degrees.listDegrees', ['degree' => $degree]);
+        return view('resourcesJV.degrees.listDegrees', [
+            'degree' => $degree,
+            'sections' => $sections
+        ]);
     }
+
 
     public function createDegrees(DegreeRequest $request)
     {
         $degree = Degree::create($request->validated());
+        $sections = Sections::all();
         return redirect('/degrees');
     }
 

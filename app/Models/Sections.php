@@ -25,6 +25,11 @@ class Sections extends Model
         $this->save();
     }
 
+    public function degree()
+    {
+        return $this->hasMany('Degree', 'section_id', 'id');
+    }
+
     public function student()
     {
         return $this->hasMany('tb_student', 'section_id', 'id');

@@ -71,14 +71,17 @@
                         <x-tablas.td>{{ $user->dpi }}</x-tablas.td>
                         <x-tablas.td>{{ $user->email }}</x-tablas.td>
                         <x-tablas.td>{{ $user->phone }}</x-tablas.td>
-                        <x-tablas.td> @forelse ($user->roles as $role)
-                            <span class="badge badge-info">{{ $role->name }}</span>
-                          @empty
-                            <span class="badge badge-danger">No roles</span>
-                          @endforelse</x-tablas.td>
                         <x-tablas.td>
 
-                                <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al usuario?"
+                            @forelse ($user->roles as $role)
+                                <span class="badge badge-info">{{ $role->name }}</span>
+                            @empty
+                                <span class="badge badge-danger">No roles</span>
+                            @endforelse
+                        </x-tablas.td>
+                        <x-tablas.td>
+
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al usuario?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
@@ -101,7 +104,8 @@
                             </x-button-link>
 
 
-                            <x-modal id="createPayment-{{ $user->id }}" title="Informacion" bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
+                            <x-modal id="createPayment-{{ $user->id }}" title="Informacion"
+                                bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
                                 <x-slot name="button">
                                     <x-iconos.ver />
                                 </x-slot>
