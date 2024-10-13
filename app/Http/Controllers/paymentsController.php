@@ -4,17 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
-use App\Models\MonthlyPayment;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
 use App\Models\Payments;
 use App\Models\User;
 use App\Models\Sections;
-use Faker\Provider\ar_EG\Payment;
-use NumberFormatter;
-use Illuminate\Support\Facades\DB;
 
 class paymentsController extends Controller
 {
@@ -32,7 +27,9 @@ class paymentsController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('first_name', 'LIKE', "%{$search}%");
                     })
-                    ->with(['degree', 'section'])
+                    ->with(['degree', 'section', 'payments' => function ($query) {
+                        $query->where('year', date('Y'));
+                    }])
                     ->paginate(10)
                     ->appends([
                         'degree_id' => $degreeId,
@@ -40,7 +37,9 @@ class paymentsController extends Controller
                     ]);
             } else {
                 $student = Student::whereIn('state', [1, 2])
-                    ->with(['degree', 'section'])
+                    ->with(['degree', 'section', 'payments' => function ($query) {
+                        $query->where('year', date('Y'));
+                    }])
                     ->paginate(10);
             }
 
@@ -48,11 +47,14 @@ class paymentsController extends Controller
             $sections = Sections::all();
             $users = User::all();
 
+            $months = Constants::MONTHS;
+
             return view('payments.listPayments', [
                 'student' => $student,
                 'degrees' => $degrees,
                 'sections' => $sections,
-                'users' => $users
+                'users' => $users,
+                'months' => $months
             ]);
         } catch (\Exception $e) {
             return redirect('/payments')->with('error', 'Ocurrió un problema.');
@@ -65,6 +67,7 @@ class paymentsController extends Controller
         $degrees = Degree::all();
         $sections = Sections::all();
         $users = User::all();
+
 
         return view('payments.newPayment', [
             'student' => $student,

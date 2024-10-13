@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-
-
 @section('header')
     <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
@@ -62,7 +60,6 @@
                                 <x-slot name="button">
                                     <x-iconos.ver />
                                 </x-slot>
-
                                 <x-slot name="body">
                                     @include('payments.newPayment', [
                                         'student' => $studens,
