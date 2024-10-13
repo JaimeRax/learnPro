@@ -118,3 +118,4 @@
         </div>
 @endsection
 <script src="{{ asset('js/reloadPage.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

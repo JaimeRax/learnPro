@@ -32,37 +32,53 @@ class sectionsController extends Controller
 
     public function createSections(DegreeRequest $request)
     {
-        $sections = Sections::create($request->validated());
-        return redirect('/sections');
+        try {
+            $sections = Sections::create($request->validated());
+            return redirect('/sections')->with('message', 'Sección creada exitosamente');
+        } catch (\Exception $e) {
+            return redirect('/sections')->with('error', 'Ocurrió un problema al crear la sección ' . $e->getMessage());
+        }
     }
 
     public function disableSections($id)
     {
-        $sections = Sections::find($id);
-        $sections->disable();
-        return redirect('/sections');
+        try {
+            $sections = Sections::findOrFail($id);
+            $sections->disable();
+            return redirect('/sections')->with('message', 'Sección desactivada exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/sections')->with('error', 'Error al desactivar la sección ' . $e->getMessage());
+        }
     }
 
     public function activeSections($id)
     {
-        $sections = Sections::find($id);
-        $sections->enable();
-        return redirect('/sections');
+        try {
+            $sections = Sections::findOrFail($id);
+            $sections->enable();
+            return redirect('/sections')->with('message', 'Sección activada exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/sections')->with('error', 'Error al activar la sección ' . $e->getMessage());
+        }
     }
 
     public function trashSections()
     {
-        $search = request()->query('search');
+        try {
+            $search = request()->query('search');
 
-        if ($search) {
-            $sections = Sections::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 0)
-                ->paginate(10);
-        } else {
-            $sections = Sections::where('state', 0)->paginate(10);
+            if ($search) {
+                $sections = Sections::where('name', 'LIKE', "%{$search}%")
+                    ->where('state', 0)
+                    ->paginate(10);
+            } else {
+                $sections = Sections::where('state', 0)->paginate(10);
+            }
+
+            return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
+        } catch (\Exception $e) {
+            return redirect('/sections')->with('error', 'Ocurrió un problema al obtener las secciones ' . $e->getMessage());
         }
-
-        return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
     }
 
     public function editSection(SectionsRequest $request, $id)
@@ -75,7 +91,6 @@ class sectionsController extends Controller
 
         $section->update($request->validated());
 
-        return redirect('/sections')->with('success', 'Grado actualizado correctamente.');
+        return redirect('/sections')->with('message', 'Grado actualizado correctamente.');
     }
-
 }

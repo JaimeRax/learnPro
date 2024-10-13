@@ -23,19 +23,17 @@ class coursesController extends Controller
 
             if ($degreeId || $search) {
                 $courses = Courses::where('state', 1)
-                ->when($degreeId, function($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
-                })
-                ->when($search, function($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'search' => $search
-                ]);
-
-
+                    ->when($degreeId, function ($query) use ($degreeId) {
+                        return $query->where('degree_id', $degreeId);
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'degree_id' => $degreeId,
+                        'search' => $search
+                    ]);
             } else {
                 $courses = Courses::where('state', 1)->paginate(10);
             }
@@ -44,14 +42,12 @@ class coursesController extends Controller
 
             return view('resourcesJV.courses.listCourses', [
                 'courses' => $courses,
-                'degrees' => $degrees,
+                'degrees' => $degrees
             ]);
-
         } catch (\Exception $e) {
             return redirect('/courses')->with('error', 'Ocurrió un problema.');
         }
     }
-
 
     public function createCourses(CoursesRequest $request)
     {
@@ -71,16 +67,24 @@ class coursesController extends Controller
 
     public function disableCourses($id)
     {
-        $courses = Courses::find($id);
-        $courses->disable();
-        return redirect('/courses');
+        try {
+            $courses = Courses::findOrFail($id);
+            $courses->disable();
+            return redirect('/courses')->with('message', 'Curso desactivado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Error al desactivar el curso: ' . $e->getMessage());
+        }
     }
 
     public function activeCourses($id)
     {
-        $courses = Courses::find($id);
-        $courses->enable();
-        return redirect('/courses');
+        try {
+            $courses = Courses::findOrFail($id);
+            $courses->enable();
+            return redirect('/courses')->with('message', 'Curso activado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Error al activar el curso: ' . $e->getMessage());
+        }
     }
 
     public function trashCourses()
@@ -91,19 +95,17 @@ class coursesController extends Controller
 
             if ($degreeId || $search) {
                 $courses = Courses::where('state', 0)
-                ->when($degreeId, function($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
-                })
-                ->when($search, function($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'search' => $search
-                ]);
-
-
+                    ->when($degreeId, function ($query) use ($degreeId) {
+                        return $query->where('degree_id', $degreeId);
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'degree_id' => $degreeId,
+                        'search' => $search
+                    ]);
             } else {
                 $courses = Courses::where('state', 0)->paginate(10);
             }
@@ -112,26 +114,27 @@ class coursesController extends Controller
 
             return view('resourcesJV.courses.trashCourses', [
                 'courses' => $courses,
-                'degrees' => $degrees,
+                'degrees' => $degrees
             ]);
-
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema.');
+            return redirect('/courses')->with('error', 'Ocurrió un problema' . $e->getMessage());
         }
-
-
     }
 
     public function editCourses(DegreeRequest $request, $id)
     {
-        $courses = Courses::find($id);
+        try {
+            $courses = Courses::find($id);
 
-        if (!$courses) {
-            return redirect('/courses')->with('error', 'Grado no encontrado.');
+            if (!$courses) {
+                return redirect('/courses')->with('error', 'Curso no encontrado.');
+            }
+
+            $courses->update($request->validated());
+
+            return redirect('/courses')->with('message', 'Curso actualizado correctamente.');
+        } catch (\Exception $e) {
+            return redirect('/courses')->with('error', 'Ocurrió un problema al actualizar el curso ' . $e->getMessage());
         }
-
-        $courses->update($request->validated());
-
-        return redirect('/courses')->with('success', 'Grado actualizado correctamente.');
     }
 }
