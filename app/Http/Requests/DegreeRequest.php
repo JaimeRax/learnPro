@@ -23,7 +23,6 @@ class DegreeRequest extends FormRequest
     {
         return [
             'name'=> 'required',
-            'section_id'=> 'required',
         ];
     }
 }

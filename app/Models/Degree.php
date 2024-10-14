@@ -12,7 +12,6 @@ class Degree extends Model
 
     protected $fillable = [
         'name',
-        'section_id',
     ];
 
     public function courses()
@@ -35,6 +34,11 @@ class Degree extends Model
     {
         return $this->belongsTo(Sections::class, 'section_id');
     }
+
+    public function course()
+{
+    return $this->belongsToMany(Courses::class);
+}
 
 
     public function disable()

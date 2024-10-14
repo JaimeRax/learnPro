@@ -23,8 +23,8 @@ Route::get('/', function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'listUsers'])->name('users.index');
 
-Route::get('/register', [UserController::class, 'show'])->middleware('can:admin');
-Route::post('/register', [UserController::class, 'register'])->middleware('can:admin');
+Route::get('/register', [UserController::class, 'show']);
+Route::post('/register', [UserController::class, 'register']);
 Route::get('/viewForm', [UserController::class, 'showCreateForm'])->middleware('can:admin');
 Route::post('/newUser', [UserController::class, 'createUser'])->middleware('can:admin');
 Route::get('/showForm/{id}', [UserController::class, 'showEdit'])->middleware('can:admin');

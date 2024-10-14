@@ -67,40 +67,34 @@ class assignmentController extends Controller
 
     public function newTeacherCourse(Request $request)
     {
-        $request->validate([
-            'teachers_id' => 'required',
-            'course_id' => 'required',
-            'section_id' => 'required',
-            'degree_id' => 'required',
-        ]);
-
         try {
             $teachers_id = $request->input('teachers_id');
-            $course_ids = $request->input('course_id');
-            $section_ids = $request->input('section_id');
-            $degree_ids = $request->input('degree_id');
+            $selections = $request->input('selections');
+
+            // Asegúrate de que los datos lleguen correctamente al controlador
+            if (empty($teachers_id) || empty($selections)) {
+                return response()->json(['success' => false, 'message' => 'Datos faltantes'], 400);
+            }
 
             $teacher = User::findOrFail($teachers_id);
 
-            foreach ($course_ids as $key => $course_id) {
-                $teacher->courses()->attach($course_id, [
-                    'section_id' => $section_ids[$key],
-                    'degree_id' => $degree_ids[$key],
-                ]);
+            foreach ($selections as $selection) {
+                // Verificar si ya está asignado
+                if (!$teacher->courses()->where('course_id', $selection['course_id'])->where('section_id', $selection['section_id'])->where('degree_id', $selection['degree_id'])->exists()) {
+                    $teacher->courses()->attach($selection['course_id'], [
+                        'section_id' => $selection['section_id'],
+                        'degree_id' => $selection['degree_id'],
+                    ]);
+                }
             }
 
-            return redirect('/users')->with('success', 'Cursos asignados correctamente.');
-        } catch (\Exception $e) {
-            Log::error('Error al asignar cursos', [
-                'teachers_id' => $teachers_id,
-                'course_ids' => $course_ids,
-                'section_ids' => $section_ids,
-                'degree_ids' => $degree_ids,
-                'error_message' => $e->getMessage(),
-                'stack_trace' => $e->getTraceAsString(),
-            ]);
 
-            return redirect('/users')->with('error', 'Ocurrió un error al asignar los cursos. Por favor, inténtelo más tarde.');
+            // Respuesta JSON exitosa
+            return response()->json(['success' => true, 'message' => 'Cursos asignados correctamente.']);
+        } catch (\Exception $e) {
+            // Manejar cualquier error y devolver un mensaje de error JSON
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
 }

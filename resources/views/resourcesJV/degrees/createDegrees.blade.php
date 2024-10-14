@@ -8,7 +8,6 @@
                 required />
         </div>
 
-        <x-inputs.select-option id="section_id" titulo="Secciòn" name="section_id" :options="$sections->pluck('name', 'id')->toArray()" required />
 
 
         <button type="submit"

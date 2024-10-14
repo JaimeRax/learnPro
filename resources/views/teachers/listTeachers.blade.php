@@ -5,6 +5,8 @@
 @endsection
 
 @section('main')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
     <div class="grid grid-cols-1 gap-2">
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
@@ -32,7 +34,7 @@
 
             {{-- BOTON PARA AGREGAR --}}
 
-            <x-button-link href="teachers/viewForm" class="mt-2 btn-primary">
+            <x-button-link href="users/viewForm" class="mt-2 btn-primary">
 
                 <x-iconos.agregar /> Agregar
 
@@ -41,7 +43,7 @@
         </div>
 
         <div class="flex justify-end col-md-2">
-            <x-button-link href="/student/trash" class="text-white bg-green-600">
+            <x-button-link href="/users/trash" class="text-white bg-green-600">
                 <x-iconos.basurero /> Papelera
             </x-button-link>
         </div>
@@ -72,29 +74,6 @@
                         <x-tablas.td>{{ $user->phone }}</x-tablas.td>
                         <x-tablas.td>
 
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al usuario?"
-                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
-                                <x-slot name="button">
-                                    <x-iconos.basurero />
-                                </x-slot>
-
-                                <x-slot name="body">
-                                    <form action="/users/delete/{{ $user->id }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn-error">
-                                            Dar de Baja al usuario
-                                        </button>
-                                    </form>
-                                </x-slot>
-                            </x-modal>
-
-                            <x-button-link href="/users/showForm/{{ $user->id }}" class="mt-2 text-white bg-orange-500">
-
-                                <x-iconos.editar />
-
-                            </x-button-link>
-
-
                             <x-modal id="createPayment-{{ $user->id }}" title="Informacion"
                                 bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
                                 <x-slot name="button">
@@ -102,7 +81,7 @@
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    @include('user.infoUsers', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
+                                    @include('teachers.infoCoursesAssignment', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
                                 </x-slot>
                             </x-modal>
 
