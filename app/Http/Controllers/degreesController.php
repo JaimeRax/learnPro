@@ -20,64 +20,85 @@ class degreesController extends Controller
     public function listDegrees()
     {
         $search = request()->query('search');
+        $sections = Sections::all();
 
         if ($search) {
             $degree = Degree::where('name', 'LIKE', "%{$search}%")
                 ->where('state', 1)
+                ->with('section')
                 ->paginate(10);
         } else {
-            $degree = Degree::where('state', 1)->paginate(10);
+            $degree = Degree::where('state', 1)
+                ->with('section')
+                ->paginate(10);
         }
 
-        return view('resourcesJV.degrees.listDegrees', ['degree' => $degree]);
+        return view('resourcesJV.degrees.listDegrees', [
+            'degree' => $degree,
+            'sections' => $sections
+        ]);
     }
+
 
     public function createDegrees(DegreeRequest $request)
     {
-        $degree = Degree::create($request->validated());
-        return redirect('/degrees');
+        try {
+            $degree = Degree::create($request->validated());
+            return redirect('/degrees')->with('message', 'Grado creado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al crear el grado ' . $e->getMessage());
+        }
     }
-
     public function disableDegrees($id)
     {
-        $degree = Degree::find($id);
-        $degree->disable();
-        return redirect('/degrees');
+        try {
+            $degree = Degree::findOrFail($id);
+            $degree->disable();
+            return redirect('/degrees')->with('message', 'Grado desactivado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/degrees')->with('error', 'Error al desactivar el grado' . $e->getMessage());
+        }
     }
 
     public function activeDegrees($id)
     {
-        $degree = Degree::find($id);
-        $degree->enable();
-        return redirect('/degrees');
+        try {
+            $degree = Degree::findOrFail($id);
+            $degree->enable();
+            return redirect('/degrees')->with('message', 'Grado activado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/degrees')->with('error', 'Error al activar el grado ' . $e->getMessage());
+        }
     }
 
     public function trashDegrees()
     {
-        $search = request()->query('search');
+        try {
+            $search = request()->query('search');
 
-        if ($search) {
-            $degree = Degree::where('name', 'LIKE', "%{$search}%")
-                ->where('state', 0)
-                ->paginate(10);
-        } else {
-            $degree = Degree::where('state', 0)->paginate(10);
+            if ($search) {
+                $degree = Degree::where('name', 'LIKE', "%{$search}%")
+                    ->where('state', 0)
+                    ->paginate(10);
+            } else {
+                $degree = Degree::where('state', 0)->paginate(10);
+            }
+
+            return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
+        } catch (\Exception $e) {
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al obtener los grados' . $e->getMessage());
         }
-
-        return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
     }
 
     public function editDegrees(DegreeRequest $request, $id)
     {
-        $degree = Degree::find($id);
+        try {
+            $degree = Degree::findOrFail($id);
+            $degree->update($request->validated());
 
-        if (!$degree) {
-            return redirect('/degrees')->with('error', 'Grado no encontrado.');
+            return redirect('/degrees')->with('message', 'Grado actualizado correctamente.');
+        } catch (\Exception $e) {
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al actualizar el grado ' . $e->getMessage());
         }
-
-        $degree->update($request->validated());
-
-        return redirect('/degrees')->with('success', 'Grado actualizado correctamente.');
     }
-
 }

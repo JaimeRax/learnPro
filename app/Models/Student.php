@@ -43,6 +43,11 @@ class Student extends Model
         return $this->belongsTo(Sections::class, 'section_id', 'id');
     }
 
+    public function ratings()
+    {
+        return $this->hasMany('tb_ratings', 'student_id', 'id');
+    }
+
     public function disable()
     {
         $this->state = 0;
@@ -54,4 +59,6 @@ class Student extends Model
         $this->state = 1;
         $this->save();
     }
+
+
 }
