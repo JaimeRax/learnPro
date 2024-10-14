@@ -1,1 +1,1 @@
-<i class="fas fa-plus-circle"></i>
+<i class="fas fa-eye"></i>

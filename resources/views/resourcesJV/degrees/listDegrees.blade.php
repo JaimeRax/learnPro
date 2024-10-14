@@ -27,7 +27,7 @@
                 <x-slot name="button">
                     Agregar
 
-                    <x-iconos.ver />
+                    <x-iconos.agregar />
 
                 </x-slot>
 
@@ -62,7 +62,7 @@
                 @foreach ($degree as $degrees)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
+                        <x-tablas.td>{{  strtoupper($degrees->name) }}</x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="delete{{ Str::random(16) }}" title="Eliminar"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">

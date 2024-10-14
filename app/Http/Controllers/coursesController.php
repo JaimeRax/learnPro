@@ -54,7 +54,6 @@ class coursesController extends Controller
         try {
             $request->validate([
                 'name' => 'required|unique:courses,name',
-                'degree_id' => 'required|exists:degrees,id'
             ]);
 
             Courses::create($request->validated());
@@ -121,7 +120,7 @@ class coursesController extends Controller
         }
     }
 
-    public function editCourses(DegreeRequest $request, $id)
+    public function editCourses(CoursesRequest $request, $id)
     {
         try {
             $courses = Courses::find($id);

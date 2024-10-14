@@ -39,7 +39,7 @@
             <x-modal id="createCourses" title="Curso" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
                     Agregar
-                    <x-iconos.ver />
+                    <x-iconos.agregar />
                 </x-slot>
 
                 <x-slot name="body">

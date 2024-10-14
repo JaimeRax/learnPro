@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Sections;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Degree extends Model
 {
@@ -22,6 +23,23 @@ class Degree extends Model
     {
         return $this->hasMany('tb_student', 'degree_id', 'id');
     }
+
+    public function ratings()
+    {
+        return $this->hasMany('tb_ratings', 'degree_id', 'id');
+    }
+
+
+    public function section()
+    {
+        return $this->belongsTo(Sections::class, 'section_id');
+    }
+
+    public function course()
+{
+    return $this->belongsToMany(Courses::class);
+}
+
 
     public function disable()
     {
