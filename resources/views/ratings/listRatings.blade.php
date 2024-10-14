@@ -24,6 +24,10 @@
                 <x-inputs.select-option id="degree_id" titulo="Curso" name="degree_id"
                     required onchange="document.getElementById('degreeForm').submit()" />
             </form>
+
+            <x-button-link href="#" class="text-white bg-orange-600 mt-9">
+                Buscar
+            </x-button-link>
         </div>
 
 
