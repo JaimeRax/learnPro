@@ -19,6 +19,7 @@ class Payments extends Model
         'amount',
         'bank',
         'month',
+        'year',
         'document_number',
         'comment',
         'student_id',

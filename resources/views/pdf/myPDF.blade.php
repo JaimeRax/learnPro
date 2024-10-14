@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Solicitud de Financiamiento</title>
+        <title>Voucher Pago</title>
         <style>
             @page {
                 margin-top: 1cm;
@@ -163,9 +162,7 @@
             }
         </style>
     </head>
-
     <body>
-
         @foreach ($payments as $dato)
             <div class="header" style=" margin-top: 30px;">
                 <div class="contact-info lato-regular">
@@ -174,40 +171,33 @@
                     <p>Tel. (+502) 5991 0548</p>
                 </div>
                 <img class="logo" src="{{ public_path('Imagenes/jv-logo.png') }}" alt="jv-logo" />
-
                 <div class="text-container ">
-                    <p class=" lato-bold">INSTITUTO DE EDUCACION BASICA </p>
-                    <p class=" lato-bold">POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
-                    <p class="lato-regular-italic">Autorizado por Acuerdo Ministerial NO. 475</p>
+                    <p class="lato-bold" style="font-size: 14px;">INSTITUTO DE EDUCACION BASICA </p>
+                    <p class="lato-bold" style="font-size: 14px;">POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
+                    <p class="lato-regular-italic" style="font-size: 12px;">Autorizado por Acuerdo Ministerial NO. 475
+                    </p>
                 </div>
-
             </div>
             <div style=" font-size: 0.8rem;">
-                <p class=" lato-bold">No. 000001</p>
+                <p class=" lato-bold">No. </p>
             </div>
-
             <h4 class="titulo" style=" font-size: 0.7rem;">
                 Datos Generales del Pago
             </h4>
-
             <table class="table mt-5 table-offset" style=" margin-top: 10px;">
                 <thead>
                     <tr>
                         <th scope="col" style=" font-size: 0.5rem;">Cuota Escolar Mensual</th>
                         <th scope="col" style=" font-size: 0.5rem;">Couta Computaciòn Mneusal</th>
-
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td style=" font-size: 0.6rem;">Q55.00</td>
                         <td style=" font-size: 0.6rem;">q20.00</td>
-
-
                     </tr>
                 </tbody>
             </table>
-
             <div style="flex-direction: column;">
                 <div style="flex-direction:row; margin-top: 15px;">
                     <span class="campo" style=" font-size: 0.8rem;">Nombre:</span>
@@ -217,52 +207,37 @@
                     </span>
                     <span class="campo" style=" font-size: 0.8rem; margin-left: 35.5px;">Fecha:</span>
                     <span class="content" style="width:41.5%">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</span>
-
                 </div>
-
                 <div style="flex-direction:row; margin-top: 1px;">
                     <span class="campo" style=" font-size: 0.8rem;">Grado:</span>
                     <span class="content" style="width:37% ">{{ $dato->degree->name }}</span>
                     <span class="campo" style="font-size: 0.8rem; margin-left: 35.3px;"> {{ $dato->section->name }}
                     </span>
                     <span class="content" style="width:40%"> A </span>
-
                 </div>
                 @foreach ($pay as $pays)
                     <div style="flex-direction:row; margin-top: 1px;">
-
                         <span class="campo" style="font-size: 0.8rem;">Mes de pago: </span>
                         <span class="content" style="width:31%"> Enero </span>
                         <span class="campo" style=" font-size: 0.8rem; margin-left: 31px;"> Tipo de pago:</span>
                         <span class="content" style="width:35.8%"> {{ $pays->type_payment }}</span>
                     </div>
-
                     <div style="flex-direction:row; margin-top: 10px;">
-
                         <span class="campo" style=" font-size: 0.8rem;"> Observaciones</span>
                         <span class="content" style="width:84.2%; font-size: 0.8rem;"> {{ $pays->comment }} </span>
                     </div>
-
-
-
-                <div style="flex-direction:row; margin-top: 10px;">
-
-                    <span class="campo" style=" font-size: 0.8rem;"> Total:</span>
-                    <span class="" style="width:94.5%; font-size: 0.7rem;"> Q. {{ $pays->amount }} </span>
-                </div>
+                    <div style="flex-direction:row; margin-top: 10px;">
+                        <span class="campo" style=" font-size: 0.8rem;"> Total:</span>
+                        <span class="" style="width:94.5%; font-size: 0.7rem;"> Q. {{ $pays->amount }} </span>
+                    </div>
                 @endforeach
         @endforeach
         <div class="mt-3 mb-3 text-center">
             <div>
                 <hr class="hr-firma" style="width: 50%;">
                 <p style=" margin-left: 280px; font-size: 0.7rem;">Firma de Direcciòn</p>
-
             </div>
         </div>
         </div>
-
-
     </body>
-
-
 </html>
