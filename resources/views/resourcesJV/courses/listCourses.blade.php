@@ -85,7 +85,7 @@
 
                         {{-- modal para desactivar un curso --}}
                         <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja el Curso?"
-                            bstyle="border-none bg-red-600 text-white hover:bg-red-800">
+                            bstyle="border-none bg-red-600 text-white hover:bg-red-600">
                             <x-slot name="button">
                                 <x-iconos.basurero />
                             </x-slot>
@@ -93,8 +93,8 @@
                             <x-slot name="body">
                                 <form action="/courses/delete/{{ $course->id }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn-error">
-                                        Dar de Baja al Curso
+                                    <button type="submit" class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        Aceptar
                                     </button>
                                 </form>
                             </x-slot>
@@ -112,7 +112,7 @@
                                 <form action="/courses/edit/{{ $course->id }}" method="POST">
                                     @csrf
                                     <div>
-                                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Nombre
+                                        <label for="email" class="block mb-2 text-sm font-medium text-gray-50">Nombre
                                             del
                                             Curso</label>
                                         <input type="text" name="name" id="name"
