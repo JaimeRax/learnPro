@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Degree;
+use App\Models\Courses;
+use App\Models\Sections;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\FuncCall;
 use Spatie\Permission\Models\Role;
@@ -75,10 +77,16 @@ class UserController extends Controller
             }
 
             $roles = Role::all();
+            $courses = Courses::all();
+            $sections = Sections::all();
+            $degrees = Degree::all();
 
             return view('user.listUsers', [
                 'roles' => $roles,
                 'users' => $users,
+                'courses' => $courses,
+                'sections' => $sections,
+                'degrees' => $degrees,
             ]);
         } catch (\Exception $e) {
             return redirect('/users')->with('error', 'Ocurrió un problema.');
@@ -171,7 +179,11 @@ class UserController extends Controller
                 $user->syncRoles([]);
             }
 
-           return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente');
+            if (in_array('administracion', $roleNames)) {
+                return redirect('/users')->with('success', 'Usuario creado correctamente');
+            } else {
+                return redirect('/teachers')->with('success', 'Usuario creado correctamente');
+            }
 
         } catch (\Exception $e) {
             Log::error('Error al actualizar el usuario', ['error' => $e->getMessage()]);

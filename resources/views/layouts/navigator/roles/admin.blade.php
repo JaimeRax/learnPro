@@ -12,9 +12,9 @@
 
         <ul>
 
-        <li><a href="{{ '/degrees' }}"><i class="fa-solid fa-users-line"></i> Grados</a></li>
-
         <li><a href="{{ '/sections' }}"><i class="fa-solid fa-users-line"></i> Secciones</a></li>
+
+        <li><a href="{{ '/degrees' }}"><i class="fa-solid fa-users-line"></i> Grados</a></li>
 
         <li><a href="{{ '/courses' }}"><i class="fa-solid fa-users-line"></i> Cursos</a></li>
 
@@ -29,6 +29,8 @@
     @endcan
 
     @can('admin')
+    <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-plus"></i> Docentes</a></li>
+
     <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
     <li><a href="{{ '/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Pagos</a></li>

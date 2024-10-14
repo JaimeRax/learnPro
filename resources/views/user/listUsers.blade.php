@@ -25,15 +25,8 @@
             {{-- filtro por seleccion de grado --}}
 
             <form method="GET" action="/users" id="userSearchForm" class="mt-6">
-                <x-inputs.select-option
-                    id="role_id"
-                    titulo=""
-                    name="role_id"
-                    :options="$roles->pluck('name', 'id')->toArray()"
-                    :selected="request('role_id')"
-                    required
-                    onchange="document.getElementById('userSearchForm').submit()"
-                />
+                <x-inputs.select-option id="role_id" titulo="" name="role_id" :options="$roles->pluck('name', 'id')->toArray()" :selected="request('role_id')"
+                    required onchange="document.getElementById('userSearchForm').submit()" />
 
 
             </form>
@@ -124,6 +117,7 @@
                                     @include('user.infoUsers', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
                                 </x-slot>
                             </x-modal>
+
 
                         </x-tablas.td>
                     </x-tablas.tr>

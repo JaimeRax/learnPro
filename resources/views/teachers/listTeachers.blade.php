@@ -54,7 +54,6 @@
                     <x-tablas.th>DPI</x-tablas.th>
                     <x-tablas.th>Correo Electrònico</x-tablas.th>
                     <x-tablas.th>Telèfono</x-tablas.th>
-                    <x-tablas.th>Rol</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -64,46 +63,60 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($users as $teacher)
+                @foreach ($users as $user)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ strtoupper("{$teacher->username} ") }}</x-tablas.td>
-                        <x-tablas.td>2459455611890</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$user->first_name} {$user->second_name} {$user->first_lastname} {$user->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $user->dpi }}</x-tablas.td>
+                        <x-tablas.td>{{ $user->email }}</x-tablas.td>
+                        <x-tablas.td>{{ $user->phone }}</x-tablas.td>
                         <x-tablas.td>
 
-                                <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al docente?"
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al usuario?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <form action="/teachers/delete/{{ $teacher->id }}" method="POST">
+                                    <form action="/users/delete/{{ $user->id }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn-error">
-                                            Dar de Baja al docente
+                                            Dar de Baja al usuario
                                         </button>
                                     </form>
                                 </x-slot>
                             </x-modal>
 
-                            <x-button-link href="teachers/showForm/{{ $teacher->id }}" class="mt-2 text-white bg-orange-500">
+                            <x-button-link href="/users/showForm/{{ $user->id }}" class="mt-2 text-white bg-orange-500">
 
                                 <x-iconos.editar />
 
                             </x-button-link>
 
 
-                            <x-modal id="createPayment-{{ $teacher->id }}" title="Informacion" bstyle="border-none bg-purple-600 text-white hover:bg-blue-800">
+                            <x-modal id="createPayment-{{ $user->id }}" title="Informacion"
+                                bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
                                 <x-slot name="button">
                                     <x-iconos.ver />
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    @include('teachers.infoTeachers', ['teacherId' => $teacher->id]) <!-- Aquí pasas el objeto usuario -->
+                                    @include('user.infoUsers', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
                                 </x-slot>
                             </x-modal>
 
+                            <x-modal id="assign{{ $user->id }}" title="Asignar Cursos"
+                                bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
+                                <x-slot name="button">
+                                    <x-iconos.asignar />
+                                </x-slot>
+
+                                <x-slot name="body">
+                                    @include('assignment.assignmentCourses-Teacher')
+
+                                </x-slot>
+                            </x-modal>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach

@@ -36,7 +36,7 @@
 
                                     <div class="group">
                                         <div>
-                                            <label class="mb-0 font-bold label" for="email">
+                                            <label class="mb-0 font-bold label" for="personal_code">
                                                 <span class="label-text">
                                                     Email *
                                                 </span>
@@ -167,31 +167,26 @@
                                                 value="{{ old('service_time', $user->service_time) }}">
                                         </div>
                                     </div>
-                                    <div class="flex items-center mt-4 space-x-4"> <!-- Agregado un margen superior -->
+                                    <div class="flex items-center mt-4 space-x-4">
                                         @foreach ($roles as $id => $role)
-                                            <div class="flex items-center"> <!-- Cada rol en un div flex -->
-                                                <label class="flex items-center mr-4"> <!-- Clase mr-4 para espacio entre checkboxes -->
+                                            <div class="flex items-center">
+                                                <label class="flex items-center mr-4">
                                                     <input class="mr-2 form-check-input" type="checkbox" name="roles[]"
-                                                    value="{{ $id }}" {{ $user->roles->contains($id) ? 'checked' : '' }}>
-
+                                                        value="{{ $id }}" {{ $user->roles->contains($id) ? 'checked' : '' }}>
                                                     <span class="form-check-sign">
                                                         <span class="check" value=""></span>
                                                     </span>
-                                                    {{ $role }} <!-- Texto al lado del checkbox -->
+                                                    {{ $role }}
                                                 </label>
                                             </div>
                                         @endforeach
                                     </div>
-
                                 </div>
 
 
                                 <div class="group">
-                                    <x-button-link href="/users" class="mt-2 text-white bg-orange-400">
+                                    <button type="button" onclick="redirectToRole()">Cancelar</button>
 
-                                    Cancelar
-
-                                    </x-button-link>
                                     <button class="justify-start mt-2 text-white btn bg-success" type="submit">
                                         Enviar
                                     </button>
@@ -211,3 +206,23 @@
     @endsection
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script>
+        function redirectToRole() {
+            const checkboxes = document.querySelectorAll('input[name="roles[]"]:checked');
+            let roleId;
+
+            if (checkboxes.length > 0) {
+                roleId = checkboxes[0].value;
+
+                if (roleId === '1') {
+                    window.location.href = '/users';
+                } else if (roleId === '2') {
+                    window.location.href = '/teachers';
+                } else {
+                    console.log("Rol no reconocido:", roleId);
+                }
+            } else {
+                console.log("No hay roles seleccionados.");
+            }
+        }
+    </script>

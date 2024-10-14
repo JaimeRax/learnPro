@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Courses extends Model
 {
@@ -28,5 +29,12 @@ class Courses extends Model
     {
         $this->state = 1;
         $this->save();
+    }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class, 'tb_assign_courses')
+                    ->withPivot('section_id', 'grade_id')
+                    ->withTimestamps();
     }
 }

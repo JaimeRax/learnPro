@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Courses;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -71,4 +72,12 @@ class User extends Authenticatable
         $this->state = 1;
         $this->save();
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Courses::class, 'tb_assign_courses', 'teachers_id', 'course_id')
+                    ->withPivot('section_id', 'degree_id') // Incluye las columnas adicionales
+                    ->withTimestamps(); // Si deseas registrar las fechas de creación y actualización
+    }
+
 }

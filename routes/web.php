@@ -104,6 +104,7 @@ Route::prefix('payments')->group(function () {
 Route::prefix('assignment')->group(function () {
     Route::get('/', [assignmentController::class, 'listAssignment'])->middleware('can:admin');
     Route::get('/form', [ assignmentController::class,'ShowcreateAssignment'])->middleware('can:admin');
+    Route::post('/newTeacherCourse', [assignmentController::class, 'newTeacherCourse']);
 });
 
 // Routes to Reports
@@ -114,6 +115,7 @@ Route::prefix('report')->group(function () {
 
 // ROUTES TEACHERS
 Route::prefix('teachers')->group(function () {
+    Route::get('/', [TeachersController::class, 'listTeachers'])->middleware('can:admin');
     Route::get('/myCourses', [TeachersController::class, 'ListCoursesTeacher'])->middleware('can:teacher')->name('teacher.index');
     Route::get('/showForm/{id}', [TeachersController::class, 'showEdit'])->middleware('can:admin');
     Route::post('/edit/{user}', [TeachersController::class, 'editTeacher'])->middleware('can:admin');
