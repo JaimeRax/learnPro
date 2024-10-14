@@ -68,22 +68,26 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ $section->name }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja a la Seccions?"
+                            <x-modal id="delete{{ Str::random(16) }}" title="Eliminar"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
                                 </x-slot>
 
                                 <x-slot name="body">
+                                    <p class="mt-5 mb-4 text-sm text-center">¿Está seguro de eliminar la sección {{ $section->name }}?</p>
                                     <form action="/sections/delete/{{ $section->id }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        <button type="submit" class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                             Aceptar
                                         </button>
                                     </form>
                                 </x-slot>
                             </x-modal>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar la Seccion?"
+
+                            {{-- modal para editar un seccion --}}
+
+                            <x-modal id="delete{{ Str::random(16) }}" title="Editar"
                                 bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
                                 <x-slot name="button">
                                     <x-iconos.editar />
@@ -93,16 +97,14 @@
                                     <form action="/sections/edit/{{ $section->id }}" method="POST">
                                         @csrf
                                         <div>
-                                            <label for="email"
-                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre de la
-                                                Seccion</label>
                                             <input type="text" name="name" id="name"
-                                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
+                                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black mt-5"
                                                 required value="{{ $section->name }}" />
                                         </div>
 
-                                        <button type="submit"
-                                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
+                                        <button type="submit"class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                            Acepar
+                                        </button>
 
                                     </form>
                                 </x-slot>

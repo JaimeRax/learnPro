@@ -134,7 +134,7 @@ class coursesController extends Controller
 
             return redirect('/courses')->with('message', 'Curso actualizado correctamente.');
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema al actualizar el curso ' . $e->getMessage());
+            return redirect('/courses')->with('error', 'Ocurrió un problema al actualizar el curso' . $e->getMessage());
         }
     }
 }
