@@ -12,32 +12,21 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <form class="input-group" action="/degrees" method="get">
-                <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
-
-                <div class="input-group-addon">
-                    <button type="submit" class="input-group-text">
-                        <i class="ti-search"></i>
-                    </button>
-                </div>
+            <form method="GET" action="#" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id"
+                    required onchange="document.getElementById('degreeForm').submit()" />
             </form>
-
-            <x-modal id="createDegrees" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
-                <x-slot name="button">
-                    Agregar
-
-                    <x-iconos.ver />
-
-                </x-slot>
-
-                <x-slot name="body">
-
-                    @include('resourcesJV.degrees.createDegrees')
-
-                </x-slot>
-            </x-modal>
+            <form method="GET" action="#" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="Seccion" name="degree_id"
+                    required onchange="document.getElementById('degreeForm').submit()" />
+            </form>
+            <form method="GET" action="#" id="degreeForm" class="mt-6">
+                <x-inputs.select-option id="degree_id" titulo="Curso" name="degree_id"
+                    required onchange="document.getElementById('degreeForm').submit()" />
+            </form>
         </div>
+
+
 
         <div class="flex justify-end col-md-2">
             <x-button-link href="/degrees/trash" class="text-white bg-green-600">
@@ -49,7 +38,17 @@
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Estudiante</x-tablas.th>
+                    <x-tablas.th>Act #1</x-tablas.th>
+                    <x-tablas.th>Act #2</x-tablas.th>
+                    <x-tablas.th>Act #3</x-tablas.th>
+                    <x-tablas.th>Mej #1</x-tablas.th>
+                    <x-tablas.th>Mej #2</x-tablas.th>
+                    <x-tablas.th>Mej #3</x-tablas.th>
+                    <x-tablas.th>Disciplina</x-tablas.th>
+                    <x-tablas.th>Extracurrilar</x-tablas.th>
+                    <x-tablas.th>Examen</x-tablas.th>
+                    <x-tablas.th>Nota Final</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -59,55 +58,51 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($ratings as $rating)
+
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $rating->name }}</x-tablas.td>
+                        <x-tablas.td> MELANIE ROSAURA ANAYTE CAAL MAAZ</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
-                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
-                                <x-slot name="button">
-                                    <x-iconos.basurero />
-                                </x-slot>
+                            <input type="number" min="0" name="actividad1" id="actividad1" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="actividad2" id="actividad2" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="actividad3" id="actividad3" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="mejoramiento1" id="mejoramiento1" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="mejoramiento2" id="mejoramiento2" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="mejoramiento3" id="mejoramiento3" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="Disciplina" id="Disciplina" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="extracurricular" id="extracurricular" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" min="0" name="examen" id="examen" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
+                        </x-tablas.td>
+                        <x-tablas.td>
+                            <input type="number" readonly name="notaFinal" id="notaFinal" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required />
+                        </x-tablas.td>
 
-                                <x-slot name="body">
-                                    <form action="/rating/delete/{{ $rating->id }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn-error">
-                                            Dar de Baja al Grado
-                                        </button>
-                                    </form>
-                                </x-slot>
-                            </x-modal>
+                        <x-tablas.td>
+                            <x-button href="student/viewForm" class="mt-2 btn-primary">
 
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea editar el Grado?"
-                                bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
-                                <x-slot name="button">
-                                    <x-iconos.editar />
-                                </x-slot>
+                                <x-iconos.guardar />
 
-                                <x-slot name="body">
-                                    <form action="/rating/edit/{{ $rating->id }}" method="POST">
-                                        @csrf
-                                        <div>
-                                            <label for="email"
-                                                class="block mb-2 text-sm font-medium text-gray-900">Nombre del
-                                                Grado</label>
-                                            <input type="text" name="name" id="name"
-                                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
-                                                required value="{{ $rating->name }}" />
-                                        </div>
+                            </x-button>
 
-                                        <button type="submit"
-                                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Editar</button>
-
-                                    </form>
-                                </x-slot>
-                            </x-modal>
 
                         </x-tablas.td>
                     </x-tablas.tr>
-                @endforeach
 
             </x-slot>
 
@@ -118,3 +113,24 @@
         </div> --}}
 @endsection
 <script src="{{ asset('js/reloadPage.js') }}"></script>
+<script>
+    function calculateFinalGrade() {
+        // Obtener los valores de los inputs
+        const actividad1 = parseFloat(document.getElementById('actividad1').value) || 0;
+        const actividad2 = parseFloat(document.getElementById('actividad2').value) || 0;
+        const actividad3 = parseFloat(document.getElementById('actividad3').value) || 0;
+        const mejoramiento1 = parseFloat(document.getElementById('mejoramiento1').value) || 0;
+        const mejoramiento2 = parseFloat(document.getElementById('mejoramiento2').value) || 0;
+        const mejoramiento3 = parseFloat(document.getElementById('mejoramiento3').value) || 0;
+        const disciplina = parseFloat(document.getElementById('Disciplina').value) || 0;
+
+        const extracurricular = parseFloat(document.getElementById('extracurricular').value) || 0;
+        const examen = parseFloat(document.getElementById('examen').value) || 0;
+
+        // Calcular la nota final
+        const notaFinal = actividad1 + actividad2 + actividad3 + mejoramiento1 + mejoramiento2 + mejoramiento3 + disciplina + extracurricular + examen;
+
+        // Mostrar el resultado en el campo notaFinal
+        document.getElementById('notaFinal').value = notaFinal;
+    }
+</script>

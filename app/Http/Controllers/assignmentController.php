@@ -66,35 +66,51 @@ class assignmentController extends Controller
     }
 
     public function newTeacherCourse(Request $request)
-    {
-        try {
-            $teachers_id = $request->input('teachers_id');
-            $selections = $request->input('selections');
+{
+    try {
+        // Log de entrada
+        Log::info('newTeacherCourse llamado', ['request' => $request->all()]);
 
-            // Asegúrate de que los datos lleguen correctamente al controlador
-            if (empty($teachers_id) || empty($selections)) {
-                return response()->json(['success' => false, 'message' => 'Datos faltantes'], 400);
-            }
+        $teachers_id = $request->input('teachers_id');
+        $selections = $request->input('selections');
 
-            $teacher = User::findOrFail($teachers_id);
-
-            foreach ($selections as $selection) {
-                // Verificar si ya está asignado
-                if (!$teacher->courses()->where('course_id', $selection['course_id'])->where('section_id', $selection['section_id'])->where('degree_id', $selection['degree_id'])->exists()) {
-                    $teacher->courses()->attach($selection['course_id'], [
-                        'section_id' => $selection['section_id'],
-                        'degree_id' => $selection['degree_id'],
-                    ]);
-                }
-            }
-
-
-            // Respuesta JSON exitosa
-            return response()->json(['success' => true, 'message' => 'Cursos asignados correctamente.']);
-        } catch (\Exception $e) {
-            // Manejar cualquier error y devolver un mensaje de error JSON
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        // Asegúrate de que los datos lleguen correctamente al controlador
+        if (empty($teachers_id) || empty($selections)) {
+            Log::warning('Datos faltantes', ['teachers_id' => $teachers_id, 'selections' => $selections]);
+            return response()->json(['success' => false, 'message' => 'Datos faltantes'], 400);
         }
+
+        $teacher = User::findOrFail($teachers_id);
+        Log::info('Profesor encontrado', ['teacher_id' => $teachers_id]);
+
+        foreach ($selections as $selection) {
+            Log::info('Procesando selección', ['selection' => $selection]);
+            // Verificar si ya está asignado
+            if (!$teacher->courses()->where('course_id', $selection['course_id'])
+                ->where('section_id', $selection['section_id'])
+                ->where('degree_id', $selection['degree_id'])->exists()) {
+
+                Log::info('Asignando curso', ['course_id' => $selection['course_id'], 'teacher_id' => $teachers_id]);
+                $teacher->courses()->attach($selection['course_id'], [
+                    'section_id' => $selection['section_id'],
+                    'degree_id' => $selection['degree_id'],
+                ]);
+            } else {
+                Log::info('Curso ya asignado', ['course_id' => $selection['course_id'], 'teacher_id' => $teachers_id]);
+            }
+        }
+
+        // Respuesta JSON exitosa
+        Log::info('Cursos asignados correctamente', ['teacher_id' => $teachers_id]);
+        return response()->json(['success' => true, 'message' => 'Cursos asignados correctamente.']);
+
+    } catch (\Exception $e) {
+        // Log del error
+        Log::error('Error al asignar cursos', ['error' => $e->getMessage()]);
+        // Manejar cualquier error y devolver un mensaje de error JSON
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
+}
+
 
 }

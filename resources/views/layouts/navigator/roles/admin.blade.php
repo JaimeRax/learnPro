@@ -46,7 +46,7 @@
 
     <li><a href="{{ '/teachers/myCourses' }}"><i class="fa-solid fa-map-location-dot"></i> Mis cursos</a></li>
 
-    <li><a href="{{ '/myRatings' }}"><i class="fa-solid fa-map-location-dot"></i> Mis notas</a></li>
+    <li><a href="{{ '/ratings' }}"><i class="fa-solid fa-map-location-dot"></i> Mis notas</a></li>
 
 
     @endcan
