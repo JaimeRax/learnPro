@@ -89,7 +89,7 @@ class paymentsController extends Controller
                 'payment_date' => 'required|date',
                 'amount' => 'required|integer',
                 'bank' => 'nullable|string',
-                'month' => 'nullable|string',
+                'months' => 'nullable|array',
                 'document_number' => 'nullable|integer',
                 'comment' => 'nullable|string',
                 'student_id' => 'required|integer',
@@ -98,13 +98,17 @@ class paymentsController extends Controller
             $today = Carbon::now();
             $currentYear = $today->year;
 
-            if (empty($validatedData['month'])) {
+            if (empty($validatedData['months'])) {
                 $validatedData['month'] = [0]; // Asigna un array con 0
             }
 
             $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
 
-            foreach ($validatedData['month'] as $month) {
+            $paymentsCollection = collect();
+
+            // dd($validatedData);
+
+            foreach ($validatedData['months'] as $month) {
                 $uuid = Str::uuid();
                 $payment = Payments::create([
                     'payment_date' => $validatedData['payment_date'],
@@ -120,8 +124,9 @@ class paymentsController extends Controller
                     'student_id' => $validatedData['student_id'],
                     'user_id' => $request->user()->id
                 ]);
-            }
 
+                $paymentsCollection->push($payment);
+            }
 
             $student = Student::findOrFail($validatedData['student_id']);
             $student->state = 1;
@@ -131,11 +136,9 @@ class paymentsController extends Controller
 
             // Generar los datos para el PDF
             $data = [
-                'title' => 'Welcome to Payments',
-                'date' => date('m/d/y'),
-                'payments' => collect([$student]),
-                'users' => $users,
-                'pay' => collect([$payment])
+                'payments' => $paymentsCollection,
+                'student' => $student,
+                'users' => $users
             ];
 
             // Generar el PDF
