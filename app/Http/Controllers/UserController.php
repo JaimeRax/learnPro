@@ -48,44 +48,43 @@ class UserController extends Controller
         }
     }
 
-    public function listUsers(){
+    public function listUsers() {
+        try {
+            $roleId = request()->query('role_id');
+            $search = request()->query('search');
 
+            if ($roleId || $search) {
 
-            try {
-                $degreeId = request()->query('degree_id');
-                $search = request()->query('search');
-
-                if ($degreeId || $search) {
-                    $users = User::whereIn('state', 1)
-                    ->when($degreeId, function ($query) use ($degreeId) {
-                        return $query->where('degree_id', $degreeId);
+                $users = User::where('state', 1)
+                    ->when($roleId, function ($query) use ($roleId) {
+                        return $query->whereHas('roles', function ($q) use ($roleId) {
+                            $q->where('roles.id', $roleId);
+                        });
                     })
                     ->when($search, function ($query) use ($search) {
                         return $query->where('first_name', 'LIKE', "%{$search}%");
                     })
                     ->paginate(10)
                     ->appends([
-                        'degree_id' => $degreeId,
+                        'role_id' => $roleId,
                         'search' => $search
                     ]);
 
-
-                } else {
-                    $users = User::whereIn('state', [1])->paginate(10);
-                }
-
-                $degrees = Degree::all();
-
-                return view('user.listUsers', [
-                    'degrees' => $degrees,
-                    'users' => $users,
-                ]);
-
-            } catch (\Exception $e) {
-                return redirect('/users')->with('error', 'Ocurrió un problema.');
+            } else {
+                $users = User::where('state', [1])->paginate(10);
             }
 
+            $roles = Role::all();
+
+            return view('user.listUsers', [
+                'roles' => $roles,
+                'users' => $users,
+            ]);
+        } catch (\Exception $e) {
+            return redirect('/users')->with('error', 'Ocurrió un problema.');
+        }
     }
+
 
     public function showCreateForm(){
 

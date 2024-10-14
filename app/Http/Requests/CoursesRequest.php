@@ -23,7 +23,6 @@ class CoursesRequest extends FormRequest
     {
         return [
             'name'=> 'required',
-            'degree_id' => 'required|exists:degrees,id',
         ];
     }
 }

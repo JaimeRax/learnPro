@@ -198,7 +198,7 @@
 
 
                                 <div class="mt-5 group">
-                                    <x-button-link href="/teachers" class="mt-2 text-white bg-blue-600">
+                                    <x-button-link href="/users" class="mt-2 text-white bg-blue-600">
 
                                         Cancelar
 

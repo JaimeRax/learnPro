@@ -23,40 +23,15 @@ class RoleAndPermission extends Seeder
         ]);
 
         Permission::firstOrCreate([
-            'name' => 'createStudent',
+            'name' => 'admin',
         ]);
 
         Permission::firstOrCreate([
-            'name' => 'editStudent',
+            'name' => 'teacher',
         ]);
 
-        Permission::firstOrCreate([
-            'name' => 'deleteStudent',
-        ]);
-
-        Permission::firstOrCreate([
-            'name' => 'seeResources',
-        ]);
-
-        Permission::firstOrCreate([
-            'name' => 'seePayments',
-        ]);
-
-        Permission::firstOrCreate([
-            'name' => 'seeAssignments',
-        ]);
-
-        Permission::firstOrCreate([
-            'name' => 'reportsPayments',
-        ]);
-
-        $roleadmin->givePermissionTo('createStudent');
-        $roleadmin->givePermissionTo('editStudent');
-        $roleadmin->givePermissionTo('deleteStudent');
-        $roleadmin->givePermissionTo('seeResources');
-        $roleadmin->givePermissionTo('seePayments');
-        $roleadmin->givePermissionTo('seeAssignments');
-        $roleadmin->givePermissionTo('reportsPayments');
+        $roleadmin->givePermissionTo('admin');
+        $roleteacher->givePermissionTo('teacher');
     }
 }
 

@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class TeachersController extends Controller
 {
+    public function ListCoursesTeacher(){
 
+        return view('teachers.myCourses');
+    }
 
 
     public function disableUser($id)

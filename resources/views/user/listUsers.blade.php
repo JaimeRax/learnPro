@@ -10,7 +10,7 @@
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             {{-- filtro por busqueda de nombre --}}
-            <form class="input-group" action="/student" method="get">
+            <form class="input-group" action="/users" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
 
@@ -24,10 +24,20 @@
 
             {{-- filtro por seleccion de grado --}}
 
-            {{-- <form method="GET" action="/student" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form> --}}
+            <form method="GET" action="/users" id="userSearchForm" class="mt-6">
+                <x-inputs.select-option
+                    id="role_id"
+                    titulo=""
+                    name="role_id"
+                    :options="$roles->pluck('name', 'id')->toArray()"
+                    :selected="request('role_id')"
+                    required
+                    onchange="document.getElementById('userSearchForm').submit()"
+                />
+
+
+            </form>
+
 
 
             {{-- BOTON PARA AGREGAR --}}
@@ -120,11 +130,12 @@
                 @endforeach
 
             </x-slot>
-            <div>
-                {{ $users->appends(['search' => request()->query('search')])->links('components.pagination') }}
-            </div>
+
 
         </x-tablas.table>
+        <div>
+            {{ $users->appends(['search' => request()->query('search')])->links('components.pagination') }}
+        </div>
     @endsection
 
 
