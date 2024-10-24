@@ -13,6 +13,7 @@ return new class () extends Migration {
         Schema::create('tb_payments', function (Blueprint $table) {
             $table->id();
             $table->string('type_payment');
+            $table->string('name_collaboration')->nullable();
             $table->string('description')->nullable();
             $table->string('mood_payment');
             $table->date('payment_date');

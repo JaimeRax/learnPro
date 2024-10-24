@@ -19,8 +19,6 @@ class Student extends Model
         'gender',
         'birthdate',
         'town_ethnicity',
-        'degree_id',
-        'section_id'
     ];
 
     public function in_charge()

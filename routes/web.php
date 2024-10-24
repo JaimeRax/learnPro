@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Collaborations;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\paymentsController;
 use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\assignmentController;
+use App\Http\Controllers\CollaborationsController;
 
 // **** RUTA PARA LOGIN ****
 Route::get('/', function () {
@@ -97,12 +99,12 @@ Route::prefix('payments')->group(function () {
     Route::get('/new/{id}', [paymentsController::class, 'ShowcreatePayments'])->middleware('can:admin');
     Route::post('/newForm/{id}', [paymentsController::class, 'createPayments'])->middleware('can:admin')->name('payments.list');
 
-
 });
 
 //ROUTES ASSIGNMENTO
 Route::prefix('assignment')->group(function () {
-    Route::get('/', [assignmentController::class, 'listAssignment'])->middleware('can:admin');
+    Route::get('/teachers', [assignmentController::class, 'listAssignmentTeachers'])->middleware('can:admin');
+    Route::get('/student', [assignmentController::class, 'listAssignmentStudent'])->middleware('can:admin');
     Route::get('/form', [ assignmentController::class,'ShowcreateAssignment'])->middleware('can:admin');
     Route::post('/newTeacherCourse', [assignmentController::class, 'newTeacherCourse']);
 });
@@ -125,5 +127,16 @@ Route::prefix('teachers')->group(function () {
 // ROUTES RATINGS
 Route::prefix('ratings')->group(function () {
     Route::get('/', [RatingsController::class, 'listRatings'])->middleware('can:teacher');
+
+});
+
+//ROUTES COLLABORATIONS
+Route::prefix('collaborations')->group(function () {
+    Route::get('/', [CollaborationsController::class, 'listCollaborations'])->middleware('can:admin');
+    Route::post('/new', [CollaborationsController::class, 'createCollaborations'])->middleware('can:admin');
+    Route::put('/edit/{id}', [CollaborationsController::class, 'editCollaborations'])->middleware('can:admin');
+    Route::post('/delete/{id}', [CollaborationsController::class, 'disableCollaborations'])->middleware('can:admin');
+    Route::post('/restore/{id}', [CollaborationsController::class, 'activeCollaborations'])->middleware('can:admin');
+    Route::get('/trash', [CollaborationsController::class, 'trashCollaborations'])->middleware('can:admin');
 
 });

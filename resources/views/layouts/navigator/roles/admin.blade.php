@@ -34,8 +34,24 @@
     <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
     <li><a href="{{ '/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Pagos</a></li>
+    <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-map-location-dot"></i> Colaboraciones</a></li>
 
-    <li><a href="{{ '/assignment' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones</a></li>
+
+    <li>
+
+        <details>
+
+        <summary><i class="fa-solid fa-people-arrows"></i> Asignaciones generales</summary>
+
+        <ul>
+            <li><a href="{{ '/assignment/teachers' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones de docente</a></li>
+
+            <li><a href="{{ '/assignment/student' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones de estudiantes</a></li>
+        </ul>
+
+        </details>
+
+    </li>
 
     <li><a href="{{ '/users' }}"><i class="fa-solid fa-user-plus"></i> Usuarios</a></li>
 
