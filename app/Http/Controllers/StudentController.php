@@ -71,8 +71,6 @@ class StudentController extends Controller
                 'birthdate' => 'required|date',
                 'gender' => 'required',
                 'town_ethnicity' => 'nullable',
-                'section_id' => 'nullable',
-                'degree_id' => 'nullable',
             ]);
 
             // Crear el estudiante
