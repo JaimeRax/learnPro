@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\DegreeRequest;
-use App\Http\Requests\CoursesRequest;
-use App\Http\Requests\SectionsRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
 use App\Models\Sections;
-use App\Models\Courses;
-use Symfony\Component\Stopwatch\Section;
 
 class degreesController extends Controller
 {
@@ -46,7 +39,7 @@ class degreesController extends Controller
             $degree = Degree::create($request->validated());
             return redirect('/degrees')->with('message', 'Grado creado exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/degrees')->with('error', 'Ocurrió un problema al crear el grado ' . $e->getMessage());
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al crear el grado ');
         }
     }
     public function disableDegrees($id)
@@ -56,7 +49,7 @@ class degreesController extends Controller
             $degree->disable();
             return redirect('/degrees')->with('message', 'Grado desactivado exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/degrees')->with('error', 'Error al desactivar el grado' . $e->getMessage());
+            return redirect('/degrees')->with('error', 'Error al desactivar el grado');
         }
     }
 
@@ -67,7 +60,7 @@ class degreesController extends Controller
             $degree->enable();
             return redirect('/degrees')->with('message', 'Grado activado exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/degrees')->with('error', 'Error al activar el grado ' . $e->getMessage());
+            return redirect('/degrees')->with('error', 'Error al activar el grado ');
         }
     }
 
@@ -86,7 +79,7 @@ class degreesController extends Controller
 
             return view('resourcesJV.degrees.trashDegrees', ['degree' => $degree]);
         } catch (\Exception $e) {
-            return redirect('/degrees')->with('error', 'Ocurrió un problema al obtener los grados' . $e->getMessage());
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al obtener los grados');
         }
     }
 
@@ -98,7 +91,7 @@ class degreesController extends Controller
 
             return redirect('/degrees')->with('message', 'Grado actualizado correctamente.');
         } catch (\Exception $e) {
-            return redirect('/degrees')->with('error', 'Ocurrió un problema al actualizar el grado ' . $e->getMessage());
+            return redirect('/degrees')->with('error', 'Ocurrió un problema al actualizar el grado ');
         }
     }
 }

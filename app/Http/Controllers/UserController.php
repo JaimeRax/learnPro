@@ -7,22 +7,21 @@ use App\Models\Degree;
 use App\Models\Courses;
 use App\Models\Sections;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\FuncCall;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use lluminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
 
 class UserController extends Controller
 {
-    public function show(){
-        if(Auth::check()){
+    public function show()
+    {
+        if(Auth::check()) {
             return redirect('/home');
         }
 
-        $roles = Role::all()->pluck('name','id')->toArray(); // Convertir a array antes de pasar a la vista
-        return view('auth.register' , compact('roles'));
+        $roles = Role::all()->pluck('name', 'id')->toArray(); // Convertir a array antes de pasar a la vista
+        return view('auth.register', compact('roles'));
     }
 
 
@@ -50,7 +49,8 @@ class UserController extends Controller
         }
     }
 
-    public function listUsers() {
+    public function listUsers()
+    {
         try {
             $roleId = request()->query('role_id');
             $search = request()->query('search');
@@ -94,29 +94,31 @@ class UserController extends Controller
     }
 
 
-    public function showCreateForm(){
+    public function showCreateForm()
+    {
 
-        $roles = Role::all()->pluck('name','id')->toArray();
-        return view('user.createUser' , compact('roles'));
+        $roles = Role::all()->pluck('name', 'id')->toArray();
+        return view('user.createUser', compact('roles'));
     }
 
-    public function createUser(Request $request){
+    public function createUser(Request $request)
+    {
         try {
-              // Validación de los datos del estudiante
-              $validatedStudent = $request->validate([
-                'email' => 'nullable',
-                'username' => 'nullable',
-                'first_name' => 'nullable',
-                'second_name' => 'nullable',
-                'first_lastname' => 'nullable',
-                'second_lastname' => 'nullable',
-                'dpi' => 'nullable',
-                'phone' => 'nullable',
-                'academic_degree' => 'nullable',
-                'service_time' => 'nullable',
-                'address' => 'nullable',
-                'password'=> 'nullable',
-                'password_confirmation'=> 'nullable|same:password',
+            // Validación de los datos del estudiante
+            $validatedStudent = $request->validate([
+              'email' => 'nullable',
+              'username' => 'nullable',
+              'first_name' => 'nullable',
+              'second_name' => 'nullable',
+              'first_lastname' => 'nullable',
+              'second_lastname' => 'nullable',
+              'dpi' => 'nullable',
+              'phone' => 'nullable',
+              'academic_degree' => 'nullable',
+              'service_time' => 'nullable',
+              'address' => 'nullable',
+              'password' => 'nullable',
+              'password_confirmation' => 'nullable|same:password',
             ]);
 
             // Crear el estudiante
@@ -189,7 +191,7 @@ class UserController extends Controller
             Log::error('Error al actualizar el usuario', ['error' => $e->getMessage()]);
             return redirect()
                 ->back()
-                ->with('error', 'Error al actualizar el usuario: ' . $e->getMessage());
+                ->with('error', 'Error al actualizar el usuario: ');
         }
     }
 

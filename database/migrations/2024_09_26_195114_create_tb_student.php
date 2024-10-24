@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,10 +20,7 @@ return new class extends Migration
             $table->string('gender');
             $table->date('birthdate');
             $table->string('town_ethnicity');
-            $table->unsignedBigInteger('degree_id');
-            $table->foreign('degree_id')->references('id')->on('degrees')->onDelete('cascade');
-            $table->boolean('state')->default(1);
-
+            $table->integer('state')->default(0);
             $table->timestamps();
         });
     }

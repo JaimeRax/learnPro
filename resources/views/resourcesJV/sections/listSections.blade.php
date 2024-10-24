@@ -24,11 +24,11 @@
                 </div>
             </form>
 
-            <x-modal id="createSections" title="Grado" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
+            <x-modal id="createSections" title="Sección" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
                     Agregar
 
-                    <x-iconos.ver />
+                    <x-iconos.agregar />
 
                 </x-slot>
 
@@ -75,10 +75,12 @@
                                 </x-slot>
 
                                 <x-slot name="body">
-                                    <p class="mt-5 mb-4 text-sm text-center">¿Está seguro de eliminar la sección {{ $section->name }}?</p>
+                                    <p class="mt-5 mb-4 text-sm text-center">¿Está seguro de eliminar la sección
+                                        {{ $section->name }}?</p>
                                     <form action="/sections/delete/{{ $section->id }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        <button type="submit"
+                                            class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                             Aceptar
                                         </button>
                                     </form>
@@ -102,7 +104,8 @@
                                                 required value="{{ $section->name }}" />
                                         </div>
 
-                                        <button type="submit"class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        <button
+                                            type="submit"class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                             Acepar
                                         </button>
 

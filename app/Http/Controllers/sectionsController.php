@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\DegreeRequest;
-use App\Http\Requests\CoursesRequest;
 use App\Http\Requests\SectionsRequest;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Degree;
 use App\Models\Sections;
-use App\Models\Courses;
-use Symfony\Component\Stopwatch\Section;
+use Illuminate\Support\Facades\Log;
 
 class sectionsController extends Controller
 {
@@ -36,7 +29,8 @@ class sectionsController extends Controller
             $sections = Sections::create($request->validated());
             return redirect('/sections')->with('message', 'Sección creada exitosamente');
         } catch (\Exception $e) {
-            return redirect('/sections')->with('error', 'Ocurrió un problema al crear la sección ' . $e->getMessage());
+            Log::error($e);
+            return redirect('/sections')->with('error', 'Ocurrió un problema al crear la sección ');
         }
     }
 
@@ -47,7 +41,7 @@ class sectionsController extends Controller
             $sections->disable();
             return redirect('/sections')->with('message', 'Sección desactivada exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/sections')->with('error', 'Error al desactivar la sección ' . $e->getMessage());
+            return redirect('/sections')->with('error', 'Error al desactivar la sección ');
         }
     }
 
@@ -58,7 +52,7 @@ class sectionsController extends Controller
             $sections->enable();
             return redirect('/sections')->with('message', 'Sección activada exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/sections')->with('error', 'Error al activar la sección ' . $e->getMessage());
+            return redirect('/sections')->with('error', 'Error al activar la sección ');
         }
     }
 
@@ -77,7 +71,7 @@ class sectionsController extends Controller
 
             return view('resourcesJV.sections.trashSections', ['sections' => $sections]);
         } catch (\Exception $e) {
-            return redirect('/sections')->with('error', 'Ocurrió un problema al obtener las secciones ' . $e->getMessage());
+            return redirect('/sections')->with('error', 'Ocurrió un problema al obtener las secciones ');
         }
     }
 
@@ -86,11 +80,11 @@ class sectionsController extends Controller
         $section = Sections::find($id);
 
         if (!$section) {
-            return redirect('/sections')->with('error', 'Grado no encontrado.');
+            return redirect('/sections')->with('error', 'Sección no encontrado.');
         }
 
         $section->update($request->validated());
 
-        return redirect('/sections')->with('message', 'Grado actualizado correctamente.');
+        return redirect('/sections')->with('message', 'Sección actualizado correctamente.');
     }
 }

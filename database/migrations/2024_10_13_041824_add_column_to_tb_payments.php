@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::table('tb_payments', function (Blueprint $table) {
             //
-            $table->integer('year')->after('month')->nullable(false);
+            $table->integer('year')->after('paid_month')->nullable(false);
         });
     }
 

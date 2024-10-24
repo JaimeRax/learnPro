@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\DegreeRequest;
 use App\Http\Requests\CoursesRequest;
-use App\Http\Requests\SectionsRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Degree;
-use App\Models\Sections;
 use App\Models\Courses;
-use Symfony\Component\Stopwatch\Section;
 
 class coursesController extends Controller
 {
@@ -71,7 +64,7 @@ class coursesController extends Controller
             $courses->disable();
             return redirect('/courses')->with('message', 'Curso desactivado exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Error al desactivar el curso: ' . $e->getMessage());
+            return redirect('/courses')->with('error', 'Error al desactivar el curso: ');
         }
     }
 
@@ -82,7 +75,7 @@ class coursesController extends Controller
             $courses->enable();
             return redirect('/courses')->with('message', 'Curso activado exitosamente.');
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Error al activar el curso: ' . $e->getMessage());
+            return redirect('/courses')->with('error', 'Error al activar el curso: ');
         }
     }
 
@@ -116,7 +109,7 @@ class coursesController extends Controller
                 'degrees' => $degrees
             ]);
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema' . $e->getMessage());
+            return redirect('/courses')->with('error', 'Ocurrió un problema');
         }
     }
 
@@ -133,7 +126,7 @@ class coursesController extends Controller
 
             return redirect('/courses')->with('message', 'Curso actualizado correctamente.');
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema al actualizar el curso' . $e->getMessage());
+            return redirect('/courses')->with('error', 'Ocurrió un problema al actualizar el curso');
         }
     }
 }

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,12 +13,13 @@ return new class extends Migration
         Schema::create('tb_payments', function (Blueprint $table) {
             $table->id();
             $table->string('type_payment');
+            $table->string('description')->nullable();
             $table->string('mood_payment');
             $table->date('payment_date');
             $table->string('uuid');
             $table->string('amount');
             $table->string('bank')->nullable();
-            $table->string('month')->nullable();
+            $table->integer('paid_month')->nullable();
             $table->string('document_number')->nullable();
             $table->string('comment')->nullable();
             $table->unsignedBigInteger('student_id');
