@@ -126,6 +126,7 @@
             </x-slot>
 
 
+            <x-alert-message />
         </x-tablas.table>
         <div>
             {{ $users->appends(['search' => request()->query('search')])->links('components.pagination') }}
@@ -134,3 +135,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

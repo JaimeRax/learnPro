@@ -51,9 +51,9 @@
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->degree->name }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->section->name }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
+                        <x-tablas.td>primero quemado</x-tablas.td>
+                        <x-tablas.td>A quemado</x-tablas.td>
+                        <x-tablas.td>solvente quemado</x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">

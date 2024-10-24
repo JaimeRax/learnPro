@@ -21,34 +21,36 @@ class paymentsController extends Controller
             $degreeId = request()->query('degree_id');
             $search = request()->query('search');
 
-            if ($degreeId || $search) {
-                $student = Student::whereIn('state', [1, 2])
-                    ->when($degreeId, function ($query) use ($degreeId) {
-                        return $query->where('degree_id', $degreeId);
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('first_name', 'LIKE', "%{$search}%");
-                    })
-                    ->with(['degree', 'section', 'payments' => function ($query) {
-                        $query->where('year', date('Y'));
-                    }])
-                    ->paginate(10)
-                    ->appends([
-                        'degree_id' => $degreeId,
-                        'search' => $search
-                    ]);
-            } else {
-                $student = Student::whereIn('state', [1, 2])
-                    ->with(['degree', 'section', 'payments' => function ($query) {
-                        $query->where('year', date('Y'));
-                    }])
-                    ->paginate(10);
-            }
+            // if ($degreeId || $search) {
+            //     $student = Student::whereIn('state', [0,1, 2])
+            //         ->when($degreeId, function ($query) use ($degreeId) {
+            //             return $query->where('degree_id', $degreeId);
+            //         })
+            //         ->when($search, function ($query) use ($search) {
+            //             return $query->where('first_name', 'LIKE', "%{$search}%");
+            //         })
+            //         ->with(['degree', 'section', 'payments' => function ($query) {
+            //             $query->where('year', date('Y'));
+            //         }])
+            //         ->paginate(10)
+            //         ->appends([
+            //             'degree_id' => $degreeId,
+            //             'search' => $search
+            //         ]);
+            // } else {
+            $student = Student::whereIn('state', [0,1])
+                // ->with(['degree', 'section', 'payments' => function ($query) {
+                //     $query->where('year', date('Y'));
+                // }])
+                ->paginate(10);
+            // }
 
             $degrees = Degree::all();
             $sections = Sections::all();
             $users = User::all();
 
+
+            // dd($student->toArray());
             $months = Constants::MONTHS;
 
             return view('payments.listPayments', [

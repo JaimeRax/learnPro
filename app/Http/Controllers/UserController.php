@@ -136,7 +136,7 @@ class UserController extends Controller
             $user->syncRoles($roleNames);
             Log::info('Roles sincronizados para el usuario:', ['user_id' => $user->id]);
 
-            return redirect('/users')->with('success', 'Usuario creado correctamente');
+            return redirect('/users')->with('message', 'Usuario creado correctamente');
         } catch (\Exception $e) {
             Log::error('Error al registrar el usuario: ' . $e->getMessage());
 

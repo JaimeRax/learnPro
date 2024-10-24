@@ -25,7 +25,7 @@
             <div>
                 <label>Grado y Sección: </label>
                 <x-inputs.general id="grade_id" name="degree_id" style="text-align: center; font-weight: bold;"
-                    value="{{ $student->degree->name }} {{ $student->section->name }}" required />
+                    value="primero A quemado" required />
             </div>
             <div>
                 <label>Fecha: </label>
