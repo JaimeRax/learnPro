@@ -46,7 +46,8 @@ class paymentsController extends Controller
                 ->paginate(10);
             // }
 
-            $collaborations = Collaborations::all();
+            $collaborations = Collaborations::where('state', 1)->get();
+
             $degrees = Degree::all();
             $sections = Sections::all();
             $users = User::all();
@@ -70,7 +71,8 @@ class paymentsController extends Controller
 
     public function ShowcreatePayments(Request $request, $id)
     {
-        $collaborations = Collaborations::all();
+        $collaborations = Collaborations::where('state', 1)->get();
+
         $student = Student::findOrFail($id);
         $degrees = Degree::all();
         $sections = Sections::all();

@@ -104,7 +104,7 @@ Route::prefix('payments')->group(function () {
 //ROUTES ASSIGNMENTO
 Route::prefix('assignment')->group(function () {
     Route::get('/teachers', [assignmentController::class, 'listAssignmentTeachers'])->middleware('can:admin');
-    Route::get('/student', [assignmentController::class, 'listAssignmentStuden'])->middleware('can:admin');
+    Route::get('/student', [assignmentController::class, 'listAssignmentStudent'])->middleware('can:admin');
     Route::get('/form', [ assignmentController::class,'ShowcreateAssignment'])->middleware('can:admin');
     Route::post('/newTeacherCourse', [assignmentController::class, 'newTeacherCourse']);
 });
