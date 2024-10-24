@@ -1,4 +1,4 @@
-<div class="p-8 md:p-5 w-full">
+<div class="w-full p-8 md:p-5">
     <form class="space-y-4" action="/payments/newForm/{{ $student->id }}" method="POST">
         @csrf
 
@@ -12,7 +12,7 @@
 
 
         {{-- CARGAR EL NOMBRE DEL ESTUDIANTE --}}
-        <div class="flex items-center justify-end space-x-4 border-b-2 border-gray-300 pb-1">
+        <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label>Estudiante: </label>
             <input id="name{{ $student->id }}" name="name" class="w-full shadow-sm input"
                 style="font-weight: bold; text-align: left;" readonly type="text"
@@ -21,16 +21,19 @@
 
 
         {{-- GRADO, SECCION & FECHA --}}
-        <div class="flex items-center justify-end space-x-4 border-b-2 border-gray-300 pb-1">
+        <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <div>
                 <label>Grado y Sección: </label>
-                <x-inputs.general id="grade_id" name="degree_id" style="text-align: center; font-weight: bold;"
-                    value="primero A quemado" required />
+                <x-inputs.general id="grade_id" name="degree_id" readonly
+                    style="text-align: center; font-weight: bold;"
+                    value="{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}" required />
             </div>
+
             <div>
                 <label>Fecha: </label>
-                <x-inputs.general id="payment_date" name="date" style="text-align: center; font-weight: bold;"
-                    value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" required />
+                <x-inputs.general id="payment_date" name="date" readonly
+                    style="text-align: center; font-weight: bold;" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
+                    required />
             </div>
         </div>
 
@@ -57,9 +60,20 @@
             </div>
         </div>
 
+        {{-- LISTAR COLABORACIONES --}}
+
+        <div class="flex items-center justify-end mr-56 space-x-4" id="collaborations" >
+            <div>
+                <label>Colaboraciones: </label>
+                <x-inputs.select-option id="name_collaboration" titulo="" name="name_collaboration" :options="$collaborations->pluck('name', 'name')->toArray()" :selected="request('name_collaboration')"
+                    required class="border-2 border-gray-300" onchange="togglePaymentOptions()" />
+            </div>
+
+        </div>
+
 
         {{-- METODO PAGO & TIPO BANCO --}}
-        <div id="referenceFields" class="flex items-center justify-center space-x-4 border-b-2 border-gray-300 pb-2">
+        <div id="referenceFields" class="flex items-center justify-center pb-2 space-x-4 border-b-2 border-gray-300">
             <div class="flex flex-col items-center">
                 <x-inputs.general id="document_number" placeholder="No. Referencia" name="document_number"
                     class="border-2 border-gray-300" value="" />
@@ -75,7 +89,7 @@
         <div class="mb-4">
             Seleccione los meses de pago:
         </div>
-        <div id="checkboxes" class="flex items-center justify-center space-x-4 border-b-2 border-gray-300 pb-4">
+        <div id="checkboxes" class="flex items-center justify-center pb-4 space-x-4 border-b-2 border-gray-300">
             <div class="grid grid-cols-5 gap-6">
                 @foreach ($months as $monthNumber => $monthName)
                     <div class="flex items-center justify-center">
@@ -96,7 +110,7 @@
 
 
         {{-- OBSERVACIONES --}}
-        <div class="flex items-center justify-end space-x-4 border-b-2 border-gray-300 pb-1">
+        <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label>Observaciones: </label>
             <input id="comment" name="comment" class="w-full shadow-sm input" style="text-align: left;" type="text"
                 value="">
@@ -104,7 +118,7 @@
 
 
         {{-- TOTAL --}}
-        <div class="flex items-center justify-end space-x-4 border-b-2 border-gray-300 pb-1">
+        <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label style="font-weight: bold; text-align: right;">TOTAL:</label>
             <input id="amount" name="amount" class="w-full shadow-sm input" style="text-align: left;" type="number"
                 value="" placeholder="Q. ">
@@ -131,6 +145,13 @@
             checkboxes.classList.remove('hidden');
         } else {
             checkboxes.classList.add('hidden');
+        }
+
+        const collaborations = document.getElementById('collaborations');
+        if (typePayment === 'colaboracion') {
+            collaborations.classList.remove('hidden');
+        } else {
+            collaborations.classList.add('hidden');
         }
 
         // Mostrar/ocultar No. Referencia y Banco

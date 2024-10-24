@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class assignmentController extends Controller
 {
-    public function listAssignment()
+    public function listAssignmentStudent()
     {
         try {
             $degreeId = request()->query('degree_id');

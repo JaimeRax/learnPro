@@ -29,16 +29,28 @@
                 <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
             </form>
+
+
         </div>
+
+        {{-- BOTON PARA VOLVER --}}
+
+        <div class="flex justify-end col-md-2">
+            <x-button-link href="/collaborations" class="mt-2 text-white bg-orange-400">
+
+                <x-iconos.volver /> Volver
+
+            </x-button-link>
+        </div>
+
+
+        {{-- Tabla para colaboraciones eliminadas --}}
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Nombre</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
-                    <x-tablas.th>Sección</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
@@ -47,36 +59,28 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($student as $studens)
+                @foreach ($collaborations as $collaboration)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : "--- ----" }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : "--- ----" }}</x-tablas.td>
-                        <x-tablas.td>solvente quemado</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$collaboration->name}") }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
-                                bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
-                                <x-slot name="button">
-                                    <x-iconos.pago />
-                                </x-slot>
-                                <x-slot name="body">
-                                    @include('payments.newPayment', [
-                                        'student' => $studens,
-                                        'user' => $users,
-                                        'degree' => $degrees,
-                                        'sections' => $sections,
-                                        'collaborations' => $collaborations
-                                    ])
-                                </x-slot>
-                            </x-modal>
+
+                            {{-- modal para restaurar un curso --}}
+                            <form action="/collaborations/restore/{{ $collaboration->id }}" method="POST">
+                                @csrf
+                                {{ @method_field('POST') }}
+                                <input type="submit"
+                                    class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
+                                    value="Restaurar"
+                                    onclick="return confirm('¿Está completamente seguro de querer restaurar esta colaboraciòn?')">
+                            </form>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
             </x-slot>
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $collaborations->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 

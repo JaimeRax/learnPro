@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collaborations;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Log;
@@ -38,17 +39,17 @@ class paymentsController extends Controller
             //             'search' => $search
             //         ]);
             // } else {
-            $student = Student::whereIn('state', [0,1])
+            $student = Student::whereIn('state', [0, 1])
                 // ->with(['degree', 'section', 'payments' => function ($query) {
                 //     $query->where('year', date('Y'));
                 // }])
                 ->paginate(10);
             // }
 
+            $collaborations = Collaborations::all();
             $degrees = Degree::all();
             $sections = Sections::all();
             $users = User::all();
-
 
             // dd($student->toArray());
             $months = Constants::MONTHS;
@@ -58,7 +59,9 @@ class paymentsController extends Controller
                 'degrees' => $degrees,
                 'sections' => $sections,
                 'users' => $users,
-                'months' => $months
+                'months' => $months,
+                'collaborations' => $collaborations,
+
             ]);
         } catch (\Exception $e) {
             return redirect('/payments')->with('error', 'Ocurrió un problema.');
@@ -67,17 +70,18 @@ class paymentsController extends Controller
 
     public function ShowcreatePayments(Request $request, $id)
     {
+        $collaborations = Collaborations::all();
         $student = Student::findOrFail($id);
         $degrees = Degree::all();
         $sections = Sections::all();
         $users = User::all();
 
-
         return view('payments.newPayment', [
             'student' => $student,
             'degrees' => $degrees,
             'sections' => $sections,
-            'users' => $users
+            'users' => $users,
+            'collaborations'=> $collaborations
         ]);
     }
 
@@ -87,6 +91,7 @@ class paymentsController extends Controller
             // Validación de los datos del estudiante
             $validatedData = $request->validate([
                 'type_payment' => 'required',
+                'name_collaboration' => 'nullable',
                 'mood_payment' => 'required|string',
                 'payment_date' => 'required|date',
                 'amount' => 'required|integer',
@@ -94,7 +99,7 @@ class paymentsController extends Controller
                 'months' => 'nullable|array',
                 'document_number' => 'nullable|integer',
                 'comment' => 'nullable|string',
-                'student_id' => 'required|integer',
+                'student_id' => 'required|integer'
             ]);
 
             $today = Carbon::now();
@@ -115,6 +120,7 @@ class paymentsController extends Controller
                 $payment = Payments::create([
                     'payment_date' => $validatedData['payment_date'],
                     'type_payment' => $validatedData['type_payment'],
+                    'name_collaboration' => $validatedData['name_collaboration'],
                     'mood_payment' => $validatedData['mood_payment'],
                     'uuid' => $uuid,
                     'month' => $month,
@@ -154,5 +160,6 @@ class paymentsController extends Controller
                 ->withInput();
         }
     }
+
 
 }
