@@ -126,7 +126,7 @@ class paymentsController extends Controller
                         'uuid' => $uuid,
                         'paid_month' => $month,
                         'year' => $currentYear,
-                        'amount' => $validatedData['amount'],
+                        'amount' => 75,
                         'bank' => $validatedData['bank'],
                         'document_number' => $validatedData['document_number'],
                         'comment' => $validatedData['comment'],
@@ -172,17 +172,18 @@ class paymentsController extends Controller
             ];
 
             // Generar el PDF
-            // $pdf = PDF::loadview('pdf.myPDF', $data);
+            $pdf = PDF::loadView('pdf.myPDF', $data);
+            return $pdf->download('comprobante_pago.pdf');
 
-            if($student->state == 1) {
-                return redirect('/payments')->with('message', 'El pago se registró con éxito.');
-            } else {
-                return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.')->with('swal', true);
-            }
+            // if($student->state == 1) {
+            // return redirect('/payments')->with('message', 'El pago se registró con éxito.');
+            // } else {
+            //     return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.')->with('swal', true);
+            // }
 
         } catch (\Exception $e) {
             Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
-            return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ');
+            return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ' . $e->getMessage());
         }
     }
 }

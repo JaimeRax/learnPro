@@ -51,7 +51,6 @@
                         <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>solvente quemado</x-tablas.td>
-
                         <x-tablas.td>
                             <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
@@ -69,24 +68,6 @@
                                 </x-slot>
                             </x-modal>
                         </x-tablas.td>
-
-                        {{-- <x-tablas.td> --}}
-                        {{--     <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS" --}}
-                        {{--         bstyle="border-none bg-blue-600 text-white hover:bg-blue-800"> --}}
-                        {{--         <x-slot name="button"> --}}
-                        {{--             <x-iconos.pago /> --}}
-                        {{--         </x-slot> --}}
-                        {{--         <x-slot name="body"> --}}
-                        {{--             @include('payments.newPayment', [ --}}
-                        {{--                 'student' => $studens, --}}
-                        {{--                 'user' => $users, --}}
-                        {{--                 'degree' => $degrees, --}}
-                        {{--                 'sections' => $sections, --}}
-                        {{--                 'collaborations' => $collaborations --}}
-                        {{--             ]) --}}
-                        {{--         </x-slot> --}}
-                        {{--     </x-modal> --}}
-                        {{-- </x-tablas.td> --}}
                     </x-tablas.tr>
                 @endforeach
             </x-slot>

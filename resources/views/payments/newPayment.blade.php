@@ -127,6 +127,7 @@
 </div>
 
 
+
 <script>
     // Inicializa el formulario y establece el estado por defecto
     function initializePaymentForm() {
@@ -138,6 +139,19 @@
         // Añadir los event listeners
         typePayment.addEventListener('change', togglePaymentOptions);
         moodPayment.addEventListener('change', togglePaymentOptions);
+
+        // Configurar los checkboxes de meses
+        document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
+            const label = checkbox.nextElementSibling;
+
+            // Verifica si el checkbox es para un mes pagado
+            if (label && label.textContent.includes("(Pagado)")) {
+                checkbox.disabled = true; // Deshabilita los checkboxes de meses pagados
+            } else {
+                // Añadir event listener solo a los checkboxes no pagados
+                checkbox.addEventListener('change', updateTotal);
+            }
+        });
     }
 
     function togglePaymentOptions() {
@@ -155,19 +169,14 @@
             checkboxes.classList.remove('hidden');
             collaborationSelect.value = ""; // Vaciar colaboraciones
             collaborations.classList.add('hidden');
-        } else if (typePayment === 'inscripcion') {
+        } else if (typePayment === 'inscripcion' || typePayment === 'colaboracion') {
             checkboxes.classList.add('hidden');
             collaborationSelect.value = ""; // Vaciar colaboraciones
-            collaborations.classList.add('hidden');
+            collaborations.classList[typePayment === 'inscripcion' ? 'add' : 'remove']('hidden');
             document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
                 checkbox.checked = false; // Desmarcar meses
             });
-        } else if (typePayment === 'colaboracion') {
-            checkboxes.classList.add('hidden');
-            collaborations.classList.remove('hidden');
-            document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
-                checkbox.checked = false; // Desmarcar meses
-            });
+            updateTotal(); // Actualizar el total al ocultar
         }
 
         // Lógica de método de pago
@@ -180,6 +189,21 @@
         }
     }
 
+    function updateTotal() {
+        let totalAmount = 0;
+
+        // Calcular el total solo para los checkboxes no pagados y seleccionados
+        document.querySelectorAll('input[name="month[]"]:checked').forEach((checkbox) => {
+            const label = checkbox.nextElementSibling;
+            if (!label || !label.textContent.includes("(Pagado)")) {
+                totalAmount += 75;
+            }
+        });
+
+        // Actualizar el campo total
+        document.getElementById('amount').value = totalAmount;
+    }
+
     function resetForm() {
         // Reiniciar los valores de los selects y campos
         document.getElementById('type_payment').value = ""; // Valor por defecto
@@ -190,24 +214,108 @@
         document.getElementById('checkboxes').classList.add('hidden');
         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
             checkbox.checked = false; // Desmarcar meses
-            checkbox.disabled = true;
+            // Deshabilitar solo los checkboxes de meses pagados
+            const label = checkbox.nextElementSibling;
+            checkbox.disabled = label && label.textContent.includes("(Pagado)");
         });
 
         // Limpiar los campos de referencia y banco
         document.getElementById('document_number').value = ""; // Vaciar referencia
         document.getElementById('bank').value = ""; // Vaciar banco
 
+        // Reiniciar el total
+        document.getElementById('amount').value = 0;
+
         // Mostrar solo los campos predeterminados
         togglePaymentOptions();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const modals = document.querySelectorAll('.modal'); // Ajusta esto según tu implementación
-        modals.forEach(modal => {
-            modal.addEventListener('show.bs.modal',
-                initializePaymentForm); // Cuando se muestre el modal
-            modal.addEventListener('hidden.bs.modal',
-                resetForm); // Restablecer el formulario al cerrar el modal
-        });
+        initializePaymentForm(); // Ejecutar al cargar la página
     });
 </script>
+
+{{-- <script> --}}
+{{--     // Inicializa el formulario y establece el estado por defecto --}}
+{{--     function initializePaymentForm() { --}}
+{{--         resetForm(); // Restablecer todos los campos al abrir el modal --}}
+{{-- --}}
+{{--         const typePayment = document.getElementById('type_payment'); --}}
+{{--         const moodPayment = document.getElementById('mood_payment'); --}}
+{{-- --}}
+{{--         // Añadir los event listeners --}}
+{{--         typePayment.addEventListener('change', togglePaymentOptions); --}}
+{{--         moodPayment.addEventListener('change', togglePaymentOptions); --}}
+{{--     } --}}
+{{-- --}}
+{{--     function togglePaymentOptions() { --}}
+{{--         const typePayment = document.getElementById('type_payment').value; --}}
+{{--         const moodPayment = document.getElementById('mood_payment').value; --}}
+{{-- --}}
+{{--         // Mostrar/ocultar los checkboxes de meses --}}
+{{--         const checkboxes = document.getElementById('checkboxes'); --}}
+{{--         const collaborations = document.getElementById('collaborations'); --}}
+{{--         const collaborationSelect = document.getElementById('name_collaboration'); --}}
+{{--         const referenceFields = document.getElementById('referenceFields'); --}}
+{{-- --}}
+{{--         // Lógica de tipo de pago --}}
+{{--         if (typePayment === 'mensualidad') { --}}
+{{--             checkboxes.classList.remove('hidden'); --}}
+{{--             collaborationSelect.value = ""; // Vaciar colaboraciones --}}
+{{--             collaborations.classList.add('hidden'); --}}
+{{--         } else if (typePayment === 'inscripcion') { --}}
+{{--             checkboxes.classList.add('hidden'); --}}
+{{--             collaborationSelect.value = ""; // Vaciar colaboraciones --}}
+{{--             collaborations.classList.add('hidden'); --}}
+{{--             document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
+{{--                 checkbox.checked = false; // Desmarcar meses --}}
+{{--             }); --}}
+{{--         } else if (typePayment === 'colaboracion') { --}}
+{{--             checkboxes.classList.add('hidden'); --}}
+{{--             collaborations.classList.remove('hidden'); --}}
+{{--             document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
+{{--                 checkbox.checked = false; // Desmarcar meses --}}
+{{--             }); --}}
+{{--         } --}}
+{{-- --}}
+{{--         // Lógica de método de pago --}}
+{{--         if (moodPayment === 'Efectivo') { --}}
+{{--             referenceFields.classList.add('hidden'); --}}
+{{--             document.getElementById('document_number').value = ""; // Vaciar referencia --}}
+{{--             document.getElementById('bank').value = ""; // Vaciar banco --}}
+{{--         } else { --}}
+{{--             referenceFields.classList.remove('hidden'); --}}
+{{--         } --}}
+{{--     } --}}
+{{-- --}}
+{{--     function resetForm() { --}}
+{{--         // Reiniciar los valores de los selects y campos --}}
+{{--         document.getElementById('type_payment').value = ""; // Valor por defecto --}}
+{{--         document.getElementById('mood_payment').value = ""; // Valor por defecto --}}
+{{--         document.getElementById('name_collaboration').value = ""; // Vaciar colaboraciones --}}
+{{-- --}}
+{{--         // Ocultar los checkboxes de meses --}}
+{{--         document.getElementById('checkboxes').classList.add('hidden'); --}}
+{{--         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
+{{--             checkbox.checked = false; // Desmarcar meses --}}
+{{--             checkbox.disabled = true; --}}
+{{--         }); --}}
+{{-- --}}
+{{--         // Limpiar los campos de referencia y banco --}}
+{{--         document.getElementById('document_number').value = ""; // Vaciar referencia --}}
+{{--         document.getElementById('bank').value = ""; // Vaciar banco --}}
+{{-- --}}
+{{--         // Mostrar solo los campos predeterminados --}}
+{{--         togglePaymentOptions(); --}}
+{{--     } --}}
+{{-- --}}
+{{--     document.addEventListener('DOMContentLoaded', () => { --}}
+{{--         const modals = document.querySelectorAll('.modal'); // Ajusta esto según tu implementación --}}
+{{--         modals.forEach(modal => { --}}
+{{--             modal.addEventListener('show.bs.modal', --}}
+{{--                 initializePaymentForm); // Cuando se muestre el modal --}}
+{{--             modal.addEventListener('hidden.bs.modal', --}}
+{{--                 resetForm); // Restablecer el formulario al cerrar el modal --}}
+{{--         }); --}}
+{{--     }); --}}
+{{-- </script> --}}
