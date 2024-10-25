@@ -51,8 +51,8 @@
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : "--- ----" }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : "--- ----" }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>solvente quemado</x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
@@ -82,3 +82,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

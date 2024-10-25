@@ -28,7 +28,6 @@
                     style="text-align: center; font-weight: bold;"
                     value="{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}" required />
             </div>
-
             <div>
                 <label>Fecha: </label>
                 <x-inputs.general id="payment_date" name="date" readonly
@@ -36,7 +35,6 @@
                     required />
             </div>
         </div>
-
 
         {{-- TIPO PAGO & METODO PAGO --}}
         <div class="flex items-center justify-end space-x-4 ">
@@ -61,29 +59,26 @@
         </div>
 
         {{-- LISTAR COLABORACIONES --}}
-
-        <div class="flex items-center justify-end mr-56 space-x-4" id="collaborations" >
+        <div class="flex items-center justify-end mr-56 space-x-4" id="collaborations">
             <div>
                 <label>Colaboraciones: </label>
-                <x-inputs.select-option id="name_collaboration" titulo="" name="name_collaboration" :options="$collaborations->pluck('name', 'name')->toArray()" :selected="request('name_collaboration')"
-                    required class="border-2 border-gray-300" onchange="togglePaymentOptions()" />
+                <x-inputs.select-option id="name_collaboration" titulo="" name="name_collaboration"
+                    :options="$collaborations->pluck('name', 'name')->toArray()" :selected="request('name_collaboration')" required class="border-2 border-gray-300"
+                    onchange="togglePaymentOptions()" />
             </div>
-
         </div>
-
 
         {{-- METODO PAGO & TIPO BANCO --}}
         <div id="referenceFields" class="flex items-center justify-center pb-2 space-x-4 border-b-2 border-gray-300">
             <div class="flex flex-col items-center">
                 <x-inputs.general id="document_number" placeholder="No. Referencia" name="document_number"
-                    class="border-2 border-gray-300" value="" />
+                    class="border-2 border-gray-300" value="" type="number" />
             </div>
             <div class="flex flex-col items-center">
                 <x-inputs.general id="bank" placeholder="Banco" name="bank" class="border-2 border-gray-300"
                     value="" />
             </div>
         </div>
-
 
         {{-- MESES DE PAGO --}}
         <div class="mb-4">
@@ -95,11 +90,11 @@
                     <div class="flex items-center justify-center">
                         <label class="flex items-center">
                             @if (in_array($monthNumber, $paidMonths))
-                                <input type="checkbox" name="months[]" value="{{ $monthNumber }}" disabled checked
+                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" disabled checked
                                     class="mr-2">
                                 <span>{{ $monthName }} (Pagado)</span>
                             @else
-                                <input type="checkbox" name="months[]" value="{{ $monthNumber }}" class="mr-2">
+                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" class="mr-2">
                                 <span>{{ $monthName }}</span>
                             @endif
                         </label>
@@ -108,14 +103,12 @@
             </div>
         </div>
 
-
         {{-- OBSERVACIONES --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label>Observaciones: </label>
             <input id="comment" name="comment" class="w-full shadow-sm input" style="text-align: left;" type="text"
                 value="">
         </div>
-
 
         {{-- TOTAL --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
@@ -126,42 +119,93 @@
 
         <input type="hidden" name="student_id" value="{{ $student->id }}">
 
-
         {{-- BOTON PARA AGREGAR EL PAGO --}}
         <button type="submit"
             class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
     </form>
+    <x-alert-message />
 </div>
 
-
 <script>
+    // Inicializa el formulario y establece el estado por defecto
+    function initializePaymentForm() {
+        resetForm(); // Restablecer todos los campos al abrir el modal
+
+        const typePayment = document.getElementById('type_payment');
+        const moodPayment = document.getElementById('mood_payment');
+
+        // Añadir los event listeners
+        typePayment.addEventListener('change', togglePaymentOptions);
+        moodPayment.addEventListener('change', togglePaymentOptions);
+    }
+
     function togglePaymentOptions() {
         const typePayment = document.getElementById('type_payment').value;
         const moodPayment = document.getElementById('mood_payment').value;
 
-        // Mostrar/ocultar los checkboxes
+        // Mostrar/ocultar los checkboxes de meses
         const checkboxes = document.getElementById('checkboxes');
+        const collaborations = document.getElementById('collaborations');
+        const collaborationSelect = document.getElementById('name_collaboration');
+        const referenceFields = document.getElementById('referenceFields');
+
+        // Lógica de tipo de pago
         if (typePayment === 'mensualidad') {
             checkboxes.classList.remove('hidden');
-        } else {
-            checkboxes.classList.add('hidden');
-        }
-
-        const collaborations = document.getElementById('collaborations');
-        if (typePayment === 'colaboracion') {
-            collaborations.classList.remove('hidden');
-        } else {
+            collaborationSelect.value = ""; // Vaciar colaboraciones
             collaborations.classList.add('hidden');
+        } else if (typePayment === 'inscripcion') {
+            checkboxes.classList.add('hidden');
+            collaborationSelect.value = ""; // Vaciar colaboraciones
+            collaborations.classList.add('hidden');
+            document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
+                checkbox.checked = false; // Desmarcar meses
+            });
+        } else if (typePayment === 'colaboracion') {
+            checkboxes.classList.add('hidden');
+            collaborations.classList.remove('hidden');
+            document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
+                checkbox.checked = false; // Desmarcar meses
+            });
         }
 
-        // Mostrar/ocultar No. Referencia y Banco
-        const referenceFields = document.getElementById('referenceFields');
+        // Lógica de método de pago
         if (moodPayment === 'Efectivo') {
             referenceFields.classList.add('hidden');
+            document.getElementById('document_number').value = ""; // Vaciar referencia
+            document.getElementById('bank').value = ""; // Vaciar banco
         } else {
             referenceFields.classList.remove('hidden');
         }
     }
 
-    document.addEventListener('DOMContentLoaded', togglePaymentOptions);
+    function resetForm() {
+        // Reiniciar los valores de los selects y campos
+        document.getElementById('type_payment').value = ""; // Valor por defecto
+        document.getElementById('mood_payment').value = ""; // Valor por defecto
+        document.getElementById('name_collaboration').value = ""; // Vaciar colaboraciones
+
+        // Ocultar los checkboxes de meses
+        document.getElementById('checkboxes').classList.add('hidden');
+        document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
+            checkbox.checked = false; // Desmarcar meses
+        });
+
+        // Limpiar los campos de referencia y banco
+        document.getElementById('document_number').value = ""; // Vaciar referencia
+        document.getElementById('bank').value = ""; // Vaciar banco
+
+        // Mostrar solo los campos predeterminados
+        togglePaymentOptions();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modals = document.querySelectorAll('.modal'); // Ajusta esto según tu implementación
+        modals.forEach(modal => {
+            modal.addEventListener('show.bs.modal',
+                initializePaymentForm); // Cuando se muestre el modal
+            modal.addEventListener('hidden.bs.modal',
+                resetForm); // Restablecer el formulario al cerrar el modal
+        });
+    });
 </script>

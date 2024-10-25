@@ -73,7 +73,9 @@ class paymentsController extends Controller
     {
         $collaborations = Collaborations::where('state', 1)->get();
 
-        $student = Student::findOrFail($id);
+        $student = Student::with(['payments' => function ($query) {
+            $query->where('year', date('Y'));
+        }])->findOrFail($id);
         $degrees = Degree::all();
         $sections = Sections::all();
         $users = User::all();
@@ -83,22 +85,22 @@ class paymentsController extends Controller
             'degrees' => $degrees,
             'sections' => $sections,
             'users' => $users,
-            'collaborations'=> $collaborations
+            'collaborations' => $collaborations
         ]);
     }
+
 
     public function createPayments(Request $request, $id)
     {
         try {
-            // Validación de los datos del estudiante
             $validatedData = $request->validate([
-                'type_payment' => 'required',
-                'name_collaboration' => 'nullable',
+                'type_payment' => 'required|string',
+                'name_collaboration' => 'nullable|string',
                 'mood_payment' => 'required|string',
                 'payment_date' => 'required|date',
                 'amount' => 'required|integer',
                 'bank' => 'nullable|string',
-                'months' => 'nullable|array',
+                'month' => 'nullable|array',
                 'document_number' => 'nullable|integer',
                 'comment' => 'nullable|string',
                 'student_id' => 'required|integer'
@@ -107,17 +109,35 @@ class paymentsController extends Controller
             $today = Carbon::now();
             $currentYear = $today->year;
 
-            if (empty($validatedData['months'])) {
-                $validatedData['month'] = [0]; // Asigna un array con 0
-            }
-
             $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
 
             $paymentsCollection = collect();
 
-            // dd($validatedData);
+            // Verificar si month está presente en la solicitud
+            if (isset($validatedData['month']) && !empty($validatedData['month'])) {
+                foreach ($validatedData['month'] as $month) {
+                    Log::error('mes: ' . $month);
+                    $uuid = Str::uuid();
+                    $payment = Payments::create([
+                        'payment_date' => $validatedData['payment_date'],
+                        'type_payment' => $validatedData['type_payment'],
+                        'name_collaboration' => $validatedData['name_collaboration'],
+                        'mood_payment' => $validatedData['mood_payment'],
+                        'uuid' => $uuid,
+                        'paid_month' => $month,
+                        'year' => $currentYear,
+                        'amount' => $validatedData['amount'],
+                        'bank' => $validatedData['bank'],
+                        'document_number' => $validatedData['document_number'],
+                        'comment' => $validatedData['comment'],
+                        'student_id' => $validatedData['student_id'],
+                        'user_id' => $request->user()->id,
+                    ]);
 
-            foreach ($validatedData['months'] as $month) {
+                    $paymentsCollection->push($payment);
+                }
+            } else {
+                // Crear un registro de pago único si no hay meses pagados
                 $uuid = Str::uuid();
                 $payment = Payments::create([
                     'payment_date' => $validatedData['payment_date'],
@@ -125,21 +145,21 @@ class paymentsController extends Controller
                     'name_collaboration' => $validatedData['name_collaboration'],
                     'mood_payment' => $validatedData['mood_payment'],
                     'uuid' => $uuid,
-                    'month' => $month,
+                    'paid_month' => null,
                     'year' => $currentYear,
                     'amount' => $validatedData['amount'],
                     'bank' => $validatedData['bank'],
                     'document_number' => $validatedData['document_number'],
                     'comment' => $validatedData['comment'],
                     'student_id' => $validatedData['student_id'],
-                    'user_id' => $request->user()->id
+                    'user_id' => $request->user()->id,
                 ]);
 
                 $paymentsCollection->push($payment);
             }
 
             $student = Student::findOrFail($validatedData['student_id']);
-            $student->state = 1;
+            $student->state = $validatedData['type_payment'] === 'inscripcion' ? 0 : 1;
             $student->save();
 
             $users = User::all();
@@ -152,16 +172,19 @@ class paymentsController extends Controller
             ];
 
             // Generar el PDF
-            $pdf = PDF::loadview('pdf.myPDF', $data);
-            return $pdf->download('pagos.pdf');
+            // $pdf = PDF::loadview('pdf.myPDF', $data);
+
+            if($student->state == 1) {
+
+                return redirect('/payments')->with('message', 'El pago se registró con éxito.');
+            } else {
+
+                return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.');
+            }
+
         } catch (\Exception $e) {
             Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with('error', 'Ocurrió un error al crear el pago o actualizar el estudiante: ' . $e->getMessage())
-                ->withInput();
+            return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ' . $e->getMessage());
         }
     }
-
-
 }
