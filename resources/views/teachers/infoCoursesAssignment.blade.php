@@ -18,7 +18,7 @@
         <tr>
             <td class="py-2">{{ $course->name }}</td>
             <td class="py-2">{{ optional($course->sections->where('id', $course->pivot->section_id)->first())->name }}</td>
-            <td class="py-2">{{ optional($course->degrees->where('id', $course->pivot->degree_id)->first())->name }}</td>
+            <td class="py-2">{{ optional($course->degrees->where('id', $course->pivot->degrees_id)->first())->name }}</td>
         </tr>
     @endforeach
             </tbody>

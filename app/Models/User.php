@@ -75,8 +75,8 @@ class User extends Authenticatable
 
     public function courses()
     {
-        return $this->belongsToMany(Courses::class, 'tb_assign_courses_teachers', 'teachers_id', 'course_id')
-                    ->withPivot('section_id', 'degree_id') // Incluye las columnas adicionales
+        return $this->belongsToMany(Courses::class, 'tb_general_assignment', 'teachers_id', 'course_id')
+                    ->withPivot('section_id', 'degrees_id') // Incluye las columnas adicionales
                     ->withTimestamps(); // Si deseas registrar las fechas de creación y actualización
     }
 

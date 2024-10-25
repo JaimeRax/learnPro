@@ -42,12 +42,6 @@
 
         </div>
 
-        <div class="flex justify-end col-md-2">
-            <x-button-link href="/users/trash" class="text-white bg-green-600">
-                <x-iconos.basurero /> Papelera
-            </x-button-link>
-        </div>
-
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
@@ -85,17 +79,9 @@
                                 </x-slot>
                             </x-modal>
 
-                            <x-modal id="assign{{ $user->id }}" title="Asignar Cursos"
-                                bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
-                                <x-slot name="button">
-                                    <x-iconos.asignar />
-                                </x-slot>
-
-                                <x-slot name="body">
-                                    @include('assignment.assignmentCourses-Teacher')
-
-                                </x-slot>
-                            </x-modal>
+                            <x-button-link href="{{ url('assignment/form/' . $user->id) }}" class="mt-2 btn-primary">
+                                <x-iconos.asignar />
+                            </x-button-link>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach

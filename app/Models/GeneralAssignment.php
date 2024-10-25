@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class GeneralAssignment extends Model
 {
     use HasFactory;
+    protected $table = 'tb_general_assignment';
 
 
     protected $fillable = [
+        'student_id',
         'course_id',
         'degrees_id',
         'section_id',

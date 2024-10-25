@@ -103,10 +103,11 @@ Route::prefix('payments')->group(function () {
 
 //ROUTES ASSIGNMENTO
 Route::prefix('assignment')->group(function () {
-    Route::get('/teachers', [assignmentController::class, 'listAssignmentTeachers'])->middleware('can:admin');
     Route::get('/student', [assignmentController::class, 'listAssignmentStudent'])->middleware('can:admin');
-    Route::get('/form', [ assignmentController::class,'ShowcreateAssignment'])->middleware('can:admin');
+    Route::get('/form/{id}', [assignmentController::class, 'ShowcreateAssignment'])->middleware('can:admin');
     Route::post('/newTeacherCourse', [assignmentController::class, 'newTeacherCourse']);
+    Route::post('/newAssignmentStudent/{id}', [assignmentController::class, 'createAssignment']);
+
 });
 
 // Routes to Reports
