@@ -79,7 +79,7 @@
                             <x-slot name="body">
                                 <form class="space-y-4" action="{{ url('/assignment/newAssignmentStudent/' . $student->id) }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="student_id" value="{{ $student->id }}"> <!-- Asegúrate de que esto sea el ID correcto -->
+                                    <input type="hidden" name="student_id" value="{{ $student->id }}">
 
                                     <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
                                         <label><b>Año Escolar: </b></label>

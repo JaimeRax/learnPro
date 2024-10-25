@@ -19,4 +19,10 @@ class StudentAssignment extends Model
         'year',
 
     ];
+
+    public function student()
+{
+    return $this->belongsTo(Student::class);
+}
+
 }

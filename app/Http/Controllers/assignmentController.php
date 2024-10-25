@@ -10,47 +10,56 @@ use App\Models\Sections;
 use Illuminate\Http\Request;
 use App\Models\GeneralAssignment;
 use App\Models\StudentAssignment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class assignmentController extends Controller
 {
     public function listAssignmentStudent()
-    {
-        try {
-            $degreeId = request()->query('degree_id');
-            $search = request()->query('search');
+{
+    try {
+        $degreeId = request()->query('degree_id');
+        $search = request()->query('search');
 
-            if ($degreeId || $search) {
-                $student = Student::where('state', 1)
-                    ->when($degreeId, function ($query) use ($degreeId) {
-                        return $query->where('degree_id', $degreeId);
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->paginate(10)
-                    ->appends([
-                        'degree_id' => $degreeId,
-                        'search' => $search
-                    ]);
-            } else {
-                $student = Student::where('state', 1)->paginate(10);
-            }
+        // Contar la cantidad de estudiantes por género
+        $genderCounts = Student::where('state', 1)
+            ->select('gender', DB::raw('count(*) as count'))
+            ->groupBy('gender')
+            ->pluck('count', 'gender');
 
-            $degrees = Degree::all();
-            $sections = Sections::all();
-            $courses = Courses::all();
-
-            return view('assignment.listAssignmentStudent', [
-                'students' => $student,
-                'degrees' => $degrees,
-                'sections' => $sections,
-                'courses' => $courses,
-            ]);
-        } catch (\Exception $e) {
-            return redirect('/student')->with('error', 'Ocurrió un problema.');
+        if ($degreeId || $search) {
+            $students = Student::where('state', 1)
+                ->when($degreeId, function ($query) use ($degreeId) {
+                    return $query->where('degree_id', $degreeId);
+                })
+                ->when($search, function ($query) use ($search) {
+                    return $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->paginate(10)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'search' => $search
+                ]);
+        } else {
+            $students = Student::where('state', 1)->paginate(10);
         }
+
+        $degrees = Degree::all();
+        $sections = Sections::all();
+        $courses = Courses::all();
+
+        return view('assignment.listAssignmentStudent', [
+            'students' => $students,
+            'degrees' => $degrees,
+            'sections' => $sections,
+            'courses' => $courses,
+            'genderCounts' => $genderCounts, // Pasamos los conteos de género a la vista
+        ]);
+    } catch (\Exception $e) {
+        return redirect('/student')->with('error', 'Ocurrió un problema.');
     }
+}
+
 
     public function createAssignment(Request $request, $id)
     {
