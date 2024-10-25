@@ -18,6 +18,8 @@
 
         <li><a href="{{ '/courses' }}"><i class="fa-solid fa-users-line"></i> Cursos</a></li>
 
+        <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-map-location-dot"></i> Colaboraciones</a></li>
+
         </li>
 
         </ul>
@@ -29,12 +31,10 @@
     @endcan
 
     @can('admin')
-    <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-plus"></i> Docentes</a></li>
 
     <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
     <li><a href="{{ '/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Pagos</a></li>
-    <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-map-location-dot"></i> Colaboraciones</a></li>
 
 
     <li>
@@ -44,7 +44,8 @@
         <summary><i class="fa-solid fa-people-arrows"></i> Asignaciones generales</summary>
 
         <ul>
-            <li><a href="{{ '/assignment/teachers' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones de docente</a></li>
+            <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-plus"></i> Asignaciones de Docentes</a></li>
+
 
             <li><a href="{{ '/assignment/student' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones de estudiantes</a></li>
         </ul>

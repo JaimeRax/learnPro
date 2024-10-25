@@ -32,7 +32,7 @@ class Sections extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Courses::class, 'tb_assign_courses_teachers', 'section_id', 'course_id');
+        return $this->belongsToMany(Courses::class, 'tb_general_assignment', 'section_id', 'course_id');
     }
 
     public function student()

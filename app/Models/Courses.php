@@ -21,12 +21,12 @@ class Courses extends Model
 
     public function degrees()
     {
-        return $this->belongsToMany(Degree::class, 'tb_assign_courses_teachers', 'course_id', 'degree_id');
+        return $this->belongsToMany(Degree::class, 'tb_general_assignment', 'course_id', 'degrees_id');
     }
 
     public function sections()
     {
-        return $this->belongsToMany(Sections::class, 'tb_assign_courses_teachers', 'course_id', 'section_id');
+        return $this->belongsToMany(Sections::class, 'tb_general_assignment', 'course_id', 'section_id');
     }
 
     public function disable()
@@ -43,8 +43,8 @@ class Courses extends Model
 
     public function teachers()
     {
-        return $this->belongsToMany(User::class, 'tb_assign_courses_teachers')
-                    ->withPivot('section_id', 'grade_id')
+        return $this->belongsToMany(User::class, 'tb_general_assignment')
+                    ->withPivot('section_id', 'degrees_id')
                     ->withTimestamps();
     }
 }

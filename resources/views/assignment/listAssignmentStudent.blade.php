@@ -65,45 +65,48 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($student as $studens)
+                @foreach ($students as $student)
                 <x-tablas.tr>
                     <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                    <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                    <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
+                    <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
+                    <x-tablas.td>{{ $student->personal_code }}</x-tablas.td>
                     <x-tablas.td>
-                        <x-button-link href="#" class="mt-2 text-white bg-orange-500">
+                        <x-modal title="Asignación" id="asignacion-{{ $student->id }}" bstyle="border-none bg-orange-600 text-white hover:bg-orange-800">
+                            <x-slot name="button">
+                                <x-iconos.asignar data-modal-target="#asignacion-{{ $student->id }}" />
+                            </x-slot>
 
-                            Asignar
+                            <x-slot name="body">
+                                <form class="space-y-4" action="{{ url('/assignment/newAssignmentStudent/' . $student->id) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="student_id" value="{{ $student->id }}"> <!-- Asegúrate de que esto sea el ID correcto -->
 
-                          </x-button-link>
-                        <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
-                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
-                                <x-slot name="button">
-                                    <x-iconos.basurero /> Eliminar
-                                </x-slot>
+                                    <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
+                                        <label><b>Año Escolar: </b></label>
+                                        <x-inputs.general id="year" name="year" readonly style="text-align: center; font-weight: bold;" value="{{ \Carbon\Carbon::now()->format('Y') }}" required />
+                                    </div>
 
-                                <x-slot name="body">
-                                    <form action="#" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn-error">
-                                            Dar de Baja al Estudiante
-                                        </button>
-                                    </form>
-                                </x-slot>
-                            </x-modal>
+                                    <x-inputs.select-option id="degrees_id" titulo="Grado" name="degrees_id" :options="$degrees->pluck('name', 'id')->toArray()" required />
+                                    <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()" required />
 
-
-
+                                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Agregar
+                                    </button>
+                                </form>
+                            </x-slot>
+                        </x-modal>
                     </x-tablas.td>
                 </x-tablas.tr>
-                @endforeach
+            @endforeach
+
+
 
             </x-slot>
 
 
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $students->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 
