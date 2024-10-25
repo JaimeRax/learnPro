@@ -4,14 +4,12 @@
     <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
 
-
 @section('main')
     <div class="grid grid-cols-1 gap-2">
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             {{-- filtro por busqueda de nombre --}}
-
             <form class="input-group" action="/payments" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
@@ -24,7 +22,6 @@
             </form>
 
             {{-- filtro por seleccion de grado --}}
-
             <form method="GET" action="/payments" id="degreeForm" class="mt-6">
                 <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
@@ -54,6 +51,7 @@
                         <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>solvente quemado</x-tablas.td>
+
                         <x-tablas.td>
                             <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
@@ -71,6 +69,24 @@
                                 </x-slot>
                             </x-modal>
                         </x-tablas.td>
+
+                        {{-- <x-tablas.td> --}}
+                        {{--     <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS" --}}
+                        {{--         bstyle="border-none bg-blue-600 text-white hover:bg-blue-800"> --}}
+                        {{--         <x-slot name="button"> --}}
+                        {{--             <x-iconos.pago /> --}}
+                        {{--         </x-slot> --}}
+                        {{--         <x-slot name="body"> --}}
+                        {{--             @include('payments.newPayment', [ --}}
+                        {{--                 'student' => $studens, --}}
+                        {{--                 'user' => $users, --}}
+                        {{--                 'degree' => $degrees, --}}
+                        {{--                 'sections' => $sections, --}}
+                        {{--                 'collaborations' => $collaborations --}}
+                        {{--             ]) --}}
+                        {{--         </x-slot> --}}
+                        {{--     </x-modal> --}}
+                        {{-- </x-tablas.td> --}}
                     </x-tablas.tr>
                 @endforeach
             </x-slot>

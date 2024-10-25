@@ -175,16 +175,14 @@ class paymentsController extends Controller
             // $pdf = PDF::loadview('pdf.myPDF', $data);
 
             if($student->state == 1) {
-
                 return redirect('/payments')->with('message', 'El pago se registró con éxito.');
             } else {
-
-                return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.');
+                return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.')->with('swal', true);
             }
 
         } catch (\Exception $e) {
             Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
-            return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ' . $e->getMessage());
+            return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ');
         }
     }
 }

@@ -7,7 +7,7 @@
         @endforeach
 
         @php
-            $paidMonths = $student->payments->pluck('month')->toArray(); // Obtener los meses pagados por el estudiante
+            $paidMonths = $student->payments->pluck('paid_month')->toArray(); // Obtener los meses pagados por el estudiante
         @endphp
 
 
@@ -126,6 +126,7 @@
     <x-alert-message />
 </div>
 
+
 <script>
     // Inicializa el formulario y establece el estado por defecto
     function initializePaymentForm() {
@@ -189,6 +190,7 @@
         document.getElementById('checkboxes').classList.add('hidden');
         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
             checkbox.checked = false; // Desmarcar meses
+            checkbox.disabled = true;
         });
 
         // Limpiar los campos de referencia y banco
