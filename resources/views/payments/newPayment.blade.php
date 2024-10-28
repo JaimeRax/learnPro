@@ -152,6 +152,7 @@
         });
     }
 
+
     function togglePaymentOptions(studentId) {
         console.log(`Toggling payment options for student ID: ${studentId}`); // Debugging statement
 
@@ -184,20 +185,24 @@
     }
 
     function updateTotal(studentId) {
-        let totalAmount = 0;
+    let totalAmount = 0;
 
-        // Calcular el total solo para los checkboxes no pagados y seleccionados
-        document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
-            const label = checkbox.nextElementSibling;
-            if (!label || !label.textContent.includes("(Pagado)")) {
-                totalAmount += 75; // Asumiendo que cada mes no pagado tiene un costo de 75
-            }
-        });
+    // Define el costo mensual que debes calcular (esto depende de tu lógica)
+    const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
 
-        // Actualizar el campo total
-        document.getElementById('amount' + studentId).value = totalAmount;
-        console.log(`Total for student ID ${studentId}: ${totalAmount}`); // Debugging statement
-    }
+    // Calcular el total solo para los checkboxes no pagados y seleccionados
+    document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
+        const label = checkbox.nextElementSibling;
+        if (!label || !label.textContent.includes("(Pagado)")) {
+            totalAmount += monthlyCost; // Sumar el costo mensual
+        }
+    });
+
+    // Actualizar el campo del total con el valor calculado
+    const totalField = document.getElementById('amount' + studentId);
+    totalField.value = totalAmount;
+}
+
 
     function resetForm(studentIds) {
         // Reiniciar los valores de los selects y campos
@@ -243,5 +248,6 @@
         const initialStudentIds = [...new Set(Array.from(document.querySelectorAll('input[name="student_id"]'))
             .map(input => input.value))];
         initialStudentIds.forEach(studentId => updateTotal(studentId));
+
     });
 </script>
