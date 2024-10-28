@@ -31,15 +31,11 @@ class Student extends Model
         return $this->hasMany(Payments::class, 'student_id', 'id');
     }
 
-    public function degree()
+    public function assignments()
     {
-        return $this->belongsTo(Degree::class, 'degree_id', 'id');
+        return $this->hasMany(StudentAssignment::class, 'student_id', 'id');
     }
 
-    public function section()
-    {
-        return $this->belongsTo(Sections::class, 'section_id', 'id');
-    }
 
     public function ratings()
     {

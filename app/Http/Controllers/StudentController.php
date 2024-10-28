@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Degree;
 use App\Models\In_charge;
+use App\Models\Sections;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,38 +19,44 @@ class StudentController extends Controller
     {
         try {
             $degreeId = request()->query('degree_id');
+            $sectionId = request()->query('section_id');
             $search = request()->query('search');
 
-            if ($degreeId || $search) {
-                $student = Student::whereIn('state', [1,2])
-                ->when($degreeId, function ($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
+            $students = Student::whereIn('state', [1, 2])
+                ->when($degreeId || $sectionId, function ($query) use ($degreeId, $sectionId) {
+                    $query->whereHas('assignments', function ($query) use ($degreeId, $sectionId) {
+                        $query->when($degreeId, function ($query) use ($degreeId) {
+                            return $query->where('degrees_id', $degreeId);
+                        })
+                        ->when($sectionId, function ($query) use ($sectionId) {
+                            return $query->where('section_id', $sectionId);
+                        });
+                    });
                 })
                 ->when($search, function ($query) use ($search) {
                     return $query->where('first_name', 'LIKE', "%{$search}%");
                 })
-                ->paginate(2)
+                ->paginate(10)
                 ->appends([
                     'degree_id' => $degreeId,
+                    'section_id' => $sectionId,
                     'search' => $search
                 ]);
 
-
-            } else {
-                $student = Student::whereIn('state', [1])->paginate(2);
-            }
-
             $degrees = Degree::all();
+            $sections = Sections::all();
 
             return view('student.listStudent', [
-               'student' => $student,
+                'student' => $students,
                 'degrees' => $degrees,
+                'sections' => $sections,
             ]);
 
         } catch (\Exception $e) {
             return redirect('/student')->with('error', 'Ocurrió un problema.');
         }
     }
+
 
     public function showCreateForm()
     {
