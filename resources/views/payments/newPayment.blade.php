@@ -96,7 +96,8 @@
                                     class="mr-2">
                                 <span>{{ $monthName }} (Pagado)</span>
                             @else
-                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" class="mr-2">
+                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" class="mr-2"
+                                    onchange="handleCheckboxChange({{ $monthNumber }}, '{{ $student->id }}')">
                                 <span>{{ $monthName }}</span>
                             @endif
                         </label>
@@ -153,6 +154,7 @@
     }
 
 
+
     function togglePaymentOptions(studentId) {
         console.log(`Toggling payment options for student ID: ${studentId}`); // Debugging statement
 
@@ -185,23 +187,23 @@
     }
 
     function updateTotal(studentId) {
-    let totalAmount = 0;
+        let totalAmount = 0;
 
-    // Define el costo mensual que debes calcular (esto depende de tu lógica)
-    const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
+        // Define el costo mensual que debes calcular (esto depende de tu lógica)
+        const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
 
-    // Calcular el total solo para los checkboxes no pagados y seleccionados
-    document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
-        const label = checkbox.nextElementSibling;
-        if (!label || !label.textContent.includes("(Pagado)")) {
-            totalAmount += monthlyCost; // Sumar el costo mensual
-        }
-    });
+        // Calcular el total solo para los checkboxes no pagados y seleccionados
+        document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
+            const label = checkbox.nextElementSibling;
+            if (!label || !label.textContent.includes("(Pagado)")) {
+                totalAmount += monthlyCost; // Sumar el costo mensual
+            }
+        });
 
-    // Actualizar el campo del total con el valor calculado
-    const totalField = document.getElementById('amount' + studentId);
-    totalField.value = totalAmount;
-}
+        // Actualizar el campo del total con el valor calculado
+        const totalField = document.getElementById('amount' + studentId);
+        totalField.value = totalAmount;
+    }
 
 
     function resetForm(studentIds) {
@@ -233,6 +235,57 @@
         // Mostrar solo los campos predeterminados
         togglePaymentOptions(studentIds);
     }
+
+    function handleCheckboxChange(monthNumber, studentId) {
+        updateMonthSelection(monthNumber, studentId); // Actualiza la selección de meses
+        updateTotal(studentId); // Calcula el total basado en la selección
+    }
+
+    function updateTotal(studentId) {
+        let totalAmount = 0;
+
+        const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
+
+        // Calcular el total solo para los checkboxes no pagados y seleccionados
+        document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
+            const label = checkbox.nextElementSibling;
+            if (!label || !label.textContent.includes("(Pagado)")) {
+                totalAmount += monthlyCost; // Sumar el costo mensual
+            }
+        });
+
+        // Actualizar el campo del total con el valor calculado
+        const totalField = document.getElementById('amount' + studentId);
+        totalField.value = totalAmount;
+    }
+
+    function updateMonthSelection(monthNumber, studentId) {
+        const checkboxes = document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]`);
+        let isPreviousChecked = true; // Asumir que el anterior está chequeado
+
+        checkboxes.forEach((checkbox) => {
+            const checkboxMonth = parseInt(checkbox.value); // Obtener el valor del mes del checkbox
+
+            // Habilitar el mes si el anterior está chequeado
+            if (checkboxMonth < monthNumber) {
+                if (!checkbox.checked) {
+                    isPreviousChecked = false; // Si hay un mes anterior no chequeado, desactivar este
+                }
+            } else if (checkboxMonth === monthNumber) {
+                // Este es el mes actual
+                if (isPreviousChecked) {
+                    checkbox.disabled = false; // Habilitar el mes actual
+                } else {
+                    checkbox.checked = false; // Desmarcar el actual si el anterior no está chequeado
+                    checkbox.disabled = true; // Deshabilitarlo
+                }
+            } else {
+                // Habilitar todos los meses siguientes si el anterior está chequeado
+                checkbox.disabled = !isPreviousChecked;
+            }
+        });
+    }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         // Agregar listeners para los checkboxes
