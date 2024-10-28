@@ -15,104 +15,120 @@ use Illuminate\Support\Facades\Log;
 
 class assignmentController extends Controller
 {
+
+//   LISTAR ESTUDIANTES PARA ASGINAR
+
     public function listAssignmentStudent()
-{
-    try {
-        $degreeId = request()->query('degree_id');
-        $search = request()->query('search');
+    {
+        try {
+            $degreeId = request()->query('degree_id');
+            $search = request()->query('search');
 
-        // Contar la cantidad de estudiantes por género
-        $genderCounts = Student::where('state', 1)
-            ->select('gender', DB::raw('count(*) as count'))
-            ->groupBy('gender')
-            ->pluck('count', 'gender');
+            // Contar la cantidad de estudiantes por género
+            $genderCounts = Student::where('state', 0)
+                ->select('gender', DB::raw('count(*) as count'))
+                ->groupBy('gender')
+                ->pluck('count', 'gender');
 
-        if ($degreeId || $search) {
-            $students = Student::where('state', 1)
-                ->when($degreeId, function ($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
-                })
-                ->when($search, function ($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'search' => $search
-                ]);
-        } else {
-            $students = Student::where('state', 1)->paginate(10);
+            if ($degreeId || $search) {
+                $students = Student::where('state', 0)
+                    ->when($degreeId, function ($query) use ($degreeId) {
+                        return $query->where('degree_id', $degreeId);
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'degree_id' => $degreeId,
+                        'search' => $search
+                    ]);
+            } else {
+                $students = Student::where('state', 0)->paginate(10);
+            }
+
+            $degrees = Degree::all();
+            $sections = Sections::all();
+            $courses = Courses::all();
+
+            return view('assignment.listAssignmentStudent', [
+                'students' => $students,
+                'degrees' => $degrees,
+                'sections' => $sections,
+                'courses' => $courses,
+                'genderCounts' => $genderCounts // Pasamos los conteos de género a la vista
+            ]);
+        } catch (\Exception $e) {
+            return redirect('/student')->with('error', 'Ocurrió un problema.');
         }
-
-        $degrees = Degree::all();
-        $sections = Sections::all();
-        $courses = Courses::all();
-
-        return view('assignment.listAssignmentStudent', [
-            'students' => $students,
-            'degrees' => $degrees,
-            'sections' => $sections,
-            'courses' => $courses,
-            'genderCounts' => $genderCounts, // Pasamos los conteos de género a la vista
-        ]);
-    } catch (\Exception $e) {
-        return redirect('/student')->with('error', 'Ocurrió un problema.');
     }
-}
 
+
+
+    //CREAR ASIGNACION PARA ESTUDIANTES
 
     public function createAssignment(Request $request, $id)
     {
         // Encuentra al estudiante por ID
-    $student = Student::findOrFail($id);
-    Log::info('Estudiante encontrado:', ['student_id' => $student->id]);
+        $student = Student::findOrFail($id);
+        Log::info('Estudiante encontrado:', ['student_id' => $student->id]);
 
-    // Busca los registros que coinciden en tb_general_assignment
-    $generalAssignments = GeneralAssignment::where('degrees_id', $request->degrees_id)
-        ->where('section_id', $request->section_id)
-        ->get();
+        $student->state = 1;
+        $student->save();
+        Log::info('Estado del estudiante actualizado a 1.', ['student_id' => $student->id]);
 
-    // Verifica si se encontraron coincidencias
-    if ($generalAssignments->isEmpty()) {
-        Log::warning('No se encontraron coincidencias en tb_general_assignment:', [
-            'degrees_id' => $request->degrees_id,
-            'section_id' => $request->section_id,
-        ]);
-        return redirect()->back()->with('error', 'No se encontraron coincidencias en las asignaciones generales.');
-    }
 
-    // Inserta cada coincidencia en la tabla de asignaciones de estudiantes
-    foreach ($generalAssignments as $generalAssignment) {
-        try {
-            // Crea una nueva entrada en la tabla de asignaciones de estudiantes
-            StudentAssignment::create([
-                'general_assignment_id' => $generalAssignment->id, // Guarda el ID encontrado
-                'year' => $request->year ?? date('Y'), // Asigna el año actual si no se proporciona
-                'student_id' => $student->id, // Asigna el ID del estudiante
-                'degrees_id' => $request->degrees_id, // Agregar degrees_id
-                'section_id' => $request->section_id // Agregar section_id
-            ]);
-            Log::info('Asignación creada:', [
-                'general_assignment_id' => $generalAssignment->id,
-                'student_id' => $student->id,
-                'year' => $request->year ?? date('Y'),
+        // Busca los registros que coinciden en tb_general_assignment
+        $generalAssignments = GeneralAssignment::where('degrees_id', $request->degrees_id)
+            ->where('section_id', $request->section_id)
+            ->get();
+
+        // Verifica si se encontraron coincidencias
+        if ($generalAssignments->isEmpty()) {
+            Log::warning('No se encontraron coincidencias en tb_general_assignment:', [
                 'degrees_id' => $request->degrees_id,
-                'section_id' => $request->section_id // Log de section_id
+                'section_id' => $request->section_id
             ]);
-        } catch (\Exception $e) {
-            Log::error('Error al crear la asignación:', [
-                'general_assignment_id' => $generalAssignment->id,
-                'student_id' => $student->id,
-                'error_message' => $e->getMessage(),
-            ]);
-            return redirect()->back()->with('error', 'Error al crear la asignación.');
+            return redirect()->back()->with('error', 'No se encontraron coincidencias en las asignaciones generales.');
         }
+
+        // Inserta cada coincidencia en la tabla de asignaciones de estudiantes
+        foreach ($generalAssignments as $generalAssignment) {
+            try {
+                // Crea una nueva entrada en la tabla de asignaciones de estudiantes
+                StudentAssignment::create([
+                    'general_assignment_id' => $generalAssignment->id, // Guarda el ID encontrado
+                    'year' => $request->year ?? date('Y'), // Asigna el año actual si no se proporciona
+                    'student_id' => $student->id, // Asigna el ID del estudiante
+                    'degrees_id' => $request->degrees_id, // Agregar degrees_id
+                    'section_id' => $request->section_id // Agregar section_id
+                ]);
+                Log::info('Asignación creada:', [
+                    'general_assignment_id' => $generalAssignment->id,
+                    'student_id' => $student->id,
+                    'year' => $request->year ?? date('Y'),
+                    'degrees_id' => $request->degrees_id,
+                    'section_id' => $request->section_id // Log de section_id
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error al crear la asignación:', [
+                    'general_assignment_id' => $generalAssignment->id,
+                    'student_id' => $student->id,
+                    'error_message' => $e->getMessage()
+                ]);
+                return redirect()->back()->with('error', 'Error al crear la asignación.');
+            }
+        }
+
+        return redirect('/student')->with('success', 'Asignaciones creadas correctamente.');
     }
 
-    return redirect('/student')->with('success', 'Asignaciones creadas correctamente.');
-}
 
-     public function ShowcreateAssignment(Request $request, $id)
+
+
+    //VISTA PARA ASIGNAR CURSOS A DOCENTES
+
+    public function ShowcreateAssignment(Request $request, $id)
     {
         // Buscar el usuario por ID
         $user = User::find($id);
@@ -133,6 +149,10 @@ class assignmentController extends Controller
             'degrees' => $degrees
         ]);
     }
+
+
+
+    // ASIGNAR CURSOS A DOCENTES
 
     public function newTeacherCourse(Request $request)
     {
@@ -155,14 +175,18 @@ class assignmentController extends Controller
             foreach ($selections as $selection) {
                 Log::info('Procesando selección', ['selection' => $selection]);
                 // Verificar si ya está asignado
-                if (!$teacher->courses()->where('course_id', $selection['course_id'])
-                    ->where('section_id', $selection['section_id'])
-                    ->where('degrees_id', $selection['degrees_id'])->exists()) {
-
+                if (
+                    !$teacher
+                        ->courses()
+                        ->where('course_id', $selection['course_id'])
+                        ->where('section_id', $selection['section_id'])
+                        ->where('degrees_id', $selection['degrees_id'])
+                        ->exists()
+                ) {
                     Log::info('Asignando curso', ['course_id' => $selection['course_id'], 'teacher_id' => $teachers_id]);
                     $teacher->courses()->attach($selection['course_id'], [
                         'section_id' => $selection['section_id'],
-                        'degrees_id' => $selection['degrees_id'],
+                        'degrees_id' => $selection['degrees_id']
                     ]);
                 } else {
                     Log::info('Curso ya asignado', ['course_id' => $selection['course_id'], 'teacher_id' => $teachers_id]);
@@ -172,7 +196,6 @@ class assignmentController extends Controller
             // Respuesta JSON exitosa
             Log::info('Cursos asignados correctamente', ['teacher_id' => $teachers_id]);
             return response()->json(['success' => true, 'message' => 'Cursos asignados correctamente.']);
-
         } catch (\Exception $e) {
             // Log del error
             Log::error('Error al asignar cursos', ['error' => $e->getMessage()]);
@@ -180,6 +203,4 @@ class assignmentController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
-
 }
