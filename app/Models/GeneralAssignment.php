@@ -12,7 +12,6 @@ class GeneralAssignment extends Model
 
 
     protected $fillable = [
-        'student_id',
         'course_id',
         'degrees_id',
         'section_id',

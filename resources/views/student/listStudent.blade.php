@@ -12,7 +12,7 @@
             {{-- filtro por busqueda de nombre --}}
             <form class="input-group" action="/student" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
+                    value="{{ request()->query('search') }}" class="mt-14" />
 
                 <div class="input-group-addon">
                     <button type="submit" class="input-group-text">
@@ -23,16 +23,27 @@
 
 
             {{-- filtro por seleccion de grado --}}
+            <form method="GET" action="/student" id="degreeForm" class="flex items-center mt-6 space-x-4">
+                <!-- Selector de Grado -->
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id"
+                    :options="$degrees->pluck('name', 'id')->toArray()"
+                    :selected="request('degree_id')" required />
 
-            <form method="GET" action="/student" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
+                <!-- Selector de Sección -->
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id"
+                    :options="$sections->pluck('name', 'id')->toArray()"
+                    :selected="request('section_id')" required />
+
+                <!-- Botón de Búsqueda -->
+                <x-button type="submit" class="text-white mt-9 bg-cyan-600">
+                    Buscar
+                </x-button>
             </form>
 
 
             {{-- BOTON PARA AGREGAR --}}
 
-            <x-button-link href="student/viewForm" class="mt-2 btn-primary">
+            <x-button-link href="student/viewForm" class="mt-11 btn-primary">
 
                 <x-iconos.agregar /> Inscripciòn
 
