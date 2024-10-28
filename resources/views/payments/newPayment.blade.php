@@ -10,7 +10,6 @@
             $paidMonths = $student->payments->pluck('paid_month')->toArray(); // Obtener los meses pagados por el estudiante
         @endphp
 
-
         {{-- CARGAR EL NOMBRE DEL ESTUDIANTE --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label>Estudiante: </label>
@@ -19,18 +18,17 @@
                 value="{{ $student->first_name }} {{ $student->second_name }} {{ $student->first_lastname }} {{ $student->second_lastname }}">
         </div>
 
-
         {{-- GRADO, SECCION & FECHA --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <div>
                 <label>Grado y Sección: </label>
-                <x-inputs.general id="grade_id" name="degree_id" readonly
+                <x-inputs.payment id="grade_id{{ $student->id }}" name="degree_id" readonly
                     style="text-align: center; font-weight: bold;"
                     value="{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}" required />
             </div>
             <div>
                 <label>Fecha: </label>
-                <x-inputs.general id="payment_date" name="date" readonly
+                <x-inputs.payment id="payment_date{{ $student->id }}" name="payment_date" readonly
                     style="text-align: center; font-weight: bold;" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
                     required />
             </div>
@@ -40,43 +38,46 @@
         <div class="flex items-center justify-end space-x-4 ">
             <div>
                 <label>Tipo de Pago: </label>
-                <x-inputs.select-option name="type_payment" id="type_payment" titulo="" :options="[
-                    'inscripcion' => 'Inscripcion',
-                    'mensualidad' => 'Mensualidad',
-                    'colaboracion' => 'Colaboracion'
-                ]" required
-                    class="border-2 border-gray-300" onchange="togglePaymentOptions()" />
+                <x-inputs.select-option-payments name="type_payment" id="type_payment{{ $student->id }}"
+                    titulo="" :options="[
+                        'inscripcion' => 'Inscripcion',
+                        'mensualidad' => 'Mensualidad',
+                        'colaboracion' => 'Colaboracion'
+                    ]" required class="border-2 border-gray-300"
+                    onchange="togglePaymentOptions('{{ $student->id }}')" />
             </div>
             <div>
                 <label>Metodo de Pago: </label>
-                <x-inputs.select-option name="mood_payment" id="mood_payment" titulo="" :options="[
-                    'Efectivo' => 'Efectivo',
-                    'Deposito' => 'Deposito',
-                    'Transferencia' => 'Transferencia'
-                ]" required
-                    class="border-2 border-gray-300" onchange="togglePaymentOptions()" />
+                <x-inputs.select-option-payments name="mood_payment" id="mood_payment{{ $student->id }}"
+                    titulo="" :options="[
+                        'Efectivo' => 'Efectivo',
+                        'Deposito' => 'Deposito',
+                        'Transferencia' => 'Transferencia'
+                    ]" required class="border-2 border-gray-300"
+                    onchange="togglePaymentOptions('{{ $student->id }}')" />
             </div>
         </div>
 
         {{-- LISTAR COLABORACIONES --}}
-        <div class="flex items-center justify-end mr-56 space-x-4" id="collaborations">
+        <div class="flex items-center justify-end mr-56 space-x-4" id="collaborations{{ $student->id }}">
             <div>
                 <label>Colaboraciones: </label>
-                <x-inputs.select-option id="name_collaboration" titulo="" name="name_collaboration"
-                    :options="$collaborations->pluck('name', 'name')->toArray()" :selected="request('name_collaboration')" required class="border-2 border-gray-300"
-                    onchange="togglePaymentOptions()" />
+                <x-inputs.select-option-payments id="name_collaboration{{ $student->id }}" titulo=""
+                    name="name_collaboration" :options="$collaborations->pluck('name', 'name')->toArray()" :selected="request('name_collaboration')" required
+                    class="border-2 border-gray-300" onchange="togglePaymentOptions('{{ $student->id }}')" />
             </div>
         </div>
 
         {{-- METODO PAGO & TIPO BANCO --}}
-        <div id="referenceFields" class="flex items-center justify-center pb-2 space-x-4 border-b-2 border-gray-300">
+        <div id="referenceFields{{ $student->id }}"
+            class="flex items-center justify-center pb-2 space-x-4 border-b-2 border-gray-300">
             <div class="flex flex-col items-center">
-                <x-inputs.general id="document_number" placeholder="No. Referencia" name="document_number"
-                    class="border-2 border-gray-300" value="" type="number" />
+                <x-inputs.payment id="document_number{{ $student->id }}" placeholder="No. Referencia"
+                    name="document_number" class="border-2 border-gray-300" value="" type="number" />
             </div>
             <div class="flex flex-col items-center">
-                <x-inputs.general id="bank" placeholder="Banco" name="bank" class="border-2 border-gray-300"
-                    value="" />
+                <x-inputs.payment id="bank{{ $student->id }}" placeholder="Banco" name="bank"
+                    class="border-2 border-gray-300" value="" />
             </div>
         </div>
 
@@ -84,7 +85,8 @@
         <div class="mb-4">
             Seleccione los meses de pago:
         </div>
-        <div id="checkboxes" class="flex items-center justify-center pb-4 space-x-4 border-b-2 border-gray-300">
+        <div id="checkboxes{{ $student->id }}"
+            class="flex items-center justify-center pb-4 space-x-4 border-b-2 border-gray-300">
             <div class="grid grid-cols-5 gap-6">
                 @foreach ($months as $monthNumber => $monthName)
                     <div class="flex items-center justify-center">
@@ -94,7 +96,8 @@
                                     class="mr-2">
                                 <span>{{ $monthName }} (Pagado)</span>
                             @else
-                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" class="mr-2">
+                                <input type="checkbox" name="month[]" value="{{ $monthNumber }}" class="mr-2"
+                                    onchange="handleCheckboxChange({{ $monthNumber }}, '{{ $student->id }}')">
                                 <span>{{ $monthName }}</span>
                             @endif
                         </label>
@@ -106,15 +109,15 @@
         {{-- OBSERVACIONES --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label>Observaciones: </label>
-            <input id="comment" name="comment" class="w-full shadow-sm input" style="text-align: left;" type="text"
-                value="">
+            <input id="comment{{ $student->id }}" name="comment" class="w-full shadow-sm input"
+                style="text-align: left;" type="text" value="">
         </div>
 
         {{-- TOTAL --}}
         <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
             <label style="font-weight: bold; text-align: right;">TOTAL:</label>
-            <input id="amount" name="amount" class="w-full shadow-sm input" style="text-align: left;" type="number"
-                value="" placeholder="Q. ">
+            <input id="amount{{ $student->id }}" name="amount" class="w-full shadow-sm input"
+                style="text-align: left;" type="number" value="" placeholder="Q. ">
         </div>
 
         <input type="hidden" name="student_id" value="{{ $student->id }}">
@@ -125,20 +128,16 @@
     </form>
     <x-alert-message />
 </div>
-
-
-
 <script>
-    // Inicializa el formulario y establece el estado por defecto
-    function initializePaymentForm() {
-        resetForm(); // Restablecer todos los campos al abrir el modal
+    function initializePaymentForm(studentIds) {
+        resetForm(studentIds); // Restablecer todos los campos al abrir el modal
 
-        const typePayment = document.getElementById('type_payment');
-        const moodPayment = document.getElementById('mood_payment');
+        const typePayment = document.getElementById('type_payment' + studentIds);
+        const moodPayment = document.getElementById('mood_payment' + studentIds);
 
         // Añadir los event listeners
-        typePayment.addEventListener('change', togglePaymentOptions);
-        moodPayment.addEventListener('change', togglePaymentOptions);
+        typePayment.addEventListener('change', () => togglePaymentOptions(studentIds));
+        moodPayment.addEventListener('change', () => togglePaymentOptions(studentIds));
 
         // Configurar los checkboxes de meses
         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
@@ -149,69 +148,72 @@
                 checkbox.disabled = true; // Deshabilita los checkboxes de meses pagados
             } else {
                 // Añadir event listener solo a los checkboxes no pagados
-                checkbox.addEventListener('change', updateTotal);
+                checkbox.addEventListener('change', () => updateTotal(studentIds));
             }
         });
     }
 
-    function togglePaymentOptions() {
-        const typePayment = document.getElementById('type_payment').value;
-        const moodPayment = document.getElementById('mood_payment').value;
 
-        // Mostrar/ocultar los checkboxes de meses
-        const checkboxes = document.getElementById('checkboxes');
-        const collaborations = document.getElementById('collaborations');
-        const collaborationSelect = document.getElementById('name_collaboration');
-        const referenceFields = document.getElementById('referenceFields');
 
-        // Lógica de tipo de pago
+    function togglePaymentOptions(studentId) {
+        console.log(`Toggling payment options for student ID: ${studentId}`); // Debugging statement
+
+        const typePayment = document.getElementById('type_payment' + studentId).value;
+        const moodPayment = document.getElementById('mood_payment' + studentId).value;
+
+        const checkboxes = document.getElementById('checkboxes' + studentId);
+        const collaborations = document.getElementById('collaborations' + studentId);
+        const collaborationSelect = document.getElementById('name_collaboration' + studentId);
+        const referenceFields = document.getElementById('referenceFields' + studentId);
+
+        // Mostrar/ocultar según tipo de pago
         if (typePayment === 'mensualidad') {
             checkboxes.classList.remove('hidden');
-            collaborationSelect.value = ""; // Vaciar colaboraciones
             collaborations.classList.add('hidden');
-        } else if (typePayment === 'inscripcion' || typePayment === 'colaboracion') {
+        } else if (typePayment === 'inscripcion') {
             checkboxes.classList.add('hidden');
-            collaborationSelect.value = ""; // Vaciar colaboraciones
-            collaborations.classList[typePayment === 'inscripcion' ? 'add' : 'remove']('hidden');
-            document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
-                checkbox.checked = false; // Desmarcar meses
-            });
-            updateTotal(); // Actualizar el total al ocultar
+            collaborations.classList.add('hidden');
+        } else {
+            checkboxes.classList.add('hidden');
+            collaborations.classList.remove('hidden');
         }
 
-        // Lógica de método de pago
-        if (moodPayment === 'Efectivo') {
-            referenceFields.classList.add('hidden');
-            document.getElementById('document_number').value = ""; // Vaciar referencia
-            document.getElementById('bank').value = ""; // Vaciar banco
-        } else {
+        // Mostrar/ocultar según método de pago
+        if (moodPayment === 'Deposito' || moodPayment === 'Transferencia') {
             referenceFields.classList.remove('hidden');
+        } else {
+            referenceFields.classList.add('hidden');
         }
     }
 
-    function updateTotal() {
+    function updateTotal(studentId) {
         let totalAmount = 0;
 
+        // Define el costo mensual que debes calcular (esto depende de tu lógica)
+        const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
+
         // Calcular el total solo para los checkboxes no pagados y seleccionados
-        document.querySelectorAll('input[name="month[]"]:checked').forEach((checkbox) => {
+        document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
             const label = checkbox.nextElementSibling;
             if (!label || !label.textContent.includes("(Pagado)")) {
-                totalAmount += 75;
+                totalAmount += monthlyCost; // Sumar el costo mensual
             }
         });
 
-        // Actualizar el campo total
-        document.getElementById('amount').value = totalAmount;
+        // Actualizar el campo del total con el valor calculado
+        const totalField = document.getElementById('amount' + studentId);
+        totalField.value = totalAmount;
     }
 
-    function resetForm() {
+
+    function resetForm(studentIds) {
         // Reiniciar los valores de los selects y campos
-        document.getElementById('type_payment').value = ""; // Valor por defecto
-        document.getElementById('mood_payment').value = ""; // Valor por defecto
-        document.getElementById('name_collaboration').value = ""; // Vaciar colaboraciones
+        document.getElementById('type_payment' + studentIds).value = ""; // Valor por defecto
+        document.getElementById('mood_payment' + studentIds).value = ""; // Valor por defecto
+        document.getElementById('name_collaboration' + studentIds).value = ""; // Vaciar colaboraciones
 
         // Ocultar los checkboxes de meses
-        document.getElementById('checkboxes').classList.add('hidden');
+        document.getElementById('checkboxes' + studentIds).classList.add('hidden');
         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => {
             checkbox.checked = false; // Desmarcar meses
             // Deshabilitar solo los checkboxes de meses pagados
@@ -220,102 +222,85 @@
         });
 
         // Limpiar los campos de referencia y banco
-        document.getElementById('document_number').value = ""; // Vaciar referencia
-        document.getElementById('bank').value = ""; // Vaciar banco
+        document.getElementById('document_number' + studentIds).value = ""; // Vaciar referencia
+        document.getElementById('bank' + studentIds).value = ""; // Vaciar banco
 
         // Reiniciar el total
-        document.getElementById('amount').value = 0;
+        document.getElementById('amount' + studentIds).value = 0;
+
+        // Concatenar y mostrar los IDs de estudiantes (puedes adaptar esto según lo que necesites)
+        const studentIdsField = document.getElementById('student_ids'); // Asegúrate de que este ID exista
+        studentIdsField.value = studentIds.join(', '); // Concatenar IDs con coma y espacio
 
         // Mostrar solo los campos predeterminados
-        togglePaymentOptions();
+        togglePaymentOptions(studentIds);
     }
 
+    function handleCheckboxChange(monthNumber, studentId) {
+        updateMonthSelection(monthNumber, studentId); // Actualiza la selección de meses
+        updateTotal(studentId); // Calcula el total basado en la selección
+    }
+
+    function updateTotal(studentId) {
+        let totalAmount = 0;
+
+        const monthlyCost = 75; // Aquí debes poner el costo real de cada mes
+
+        // Calcular el total solo para los checkboxes no pagados y seleccionados
+        document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]:checked`).forEach((checkbox) => {
+            const label = checkbox.nextElementSibling;
+            if (!label || !label.textContent.includes("(Pagado)")) {
+                totalAmount += monthlyCost; // Sumar el costo mensual
+            }
+        });
+
+        // Actualizar el campo del total con el valor calculado
+        const totalField = document.getElementById('amount' + studentId);
+        totalField.value = totalAmount;
+    }
+
+    function updateMonthSelection(monthNumber, studentId) {
+        const checkboxes = document.querySelectorAll(`#checkboxes${studentId} input[name="month[]"]`);
+        let isPreviousChecked = true; // Asumir que el anterior está chequeado
+
+        checkboxes.forEach((checkbox) => {
+            const checkboxMonth = parseInt(checkbox.value); // Obtener el valor del mes del checkbox
+
+            // Habilitar el mes si el anterior está chequeado
+            if (checkboxMonth < monthNumber) {
+                if (!checkbox.checked) {
+                    isPreviousChecked = false; // Si hay un mes anterior no chequeado, desactivar este
+                }
+            } else if (checkboxMonth === monthNumber) {
+                // Este es el mes actual
+                if (isPreviousChecked) {
+                    checkbox.disabled = false; // Habilitar el mes actual
+                } else {
+                    checkbox.checked = false; // Desmarcar el actual si el anterior no está chequeado
+                    checkbox.disabled = true; // Deshabilitarlo
+                }
+            } else {
+                // Habilitar todos los meses siguientes si el anterior está chequeado
+                checkbox.disabled = !isPreviousChecked;
+            }
+        });
+    }
+
+
     document.addEventListener('DOMContentLoaded', () => {
-        initializePaymentForm(); // Ejecutar al cargar la página
+        // Agregar listeners para los checkboxes
+        document.querySelectorAll('input[name="month[]"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const studentId = checkbox.closest('form').querySelector(
+                    'input[name="student_id"]').value;
+                updateTotal(studentId);
+            });
+        });
+
+        // Inicializar al cargar
+        const initialStudentIds = [...new Set(Array.from(document.querySelectorAll('input[name="student_id"]'))
+            .map(input => input.value))];
+        initialStudentIds.forEach(studentId => updateTotal(studentId));
+
     });
 </script>
-
-{{-- <script> --}}
-{{--     // Inicializa el formulario y establece el estado por defecto --}}
-{{--     function initializePaymentForm() { --}}
-{{--         resetForm(); // Restablecer todos los campos al abrir el modal --}}
-{{-- --}}
-{{--         const typePayment = document.getElementById('type_payment'); --}}
-{{--         const moodPayment = document.getElementById('mood_payment'); --}}
-{{-- --}}
-{{--         // Añadir los event listeners --}}
-{{--         typePayment.addEventListener('change', togglePaymentOptions); --}}
-{{--         moodPayment.addEventListener('change', togglePaymentOptions); --}}
-{{--     } --}}
-{{-- --}}
-{{--     function togglePaymentOptions() { --}}
-{{--         const typePayment = document.getElementById('type_payment').value; --}}
-{{--         const moodPayment = document.getElementById('mood_payment').value; --}}
-{{-- --}}
-{{--         // Mostrar/ocultar los checkboxes de meses --}}
-{{--         const checkboxes = document.getElementById('checkboxes'); --}}
-{{--         const collaborations = document.getElementById('collaborations'); --}}
-{{--         const collaborationSelect = document.getElementById('name_collaboration'); --}}
-{{--         const referenceFields = document.getElementById('referenceFields'); --}}
-{{-- --}}
-{{--         // Lógica de tipo de pago --}}
-{{--         if (typePayment === 'mensualidad') { --}}
-{{--             checkboxes.classList.remove('hidden'); --}}
-{{--             collaborationSelect.value = ""; // Vaciar colaboraciones --}}
-{{--             collaborations.classList.add('hidden'); --}}
-{{--         } else if (typePayment === 'inscripcion') { --}}
-{{--             checkboxes.classList.add('hidden'); --}}
-{{--             collaborationSelect.value = ""; // Vaciar colaboraciones --}}
-{{--             collaborations.classList.add('hidden'); --}}
-{{--             document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
-{{--                 checkbox.checked = false; // Desmarcar meses --}}
-{{--             }); --}}
-{{--         } else if (typePayment === 'colaboracion') { --}}
-{{--             checkboxes.classList.add('hidden'); --}}
-{{--             collaborations.classList.remove('hidden'); --}}
-{{--             document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
-{{--                 checkbox.checked = false; // Desmarcar meses --}}
-{{--             }); --}}
-{{--         } --}}
-{{-- --}}
-{{--         // Lógica de método de pago --}}
-{{--         if (moodPayment === 'Efectivo') { --}}
-{{--             referenceFields.classList.add('hidden'); --}}
-{{--             document.getElementById('document_number').value = ""; // Vaciar referencia --}}
-{{--             document.getElementById('bank').value = ""; // Vaciar banco --}}
-{{--         } else { --}}
-{{--             referenceFields.classList.remove('hidden'); --}}
-{{--         } --}}
-{{--     } --}}
-{{-- --}}
-{{--     function resetForm() { --}}
-{{--         // Reiniciar los valores de los selects y campos --}}
-{{--         document.getElementById('type_payment').value = ""; // Valor por defecto --}}
-{{--         document.getElementById('mood_payment').value = ""; // Valor por defecto --}}
-{{--         document.getElementById('name_collaboration').value = ""; // Vaciar colaboraciones --}}
-{{-- --}}
-{{--         // Ocultar los checkboxes de meses --}}
-{{--         document.getElementById('checkboxes').classList.add('hidden'); --}}
-{{--         document.querySelectorAll('input[name="month[]"]').forEach((checkbox) => { --}}
-{{--             checkbox.checked = false; // Desmarcar meses --}}
-{{--             checkbox.disabled = true; --}}
-{{--         }); --}}
-{{-- --}}
-{{--         // Limpiar los campos de referencia y banco --}}
-{{--         document.getElementById('document_number').value = ""; // Vaciar referencia --}}
-{{--         document.getElementById('bank').value = ""; // Vaciar banco --}}
-{{-- --}}
-{{--         // Mostrar solo los campos predeterminados --}}
-{{--         togglePaymentOptions(); --}}
-{{--     } --}}
-{{-- --}}
-{{--     document.addEventListener('DOMContentLoaded', () => { --}}
-{{--         const modals = document.querySelectorAll('.modal'); // Ajusta esto según tu implementación --}}
-{{--         modals.forEach(modal => { --}}
-{{--             modal.addEventListener('show.bs.modal', --}}
-{{--                 initializePaymentForm); // Cuando se muestre el modal --}}
-{{--             modal.addEventListener('hidden.bs.modal', --}}
-{{--                 resetForm); // Restablecer el formulario al cerrar el modal --}}
-{{--         }); --}}
-{{--     }); --}}
-{{-- </script> --}}
