@@ -63,6 +63,8 @@
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Nombre del estudiante</x-tablas.th>
                     <x-tablas.th>Codigo Estudiantil</x-tablas.th>
+                    <x-tablas.th>Grado</x-tablas.th>
+                    <x-tablas.th>Seccion</x-tablas.th>
                     <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
