@@ -54,5 +54,8 @@ class Student extends Model
         $this->save();
     }
 
+    public function studentAssignments() {
+        return $this->hasMany(StudentAssignment::class);
+    }
 
 }

@@ -13,9 +13,44 @@ use Illuminate\Support\Facades\Auth;
 
 class TeachersController extends Controller
 {
-    public function ListCoursesTeacher(){
+    public function listCoursesTeacher()
+    {
+        try {
+            $user = Auth::user(); // Obtén el usuario autenticado
+            $degreeId = request()->query('degrees_id'); // Captura el parámetro degrees_id de la solicitud
+            $search = request()->query('search');
 
-        return view('teachers.myCourses');
+            if ($user && $user->hasRole('docente')) {
+                // Verifica si el usuario tiene el rol de "docente"
+                $courses = $user
+                    ->courses() // Relación con los cursos asignados al usuario
+                    ->when($degreeId, function ($query) use ($degreeId) {
+                        return $query->where('degrees_id', $degreeId); // Filtra por degree_id si se proporciona
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'degrees_id' => $degreeId,
+                        'search' => $search
+                    ]);
+
+                $degrees = Degree::all();
+                $sections = Sections::all();
+
+                return view('teachers.myCourses', [
+                    'user' => $user,
+                    'courses' => $courses,
+                    'sections' => $sections,
+                    'degrees' => $degrees
+                ]);
+            }
+
+            return redirect('/teachers/myCourses')->with('error', 'No tiene el rol necesario o no está autenticado.');
+        } catch (\Exception $e) {
+            return redirect('/teachers/myCourses')->with('error', 'Ocurrió un problema.');
+        }
     }
 
     public function listTeachers()
@@ -53,18 +88,16 @@ class TeachersController extends Controller
             $courses = Courses::all();
             $sections = Sections::all();
 
-
             return view('teachers.listTeachers', [
                 'users' => $users,
                 'courses' => $courses,
                 'sections' => $sections,
-                'degrees' => $degrees,
+                'degrees' => $degrees
             ]);
         } catch (\Exception $e) {
             return redirect('/teachers')->with('error', 'Ocurrió un problema.');
         }
     }
-
 
     public function disableUser($id)
     {
