@@ -38,5 +38,10 @@ class Activity extends Model
 }
 
 
+public function ratings()
+{
+    return $this->hasMany(Ratings::class, 'activity_id', 'id');
+}
+
 
 }

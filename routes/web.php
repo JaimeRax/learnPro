@@ -16,6 +16,7 @@ use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\assignmentController;
 use App\Http\Controllers\CollaborationsController;
+use App\Http\Controllers\ReportController;
 
 // **** RUTA PARA LOGIN ****
 Route::get('/', function () {
@@ -115,6 +116,7 @@ Route::prefix('assignment')->group(function () {
 Route::prefix('report')->group(function () {
     // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket'])->middleware('can:admin');
+    Route::get('/report', [ReportController::class, 'showGeneratePDFForm'])->middleware('can:teacher');
 });
 
 // ROUTES TEACHERS
@@ -129,7 +131,9 @@ Route::prefix('teachers')->group(function () {
 // ROUTES RATINGS
 Route::prefix('ratings')->group(function () {
     Route::get('/', [RatingsController::class, 'listRatings'])->middleware('can:teacher');
-    Route::get('/pdf_generator', [RatingsController::class, 'generatePdf'])->name('ratings.pdf');
+    Route::get('/generateRatingsPDF', [RatingsController::class, 'generateRatingsPDF'])->name('ratings.pdf');
+    Route::post('/update', [RatingsController::class, 'editRatings'])->name('ratings.update');
+
 
 });
 

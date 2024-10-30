@@ -27,4 +27,9 @@ class Ratings extends Model
         return $this->belongsTo('Degree', 'degree_id', 'id');
     }
 
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class, 'activity_id', 'id');
+    }
+
 }

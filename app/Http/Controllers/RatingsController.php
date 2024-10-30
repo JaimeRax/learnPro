@@ -22,7 +22,6 @@ class RatingsController extends Controller
     {
         try {
             $user = Auth::user();
-
             $degreeId = request()->query('degree_id');
             $sectionId = request()->query('section_id');
             $courseId = request()->query('course_id'); // Agregado para filtrar por curso
@@ -31,32 +30,17 @@ class RatingsController extends Controller
             if ($user && $user->hasRole('docente')) {
                 // Obtener las asignaciones generales del docente
                 $generalAssignments = GeneralAssignment::where('teachers_id', $user->id)
-                    ->when($degreeId, function ($query) use ($degreeId) {
-                        return $query->where('degrees_id', $degreeId);
-                    })
-                    ->when($sectionId, function ($query) use ($sectionId) {
-                        return $query->where('section_id', $sectionId);
-                    })
-                    ->when($courseId, function ($query) use ($courseId) {
-                        return $query->where('course_id', $courseId);
-                    })
+                    ->when($degreeId, fn($query) => $query->where('degrees_id', $degreeId))
+                    ->when($sectionId, fn($query) => $query->where('section_id', $sectionId))
+                    ->when($courseId, fn($query) => $query->where('course_id', $courseId))
                     ->pluck('id');
 
                 // Consulta de estudiantes
                 $students = Student::whereIn('state', [1, 2])
-                    ->whereHas('studentAssignments', function ($query) use ($generalAssignments) {
-                        return $query->whereIn('general_assignment_id', $generalAssignments);
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('first_name', 'LIKE', "%{$search}%");
-                    })
+                    ->whereHas('studentAssignments', fn($query) => $query->whereIn('general_assignment_id', $generalAssignments))
+                    ->when($search, fn($query) => $query->where('first_name', 'LIKE', "%{$search}%"))
                     ->paginate(10)
-                    ->appends([
-                        'degree_id' => $degreeId,
-                        'section_id' => $sectionId,
-                        'course_id' => $courseId, // Agregado para mantener el valor de curso
-                        'search' => $search
-                    ]);
+                    ->appends(compact('degreeId', 'sectionId', 'courseId', 'search'));
 
                 // Obtener grados, secciones y cursos
                 $degrees = Degree::all();
@@ -65,15 +49,9 @@ class RatingsController extends Controller
 
                 // Obtener actividades relacionadas con las asignaciones generales
                 $activities = Activity::whereIn('general_assignment_id', $generalAssignments)->get();
+                $ratings = Ratings::whereIn('activity_id', $activities->pluck('id'))->whereIn('student_id', $students->pluck('id'))->get()->groupBy('student_id')->map(fn($studentRatings) => $studentRatings->keyBy('activity_id'));
 
-                // Retornar la vista con los estudiantes, actividades y los selectores
-                return view('ratings.listRatings', [
-                    'students' => $students,
-                    'activities' => $activities, // Pasar actividades a la vista
-                    'degrees' => $degrees,
-                    'sections' => $sections,
-                    'courses' => $courses // Pasar cursos a la vista
-                ]);
+                return view('ratings.listRatings', compact('students', 'activities', 'degrees', 'sections', 'courses', 'ratings'));
             }
 
             return redirect('/ratings');
@@ -82,74 +60,89 @@ class RatingsController extends Controller
         }
     }
 
-
-    //     public function editRatings($id){
-    //         try {
-    //             $ratings = Collaborations::find($id);
-
-    //             if (!$ratings) {
-    //                 return redirect('/collaborations')->with('error', 'Colaboración no encontrada.');
-    //             }
-
-    //             $validatedData = $request->validate([
-    //                 'name' => 'required|string|max:255'
-    //             ]);
-
-    //             $ratings->update($validatedData);
-
-    //             return redirect('/ratings')->with('message', 'Colaboración actualizada correctamente.');
-    //         } catch (\Exception $e) {
-    //             return redirect('/ratings')->with('error', 'Ocurrió un problema al actualizar la colaboración');
-    //         }
-    //  }
-
-    public function generatePDF(Request $request)
+    public function editRatings(Request $request)
     {
-        // Estructuramos los datos de los estudiantes
-        $studentIds = $request->input('student_ids'); // Array con los IDs de los estudiantes
-        $actividad1 = $request->input('actividad1'); // Array con notas de actividad1
-        $actividad2 = $request->input('actividad2'); // Repite para otros campos como actividad3, mejoramiento1, etc.
-        $actividad3 = $request->input('actividad3');
-        $mejoramiento1 = $request->input('mejoramiento1');
-        $mejoramiento2 = $request->input('mejoramiento2');
-        $mejoramiento3 = $request->input('mejoramiento3');
-        $disciplina = $request->input('Disciplina');
-        $extracurricular = $request->input('extracurricular');
-        $examen = $request->input('examen');
-        $notaFinal = $request->input('notaFinal');
+        try {
+            // Validar que cada entrada en 'ratings' tenga el campo 'score_obtained'
+            $validatedData = $request->validate([
+                'ratings.*.*.score_obtained' => 'nullable|numeric'
+            ]);
 
-        // Creamos un array estructurado para cada estudiante
-        $studentIds = $request->input('student_ids'); // Array con los IDs de los estudiantes
+            foreach ($request->ratings as $studentId => $studentRatings) {
+                foreach ($studentRatings as $activityId => $ratingData) {
+                    // Aquí busca la calificación usando el activity_id de la tabla ratings
+                    $rating = Ratings::where('student_id', $studentId)->where('activity_id', $activityId)->first();
 
-    // Obtener nombres de estudiantes de la base de datos
-    $students = DB::table('tb_student')
-        ->whereIn('id', $studentIds)
-        ->get(['id', 'first_name', 'second_name', 'first_lastname', 'second_lastname']);
+                    if ($rating) {
+                        // Actualizar calificación existente
+                        $rating->score_obtained = $ratingData['score_obtained'];
+                        $rating->save();
+                    } else {
+                        // Crear nueva calificación si no existe
+                        $rating = new Ratings([
+                            'student_id' => $studentId,
+                            'activity_id' => $activityId,
+                            'score_obtained' => $ratingData['score_obtained']
+                        ]);
+                        $rating->save();
+                    }
+                }
+            }
 
-    // Crear un arreglo estructurado para cada estudiante
-    $studentsData = [];
-        foreach ($students as $index => $student) {
-            $studentsData[] = [
-                'id' => $student->id,
-                'nombre' => trim("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}"),
-                'actividad1' => $actividad1[$index] ?? 0,
-                'actividad2' => $actividad2[$index] ?? 0,
-                'actividad3' => $actividad3[$index] ?? 0,
-                'mejoramiento1' => $mejoramiento1[$index] ?? 0,
-                'mejoramiento2' => $mejoramiento2[$index] ?? 0,
-                'mejoramiento3' => $mejoramiento3[$index] ?? 0,
-                'disciplina' => $disciplina[$index] ?? 0,
-                'extracurricular' => $extracurricular[$index] ?? 0,
-                'examen' => $examen[$index] ?? 0,
-                'notaFinal' => $notaFinal[$index] ?? 0,
-            ];
+            return redirect('/ratings')->with('message', 'Calificaciones actualizadas correctamente.');
+        } catch (\Exception $e) {
+            Log::error('editRatings - Error: ' . $e->getMessage());
+            return redirect('/ratings')->with('error', 'Ocurrió un problema al actualizar las calificaciones.');
         }
+    }
 
-        // Generamos el PDF pasando los datos estructurados
-        $pdf = PDF::loadView('pdf.notas', compact('studentsData'));
+    public function generateRatingsPDF(Request $request)
+    {
+        try {
+            // Validar los datos de entrada
+            $request->validate([
+                'grado' => 'required|exists:degrees,id',
+                'seccion' => 'required|exists:sections,id',
+                'curso' => 'required|exists:courses,id',
+            ]);
 
-        // Descargamos el PDF
-        return $pdf->download('Reporte_Estudiantes.pdf');
+            // Obtener los estudiantes relacionados con las asignaciones
+            $students = Student::whereIn('id', function ($query) use ($request) {
+                $query->select('student_id')
+                    ->from('tb_student_assignment')
+                    ->whereIn('general_assignment_id', function ($subQuery) use ($request) {
+                        $subQuery->select('id')
+                            ->from('tb_general_assignment')
+                            ->where('degrees_id', $request->grado)
+                            ->where('section_id', $request->seccion)
+                            ->where('course_id', $request->curso);
+                    });
+            })
+            ->with(['ratings.activity']) // Asegúrate de que estas relaciones estén bien definidas en el modelo
+            ->get();
+
+            // Verificar si hay estudiantes
+            if ($students->isEmpty()) {
+                return redirect()->back()->with('error', 'No se encontraron estudiantes para los criterios seleccionados.');
+            }
+
+            // Generar el PDF por sección
+            $pdf = PDF::loadView('pdf.reportRatings', compact('students'));
+
+            return $pdf->download('reporte_calificaciones.pdf');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Capturar errores de validación
+            Log::error('Validation error in generateRatingsPDF: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Error de validación: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Capturar cualquier otro error
+            Log::error('Error generating PDF in generateRatingsPDF: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
     }
 
 }

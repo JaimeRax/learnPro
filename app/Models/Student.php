@@ -39,7 +39,7 @@ class Student extends Model
 
     public function ratings()
     {
-        return $this->hasMany('tb_ratings', 'student_id', 'id');
+        return $this->hasMany(Ratings::class, 'student_id', 'id');
     }
 
     public function disable()

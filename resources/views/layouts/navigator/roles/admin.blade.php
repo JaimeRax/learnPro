@@ -67,6 +67,7 @@
     <li><a href="{{ '/ratings' }}"><i class="fa-solid fa-map-location-dot"></i> Mis notas</a></li>
 
     <li><a href="{{ '/activity' }}"><i class="fa-solid fa-map-location-dot"></i> Mis actividades</a></li>
+    <li><a href="{{ '/report/report' }}"><i class="fa-solid fa-map-location-dot"></i> Reportes</a></li>
 
 
     @endcan
