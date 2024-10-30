@@ -7,6 +7,7 @@ use App\Models\Degree;
 use App\Models\Courses;
 use App\Models\Ratings;
 use App\Models\Student;
+use App\Models\Activity;
 use App\Models\Sections;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -37,7 +38,6 @@ class RatingsController extends Controller
                         return $query->where('section_id', $sectionId);
                     })
                     ->when($courseId, function ($query) use ($courseId) {
-                        // Agregado para filtrar por curso
                         return $query->where('course_id', $courseId);
                     })
                     ->pluck('id');
@@ -63,9 +63,13 @@ class RatingsController extends Controller
                 $sections = Sections::all();
                 $courses = Courses::all(); // Asegúrate de que tengas este modelo
 
-                // Retornar la vista con los estudiantes y los selectores
+                // Obtener actividades relacionadas con las asignaciones generales
+                $activities = Activity::whereIn('general_assignment_id', $generalAssignments)->get();
+
+                // Retornar la vista con los estudiantes, actividades y los selectores
                 return view('ratings.listRatings', [
                     'students' => $students,
+                    'activities' => $activities, // Pasar actividades a la vista
                     'degrees' => $degrees,
                     'sections' => $sections,
                     'courses' => $courses // Pasar cursos a la vista
@@ -77,6 +81,7 @@ class RatingsController extends Controller
             return redirect('/ratings')->with('error', 'Ocurrió un problema al listar las calificaciones.');
         }
     }
+
 
     //     public function editRatings($id){
     //         try {

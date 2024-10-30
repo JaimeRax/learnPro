@@ -18,4 +18,14 @@ class GeneralAssignment extends Model
         'teachers_id',
     ];
 
+    public function studentAssignments()
+    {
+        return $this->hasMany(StudentAssignment::class, 'general_assignment_id');
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'general_assignment_id');
+    }
+
 }

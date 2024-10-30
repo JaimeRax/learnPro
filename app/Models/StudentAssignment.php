@@ -25,6 +25,11 @@ class StudentAssignment extends Model
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
+    public function generalAssignment()
+    {
+        return $this->belongsTo(GeneralAssignment::class, 'general_assignment_id');
+    }
+
 
 
 }
