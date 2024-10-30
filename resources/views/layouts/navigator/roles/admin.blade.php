@@ -20,6 +20,7 @@
 
         <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-map-location-dot"></i> Colaboraciones</a></li>
 
+
         </li>
 
         </ul>
@@ -30,12 +31,12 @@
 
     @endcan
 
+
     @can('admin')
 
     <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
     <li><a href="{{ '/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Pagos</a></li>
-
 
     <li>
 
@@ -65,10 +66,13 @@
 
     <li><a href="{{ '/ratings' }}"><i class="fa-solid fa-map-location-dot"></i> Mis notas</a></li>
 
+    <li><a href="{{ '/activity' }}"><i class="fa-solid fa-map-location-dot"></i> Mis actividades</a></li>
+
 
     @endcan
 
 
-    <li><a href="#"> <i class="fa-solid fa-file-pdf"></i> Reportes</a></li>
+
+
 
 </section>
