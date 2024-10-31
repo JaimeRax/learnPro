@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('student_id')->references('id')->on('tb_student');
             $table->unsignedBigInteger('activity_id')->nullable();
             $table->foreign('activity_id')->references('id')->on('tb_activity');
+            $table->string('score_obtained');
             $table->timestamps();
         });
     }

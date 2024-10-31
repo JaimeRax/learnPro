@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Models\Collaborations;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\sectionsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\assignmentController;
 use App\Http\Controllers\CollaborationsController;
+use App\Http\Controllers\ReportController;
 
 // **** RUTA PARA LOGIN ****
 Route::get('/', function () {
@@ -114,6 +116,7 @@ Route::prefix('assignment')->group(function () {
 Route::prefix('report')->group(function () {
     // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket'])->middleware('can:admin');
+    Route::get('/report', [ReportController::class, 'showGeneratePDFForm'])->middleware('can:teacher');
 });
 
 // ROUTES TEACHERS
@@ -128,6 +131,9 @@ Route::prefix('teachers')->group(function () {
 // ROUTES RATINGS
 Route::prefix('ratings')->group(function () {
     Route::get('/', [RatingsController::class, 'listRatings'])->middleware('can:teacher');
+    Route::get('/generateRatingsPDF', [RatingsController::class, 'generateRatingsPDF'])->name('ratings.pdf');
+    Route::post('/update', [RatingsController::class, 'editRatings'])->name('ratings.update');
+
 
 });
 
@@ -140,4 +146,15 @@ Route::prefix('collaborations')->group(function () {
     Route::post('/restore/{id}', [CollaborationsController::class, 'activeCollaborations'])->middleware('can:admin');
     Route::get('/trash', [CollaborationsController::class, 'trashCollaborations'])->middleware('can:admin');
 
+});
+
+//ROUTES ACTIVITY
+Route::prefix('activity')->group(function () {
+    Route::get('/', [ActivityController::class, 'listActivity'])->middleware('can:teacher');
+    Route::post('/new', [ActivityController::class, 'createActivity'])->middleware('can:teacher');
+    Route::get('/showNew', [ActivityController::class, 'showCreate'])->middleware('can:teacher');
+    Route::post('/edit/{id}', [ActivityController::class, 'editActivity'])->middleware('can:teacher');
+    Route::post('/delete/{id}', [ActivityController::class, 'disableActivity'])->middleware('can:teacher');
+    Route::post('/restore/{id}', [ActivityController::class, 'activeActivity'])->middleware('can:teacher');
+    Route::get('/trash', [ActivityController::class, 'trashActivity'])->middleware('can:teacher');
 });

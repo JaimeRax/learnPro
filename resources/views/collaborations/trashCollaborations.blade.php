@@ -12,7 +12,7 @@
 
             {{-- filtro por busqueda de nombre --}}
 
-            <form class="input-group" action="/payments" method="get">
+            <form class="input-group" action="/collaborations/trash" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
 
@@ -22,14 +22,6 @@
                     </button>
                 </div>
             </form>
-
-            {{-- filtro por seleccion de grado --}}
-
-            <form method="GET" action="/payments" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form>
-
 
         </div>
 

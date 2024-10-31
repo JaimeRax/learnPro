@@ -11,17 +11,9 @@ class Ratings extends Model
     use HasFactory;
 
     protected $fillable = [
-        'courses_id',
-        'activity_1',
-        'activity_2',
-        'activity_3',
-        'improvement_1',
-        'improvement_2',
-        'improvement_3',
-        'discipline',
-        'extracurricular',
-        'exam',
-        'student_id'
+        'student_id',
+        'activity_id',
+        'score_obtained'
     ];
 
     public function student()
@@ -33,6 +25,11 @@ class Ratings extends Model
     public function degree()
     {
         return $this->belongsTo('Degree', 'degree_id', 'id');
+    }
+
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class, 'activity_id', 'id');
     }
 
 }

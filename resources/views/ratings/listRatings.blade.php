@@ -1,140 +1,109 @@
 @extends('layouts.base')
 
-
-
 @section('header')
     <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
 @endsection
 
-
 @section('main')
     <div class="grid grid-cols-1 gap-2">
-
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
-
-            <form method="GET" action="#" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id"
-                    required onchange="document.getElementById('degreeForm').submit()" />
+            <form method="GET" action="/ratings" id="filtersForm" class="flex items-center mt-6 space-x-4">
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                    required />
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()"
+                    :selected="request('section_id')" required />
+                <x-inputs.select-option id="course_id" titulo="Curso" name="course_id" :options="$courses->pluck('name', 'id')->toArray()" :selected="request('course_id')"
+                    required />
+                <x-button type="submit" class="text-white mt-9 bg-cyan-600">Buscar</x-button>
             </form>
-            <form method="GET" action="#" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="Seccion" name="degree_id"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form>
-            <form method="GET" action="#" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="Curso" name="degree_id"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form>
-
-            <x-button-link href="#" class="text-white bg-orange-600 mt-9">
-                Buscar
-            </x-button-link>
         </div>
 
+        <form method="POST" action="{{ route('ratings.update') }}">
+            @csrf
+            @method('POST')
 
-
-        <div class="flex justify-end col-md-2">
-            <x-button-link href="/degrees/trash" class="text-white bg-green-600">
-                <x-iconos.basurero /> Papelera
-            </x-button-link>
-        </div>
-
-        <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
-            <x-slot name="thead">
-                <x-tablas.tr>
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Estudiante</x-tablas.th>
-                    <x-tablas.th>Act #1</x-tablas.th>
-                    <x-tablas.th>Act #2</x-tablas.th>
-                    <x-tablas.th>Act #3</x-tablas.th>
-                    <x-tablas.th>Mej #1</x-tablas.th>
-                    <x-tablas.th>Mej #2</x-tablas.th>
-                    <x-tablas.th>Mej #3</x-tablas.th>
-                    <x-tablas.th>Disciplina</x-tablas.th>
-                    <x-tablas.th>Extracurrilar</x-tablas.th>
-                    <x-tablas.th>Examen</x-tablas.th>
-                    <x-tablas.th>Nota Final</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
-
-                </x-tablas.tr>
-            </x-slot>
-            @php
-                $i = 1;
-            @endphp
-
-            <x-slot name="tbody">
-
+            <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
+                <x-slot name="thead">
                     <x-tablas.tr>
-                        <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td> MELANIE ROSAURA ANAYTE CAAL MAAZ</x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="actividad1" id="actividad1" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="actividad2" id="actividad2" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="actividad3" id="actividad3" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="mejoramiento1" id="mejoramiento1" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="mejoramiento2" id="mejoramiento2" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="mejoramiento3" id="mejoramiento3" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="Disciplina" id="Disciplina" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="extracurricular" id="extracurricular" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" min="0" name="examen" id="examen" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required oninput="calculateFinalGrade()" />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <input type="number" readonly name="notaFinal" id="notaFinal" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black" required />
-                        </x-tablas.td>
+                        <x-tablas.th>No.</x-tablas.th>
+                        <x-tablas.th>Estudiante</x-tablas.th>
 
-                        <x-tablas.td>
-                            <x-button href="student/viewForm" class="mt-2 btn-primary">
+                        @foreach ($activities as $activity)
+                            <x-tablas.th>{{ $activity->name }}</x-tablas.th>
+                        @endforeach
 
-                                <x-iconos.guardar />
-
-                            </x-button>
-
-
-                        </x-tablas.td>
+                        <x-tablas.th>Nota Final</x-tablas.th>
+                        <x-tablas.th>Acciones</x-tablas.th>
                     </x-tablas.tr>
+                </x-slot>
 
-            </x-slot>
+                <x-slot name="tbody">
+                    @php $i = 1; @endphp
+                    @foreach ($students as $student)
+                        <x-tablas.tr>
+                            <x-tablas.td>{{ $i++ }}</x-tablas.td>
+                            <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
+
+                            @foreach ($activities as $activity)
+                                <x-tablas.td>
+                                    <input type="number" min="0"
+                                        name="ratings[{{ $student->id }}][{{ $activity->id }}][score_obtained]"
+                                        id="rating_{{ $student->id }}_{{ $activity->id }}"
+                                        value="{{ $ratings[$student->id][$activity->id]->score_obtained ?? '' }}"
+                                        class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
+                                        oninput="calculateFinalGrade({{ $student->id }})" />
+                                </x-tablas.td>
+                            @endforeach
+
+                            <x-tablas.td>
+                                <input type="number" readonly name="notaFinal" id="notaFinal-{{ $student->id }}"
+                                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
+                                    required />
+                            </x-tablas.td>
+                            <x-tablas.td>
+                                <x-button id="createPayment-{{ $student->id }}"
+                                    href="{{ url('ratings/pdf_generator', $student->id) }}" class="mt-2 btn-primary">
+                                    <x-iconos.editar />
+                                </x-button>
+                            </x-tablas.td>
+                        </x-tablas.tr>
+                    @endforeach
 
 
-        </x-tablas.table>
-        {{-- <div>
-            {{ $rating->appends(['search' => request()->query('search')])->links('components.pagination') }}
-        </div> --}}
+
+                </x-slot>
+            </x-tablas.table>
+
+            <div class="flex justify-end mt-4">
+                <x-button type="submit" class="text-white bg-blue-600">Guardar Calificaciones</x-button>
+            </div>
+        </form>
+    </div>
 @endsection
+
 <script src="{{ asset('js/reloadPage.js') }}"></script>
 <script>
-    function calculateFinalGrade() {
-        // Obtener los valores de los inputs
-        const actividad1 = parseFloat(document.getElementById('actividad1').value) || 0;
-        const actividad2 = parseFloat(document.getElementById('actividad2').value) || 0;
-        const actividad3 = parseFloat(document.getElementById('actividad3').value) || 0;
-        const mejoramiento1 = parseFloat(document.getElementById('mejoramiento1').value) || 0;
-        const mejoramiento2 = parseFloat(document.getElementById('mejoramiento2').value) || 0;
-        const mejoramiento3 = parseFloat(document.getElementById('mejoramiento3').value) || 0;
-        const disciplina = parseFloat(document.getElementById('Disciplina').value) || 0;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Llamar a calculateFinalGrade para cada estudiante
+        @foreach ($students as $student)
+            calculateFinalGrade({{ $student->id }});
+        @endforeach
+    });
 
-        const extracurricular = parseFloat(document.getElementById('extracurricular').value) || 0;
-        const examen = parseFloat(document.getElementById('examen').value) || 0;
 
-        // Calcular la nota final
-        const notaFinal = actividad1 + actividad2 + actividad3 + mejoramiento1 + mejoramiento2 + mejoramiento3 + disciplina + extracurricular + examen;
+    function calculateFinalGrade(studentId) {
+        // Obtener todos los inputs de las calificaciones para el estudiante específico
+        const inputs = document.querySelectorAll(`input[name^="ratings[${studentId}]"]`);
+        let total = 0;
 
-        // Mostrar el resultado en el campo notaFinal
-        document.getElementById('notaFinal').value = notaFinal;
+        // Sumar los valores de los inputs
+        inputs.forEach(input => {
+            const value = parseFloat(input.value) || 0; // Usar 0 si el valor no es un número
+            total += value;
+        });
+
+        // Actualizar el campo de Nota Final
+        const finalGradeInput = document.getElementById(`notaFinal-${studentId}`);
+        finalGradeInput.value = total; // Asignar la suma total al input de Nota Final
     }
 </script>
