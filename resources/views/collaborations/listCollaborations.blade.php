@@ -12,7 +12,7 @@
 
             {{-- filtro por busqueda de nombre --}}
 
-            <form class="input-group" action="/payments" method="get">
+            <form class="input-group" action="/collaborations" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
 

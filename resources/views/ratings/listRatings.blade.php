@@ -40,33 +40,34 @@
                 <x-slot name="tbody">
                     @php $i = 1; @endphp
                     @foreach ($students as $student)
-                    <x-tablas.tr>
-                        <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.tr>
+                            <x-tablas.td>{{ $i++ }}</x-tablas.td>
+                            <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
 
-                        @foreach ($activities as $activity)
+                            @foreach ($activities as $activity)
+                                <x-tablas.td>
+                                    <input type="number" min="0"
+                                        name="ratings[{{ $student->id }}][{{ $activity->id }}][score_obtained]"
+                                        id="rating_{{ $student->id }}_{{ $activity->id }}"
+                                        value="{{ $ratings[$student->id][$activity->id]->score_obtained ?? '' }}"
+                                        class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
+                                        oninput="calculateFinalGrade({{ $student->id }})" />
+                                </x-tablas.td>
+                            @endforeach
+
                             <x-tablas.td>
-                                <input type="number" min="0"
-                                       name="ratings[{{ $student->id }}][{{ $activity->id }}][score_obtained]"
-                                       id="rating_{{ $student->id }}_{{ $activity->id }}"
-                                       value="{{ $ratings[$student->id][$activity->id]->score_obtained ?? '' }}"
-                                       class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
-                                       oninput="calculateFinalGrade({{ $student->id }})" />
+                                <input type="number" readonly name="notaFinal" id="notaFinal-{{ $student->id }}"
+                                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
+                                    required />
                             </x-tablas.td>
-                        @endforeach
-
-                        <x-tablas.td>
-                            <input type="number" readonly name="notaFinal" id="notaFinal-{{ $student->id }}"
-                                class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
-                                required />
-                        </x-tablas.td>
-                        <x-tablas.td>
-                            <x-button id="createPayment-{{ $student->id }}" href="{{ url('ratings/pdf_generator', $student->id) }}" class="mt-2 btn-primary">
-                                <x-iconos.editar />
-                            </x-button>
-                        </x-tablas.td>
-                    </x-tablas.tr>
-                @endforeach
+                            <x-tablas.td>
+                                <x-button id="createPayment-{{ $student->id }}"
+                                    href="{{ url('ratings/pdf_generator', $student->id) }}" class="mt-2 btn-primary">
+                                    <x-iconos.editar />
+                                </x-button>
+                            </x-tablas.td>
+                        </x-tablas.tr>
+                    @endforeach
 
 
 
@@ -82,6 +83,14 @@
 
 <script src="{{ asset('js/reloadPage.js') }}"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Llamar a calculateFinalGrade para cada estudiante
+        @foreach ($students as $student)
+            calculateFinalGrade({{ $student->id }});
+        @endforeach
+    });
+
+
     function calculateFinalGrade(studentId) {
         // Obtener todos los inputs de las calificaciones para el estudiante específico
         const inputs = document.querySelectorAll(`input[name^="ratings[${studentId}]"]`);

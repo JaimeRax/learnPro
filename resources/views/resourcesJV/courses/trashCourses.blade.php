@@ -25,13 +25,6 @@
                 </div>
             </form>
 
-
-            {{-- filtro de seleccion por grado --}}
-            <form method="GET" action="/courses/trash" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form>
-
         </div>
 
 

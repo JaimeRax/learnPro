@@ -13,7 +13,7 @@
 
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
-            <form class="input-group" action="/degrees" method="get">
+            <form class="input-group" action="/degrees/trash" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
                     value="{{ request()->query('search') }}" class="mt-6" />
 
