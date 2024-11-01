@@ -57,6 +57,9 @@
 
     <li><a href="{{ '/users' }}"><i class="fa-solid fa-user-plus"></i> Usuarios</a></li>
 
+    <li><a href="{{ '/report/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Reportes</a></li>
+
+
     @endcan
 
 
