@@ -117,6 +117,10 @@ Route::prefix('report')->group(function () {
     // TODO: change controller
     Route::get('/ticket', [StudentController::class, 'paymentTicket'])->middleware('can:admin');
     Route::get('/report', [ReportController::class, 'showGeneratePDFForm'])->middleware('can:teacher');
+    Route::get('/payments', [ReportController::class, 'showReportPayments'])->middleware('can:admin');
+    Route::get('/reportPaymentsMonth', [ReportController::class, 'pdfReportMonth'])->middleware('can:admin');
+    Route::get('/reportPaymentsDiary', [ReportController::class, 'pdfReportDiary'])->middleware('can:admin');
+    Route::get('/reportStatusMonth', [ReportController::class, 'pdfReportStatusMonth'])->middleware('can:admin');
 });
 
 // ROUTES TEACHERS

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Collaborations;
-use Illuminate\Http\Request;
-use App\Models\Student;
-use Illuminate\Support\Facades\Log;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\Degree;
-use App\Models\Payments;
-use App\Models\User;
-use App\Models\Sections;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Degree;
+use App\Models\Student;
+use App\Models\Payments;
+use App\Models\Sections;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Collaborations;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class paymentsController extends Controller
 {
@@ -162,14 +163,16 @@ class paymentsController extends Controller
             $student->state = $validatedData['type_payment'] === 'inscripcion' ? 0 : 1;
             $student->save();
 
-            $users = User::all();
+            $users = Auth::user()->username; // Obtiene solo el campo username
 
             // Generar los datos para el PDF
             $data = [
                 'payments' => $paymentsCollection,
                 'student' => $student,
-                'users' => $users
+                'username' => $users, // Cambia 'users' a 'username'
+                'uuid' => $uuid,
             ];
+
 
             // Generar el PDF
             $pdf = PDF::loadView('pdf.myPDF', $data);
