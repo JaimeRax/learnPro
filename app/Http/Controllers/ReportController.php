@@ -35,43 +35,93 @@ class ReportController extends Controller
         return view('Reports.Payment.paymentsMonth');
     }
 
-    public function pdfReportMonth()
+    public function pdfReportMonth(Request $request)
     {
-        // Llamada al procedimiento almacenado
-        $results = DB::select('CALL corteCajaMensual()');
-        // Obtén el username del usuario autenticado
+        // Validar las fechas de entrada
+        $request->validate([
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+        ]);
+
+        // Llamar al procedimiento almacenado con las fechas
+        $resultados = DB::select('CALL corte_caja_mensual(?, ?)', [
+            $request->input('fecha_inicio'),
+            $request->input('fecha_fin'),
+        ]);
+
         $username = Auth::user()->username;
         $uuid = Str::uuid();
 
-        // Cargar la vista y pasar los datos a la misma, incluyendo el username
+        // Inicializar un arreglo para almacenar los totales por grado
+        $totalesPorGrado = [];
+
+        foreach ($resultados as $result) {
+            // Extraer el nombre del grado
+            $grado = $result->degree_name;
+
+            // Si el grado no existe en el arreglo, inicializarlo
+            if (!isset($totalesPorGrado[$grado])) {
+                $totalesPorGrado[$grado] = [
+                    'total_records' => 0,
+                    'total_amount' => 0.0,
+                ];
+            }
+
+            // Sumar los registros y los montos al grado correspondiente
+            $totalesPorGrado[$grado]['total_records'] += $result->total_records;
+            $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
+        }
+        // Generar el PDF con los resultados y totales
         $pdf = Pdf::loadView('pdf.reportPaymentMonth', [
-            'payments' => $results,
+            'resultados' => $resultados,
+            'totalesPorGrado' => $totalesPorGrado,
             'username' => $username,
-            'uuid' => $uuid
+            'uuid' => $uuid,
+            'fecha_inicio' => $request->input('fecha_inicio'),
+            'fecha_fin' => $request->input('fecha_fin'),
         ]);
 
-        // Descargar el PDF con un nombre específico
         return $pdf->download('Recorte_caja_mensual.pdf');
     }
 
+
     public function pdfReportDiary()
     {
-        // Llamada al procedimiento almacenado
-        $results = DB::select('CALL corteCajaDiario()');
-
+        $resultados = DB::select('CALL corte_caja_diario()');
         $username = Auth::user()->username;
         $uuid = Str::uuid();
 
-        // Generar el PDF usando la vista y los datos obtenidos
+        // Inicializar un arreglo para almacenar los totales por grado
+        $totalesPorGrado = [];
+
+        foreach ($resultados as $result) {
+            // Extraer el nombre del grado
+            $grado = $result->degree_name;
+
+            // Si el grado no existe en el arreglo, inicializarlo
+            if (!isset($totalesPorGrado[$grado])) {
+                $totalesPorGrado[$grado] = [
+                    'total_records' => 0,
+                    'total_amount' => 0.0,
+                ];
+            }
+
+            // Sumar los registros y los montos al grado correspondiente
+            $totalesPorGrado[$grado]['total_records'] += $result->total_records;
+            $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
+        }
+
+        // Puedes convertir el arreglo a un formato que te convenga o pasarlo a la vista
         $pdf = Pdf::loadView('pdf.reportPaymentDiary', [
-            'payments' => $results,
+            'resultados' => $resultados,
+            'totalesPorGrado' => $totalesPorGrado, // Pasar el total por grado
             'username' => $username,
-            'uuid' => $uuid
+            'uuid' => $uuid,
         ]);
 
-        // Descargar o visualizar el PDF
-        return $pdf->download('Reporte_Corte_Caja_Diario.pdf');
+        return $pdf->download('Recorte_caja_diario.pdf');
     }
+
 
     public function pdfReportStatusMonth(Request $request)
     {
