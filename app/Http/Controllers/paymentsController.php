@@ -109,9 +109,7 @@ class paymentsController extends Controller
 
             $today = Carbon::now();
             $currentYear = $today->year;
-
             $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
-
             $paymentsCollection = collect();
 
             // Verificar si month está presente en la solicitud
@@ -176,13 +174,14 @@ class paymentsController extends Controller
 
             // Generar el PDF
             $pdf = PDF::loadView('pdf.myPDF', $data);
-            return $pdf->download('comprobante_pago.pdf');
+            $pdfPath = storage_path("app/public/comprobantes/comprobante_pago_{$uuid}.pdf");
+            $pdf->save($pdfPath);
 
-            // if($student->state == 1) {
-            // return redirect('/payments')->with('message', 'El pago se registró con éxito.');
-            // } else {
-            //     return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.')->with('swal', true);
-            // }
+            // Guardar la ruta y el estado del botón de asignación en la sesión
+            session()->flash('pdf_url', asset("storage/comprobantes/comprobante_pago_{$uuid}.pdf"));
+            session()->flash('show_assignment_button', $validatedData['type_payment'] === 'inscripcion');
+
+            return redirect('/payments')->with('message', 'El pago se registró con éxito.');
 
         } catch (\Exception $e) {
             Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
