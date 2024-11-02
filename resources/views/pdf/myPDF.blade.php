@@ -36,7 +36,7 @@
             }
 
             .logo {
-                width: 110px;
+                width: 105px;
                 display: inline-block;
                 vertical-align: middle;
                 margin-top: -15px;
@@ -189,6 +189,14 @@
                             <span style="float: right;"><strong>Mes a pagar: </strong>
                                 {{ getMonthName($pays->paid_month) }}</span>
                         </div>
+                        @if ($pays->mood_payment != 'Efectivo')
+                            <div class="field">
+                                <span><strong>No. Referencia: </strong>
+                                    {{ $pays->document_number }}</span>
+                                <span style="float: right;"><strong>Banco: </strong>
+                                    {{ $pays->bank }}</span>
+                            </div>
+                        @endif
                         <div class="field">
                             <span><strong>Observaciones: </strong>
                                 {{ $pays->comment }}</span>
@@ -250,6 +258,14 @@
                             <span style="float: right;"><strong>Mes a pagar: </strong>
                                 {{ getMonthName($singlePayment->paid_month) }}</span>
                         </div>
+                        @if ($singlePayment->mood_payment != 'Efectivo')
+                            <div class="field">
+                                <span><strong>No. Referencia: </strong>
+                                    {{ $singlePayment->document_number }}</span>
+                                <span style="float: right;"><strong>Banco: </strong>
+                                    {{ $singlePayment->bank }}</span>
+                            </div>
+                        @endif
                         <div class="field">
                             <span><strong>Observaciones: </strong>
                                 {{ $singlePayment->comment }}</span>
