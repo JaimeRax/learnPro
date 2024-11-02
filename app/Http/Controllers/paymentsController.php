@@ -53,7 +53,6 @@ class paymentsController extends Controller
             $sections = Sections::all();
             $users = User::all();
 
-            // dd($student->toArray());
             $months = Constants::MONTHS;
 
             return view('payments.listPayments', [
@@ -70,7 +69,7 @@ class paymentsController extends Controller
         }
     }
 
-    public function ShowcreatePayments(Request $request, $id)
+    public function ShowcreatePayments($id)
     {
         $collaborations = Collaborations::where('state', 1)->get();
 
@@ -171,7 +170,6 @@ class paymentsController extends Controller
                 'uuid' => $uuid,
             ];
 
-
             // Generar el PDF
             $pdf = PDF::loadView('pdf.myPDF', $data);
             $pdfPath = storage_path("app/public/comprobantes/comprobante_pago_{$uuid}.pdf");
@@ -180,6 +178,7 @@ class paymentsController extends Controller
             // Guardar la ruta y el estado del botón de asignación en la sesión
             session()->flash('pdf_url', asset("storage/comprobantes/comprobante_pago_{$uuid}.pdf"));
             session()->flash('show_assignment_button', $validatedData['type_payment'] === 'inscripcion');
+            session()->flash('payment_created', true); // Indica que el pago fue creado
 
             return redirect('/payments')->with('message', 'El pago se registró con éxito.');
 
@@ -188,4 +187,30 @@ class paymentsController extends Controller
             return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ' . $e->getMessage());
         }
     }
+
+    public function listPaymentStudent($id)
+    {
+        $payments = Payments::where('student_id', $id)->get();
+
+        return view('payments.paymentStudent', [
+                'payments' => $payments,
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $payment = Payments::find($id);
+
+        if (!$payment) {
+            return redirect()->back()->with('error', 'Pago no encontrado.');
+        }
+
+        try {
+            $payment->delete();
+            return redirect('/payments/')->with('message', 'Pago eliminado con éxito.');
+        } catch (\Exception $e) {
+            return redirect('/payments')->with('error', 'Ocurrió un error al eliminar el pago: ');
+        }
+    }
+
 }

@@ -50,6 +50,7 @@
                         <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>
+                            {{-- Botón de pagos --}}
                             <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                                 <x-slot name="button">
@@ -65,17 +66,27 @@
                                     ])
                                 </x-slot>
                             </x-modal>
+
+                            {{-- Botón de listado de pagos --}}
+                            <button onclick="window.location='{{ route('payments.listPaymentStudent', $studens->id) }}'"
+                                class="btn btn-success">
+                                <i class="fas fa-list"></i> <!-- Ícono de listado -->
+                            </button>
+
+
                             {{-- Botón de asignación --}}
-                            @if(session('show_assignment_button'))
-                                <button id="assignmentButton" class="px-4 py-2 mt-2 text-white bg-green-500 rounded" onclick="handleAssignment()">
+                            @if (session('show_assignment_button'))
+                                <a href="{{ url('assignment/student') }}" class="btn btn-success">
                                     Asignar
-                                </button>
+                                </a>
                             @endif
 
                             {{-- Botón de descargar PDF --}}
-                            <button id="downloadPdfButton" class="px-4 py-2 mt-2 text-white bg-red-500 rounded" onclick="handleDownloadPDF()">
-                                Descargar PDF
-                            </button>
+                            @if (session('pdf_url') && session('payment_created'))
+                                <button onclick="window.open('{{ session('pdf_url') }}', '_blank');" class="btn btn-danger">
+                                    <i class="fas fa-file-pdf"></i>
+                                </button>
+                            @endif
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
@@ -89,48 +100,18 @@
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Mostrar u ocultar el botón de asignación según el valor de sesión
-            const assignmentButton = document.getElementById("assignmentButton");
-            const downloadPdfButton = document.getElementById("downloadPdfButton");
-
-            if (assignmentButton) {
-                assignmentButton.style.display = '{{ session("show_assignment_button") ? "block" : "none" }}';
-            }
-        });
-
-        function handleAssignment() {
-            // Oculta el botón de asignación después de hacer clic
-            const assignmentButton = document.getElementById("assignmentButton");
-            if (assignmentButton) {
-                assignmentButton.style.display = "none";
-            }
-
-            swal({
-                title: "Asignación realizada",
-                text: "La asignación se completó exitosamente.",
-                icon: "success",
-                button: "OK",
-            });
+        function redirectToAssignment(studentId) {
+            // Redirige a la página de asignación para el estudiante
+            window.location.href = `/assignment/student/`;
         }
 
-        function handleDownloadPDF() {
-            // Lógica para descargar el PDF
-            // Ejemplo: window.location.href = 'ruta/al/pdf';
+        function downloadPDF(pdfUrl) {
+            // Redirige a la URL del PDF para descarga
+            window.location.href = pdfUrl;
 
-            // Oculta el botón de descarga de PDF después de hacer clic
-            const downloadPdfButton = document.getElementById("downloadPdfButton");
-            if (downloadPdfButton) {
-                downloadPdfButton.style.display = "none";
-            }
-
-            swal({
-                title: "Descarga iniciada",
-                text: "El PDF se está descargando.",
-                icon: "success",
-                button: "OK",
-            });
+            // Desactivar el botón de descarga después de hacer clic
+            document.getElementById('downloadPdfButton').disabled = true;
+            document.getElementById('downloadPdfButton').classList.add('opacity-50'); // Cambia el estilo si lo deseas
         }
     </script>
