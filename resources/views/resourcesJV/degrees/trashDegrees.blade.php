@@ -56,7 +56,7 @@
                 @foreach ($degree as $degrees)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $degrees->name }}</x-tablas.td>
+                        <x-tablas.td>{{  strtoupper($degrees->name) }}</x-tablas.td>
                         <x-tablas.td>
                             <form action="/degrees/restore/{{ $degrees->id }}" method="POST">
 
