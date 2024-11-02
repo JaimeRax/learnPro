@@ -19,6 +19,7 @@ class Degree extends Model
         return $this->hasMany('Courses', 'degree_id', 'id');
     }
 
+
     public function student()
     {
         return $this->hasMany('tb_student', 'degree_id', 'id');
@@ -32,8 +33,9 @@ class Degree extends Model
 
     public function section()
     {
-        return $this->belongsTo(Sections::class, 'section_id');
+        return $this->belongsToMany(Sections::class, 'tb_student_assignment', 'degrees_id', 'section_id');
     }
+
 
     public function course()
 {

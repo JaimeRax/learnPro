@@ -19,33 +19,31 @@ class StudentController extends Controller
     {
         try {
             $degreeId = request()->query('degree_id');
-            $sectionId = request()->query('section_id');
+            $sectionId = request()->query('section_id'); // Nueva variable para la sección
             $search = request()->query('search');
 
-            $students = Student::whereIn('state', [1, 2])
-                ->when($degreeId || $sectionId, function ($query) use ($degreeId, $sectionId) {
-                    $query->whereHas('assignments', function ($query) use ($degreeId, $sectionId) {
-                        $query->when($degreeId, function ($query) use ($degreeId) {
-                            return $query->where('degrees_id', $degreeId);
-                        })
-                        ->when($sectionId, function ($query) use ($sectionId) {
-                            return $query->where('section_id', $sectionId);
-                        });
-                    });
-                })
-                ->when($search, function ($query) use ($search) {
-                    return $query->where('first_name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'section_id' => $sectionId,
-                    'search' => $search
-                ]);
+            // Realizar la consulta con filtros de grado, sección y nombre
+            $students = Student::with(['studentAssignments.degree', 'studentAssignments.section'])
+            ->whereIn('state', [1, 2]) // Filtrar por estado 1 o 2
+            ->when($degreeId || $sectionId, function ($query) use ($degreeId, $sectionId) {
+                $query->whereHas('studentAssignments', function ($subQuery) use ($degreeId, $sectionId) {
+                    if ($degreeId) {
+                        $subQuery->where('degrees_id', $degreeId);
+                    }
+                    if ($sectionId) {
+                        $subQuery->where('section_id', $sectionId);
+                    }
+                });
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('first_name', 'LIKE', "%{$search}%");
+            })
+            ->paginate(10);
 
+
+            // Obtener grados y secciones para el formulario de selección
             $degrees = Degree::all();
-            $sections = Sections::all();
-
+            $sections = Sections::all(); // Asegúrate de que la clase esté correctamente nombrada
             return view('student.listStudent', [
                 'student' => $students,
                 'degrees' => $degrees,
@@ -53,9 +51,19 @@ class StudentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/student')->with('error', 'Ocurrió un problema.');
+            // Registrar el error en el log
+            Log::error('Error al listar estudiantes: ' . $e->getMessage(), [
+                'degree_id' => $degreeId,
+                'section_id' => $sectionId,
+                'search' => $search,
+                'trace' => $e->getTraceAsString() // Opcional: incluye el stack trace para más información
+            ]);
+
+            return redirect('/student')->with('error', 'Ocurrió un problema: ' . $e->getMessage());
         }
     }
+
+
 
 
     public function showCreateForm()
@@ -197,18 +205,18 @@ class StudentController extends Controller
 
     }
 
-    public function editStudent(Request $request, $id)
-    {
-        $student = Student::find($id);
+    // public function editStudent(Request $request, $id)
+    // {
+    //     $student = Student::find($id);
 
-        if (!$student) {
-            return redirect('/student')->with('error', 'Estudiante no encontrado.');
-        }
+    //     if (!$student) {
+    //         return redirect('/student')->with('error', 'Estudiante no encontrado.');
+    //     }
 
-        $student->update($request->validated());
+    //     $student->update($request->validated());
 
-        return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
-    }
+    //     return redirect('/student')->with('success', 'Estudiante actualizado correctamente.');
+    // }
 
     // TODO: mover esta funcion al controlador correspondiente y corregir la ruta
     public function paymentTicket()
