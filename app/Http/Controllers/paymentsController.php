@@ -122,6 +122,8 @@ class paymentsController extends Controller
             $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
             $paymentsCollection = collect();
 
+            $singlePayment = null; // Variable para almacenar un solo pago en caso de que no haya meses
+
             // Verificar si month está presente en la solicitud
             if (isset($validatedData['month']) && !empty($validatedData['month'])) {
                 foreach ($validatedData['month'] as $month) {
@@ -148,7 +150,7 @@ class paymentsController extends Controller
             } else {
                 // Crear un registro de pago único si no hay meses pagados
                 $uuid = Str::uuid();
-                $payment = Payments::create([
+                $singlePayment = Payments::create([
                     'payment_date' => $validatedData['payment_date'],
                     'type_payment' => $validatedData['type_payment'],
                     'name_collaboration' => $validatedData['name_collaboration'],
@@ -164,19 +166,33 @@ class paymentsController extends Controller
                     'user_id' => $request->user()->id,
                 ]);
 
-                $paymentsCollection->push($payment);
+                $paymentsCollection->push($singlePayment);
             }
 
-            $student = Student::findOrFail($validatedData['student_id']);
-            $student->state = $validatedData['type_payment'] === 'inscripcion' ? 0 : 1;
-            $student->save();
-
+            $degrees = Degree::all();
+            $sections = Sections::all();
             $users = Auth::user()->username; // Obtiene solo el campo username
+
+            $students = Student::with('assignments')->findOrFail($validatedData['student_id']);
+            $students->state = $validatedData['type_payment'] === 'inscripcion' ? 0 : 1;
+            $students->save();
+
+            if ($students && $students->assignments->isNotEmpty()) {
+                $firstAssignment = $students->assignments->first();
+
+                // Buscamos el nombre del degree y section usando los IDs
+                $degreeName = $degrees->firstWhere('id', $firstAssignment['degrees_id'])->name ?? 'N/A';
+                $sectionName = $sections->firstWhere('id', $firstAssignment['section_id'])->name ?? 'N/A';
+
+                $students->degree_name = $degreeName;
+                $students->section_name = $sectionName;
+            }
 
             // Generar los datos para el PDF
             $data = [
                 'payments' => $paymentsCollection,
-                'student' => $student,
+                'singlePayment' => $singlePayment,
+                'student' => $students,
                 'username' => $users, // Cambia 'users' a 'username'
                 'uuid' => $uuid,
             ];
