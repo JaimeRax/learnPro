@@ -66,6 +66,8 @@
                                     value="Restaurar"
                                     onclick="return confirm('¿Está completamente seguro de querer restaurar esta colaboraciòn?')">
                             </form>
+                            <x-alert-message />
+
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
@@ -78,3 +80,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
