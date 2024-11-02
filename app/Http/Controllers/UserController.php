@@ -219,38 +219,44 @@ class UserController extends Controller
     public function trashUsers()
     {
         try {
-            $degreeId = request()->query('degree_id');
+            $roleId = request()->query('role_id');
             $search = request()->query('search');
 
-            if ($degreeId || $search) {
-                $users = User::where('state', 0)
-                ->when($degreeId, function ($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
-                })
-                ->when($search, function ($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'search' => $search
-                ]);
+            if ($roleId || $search) {
 
+                $users = User::where('state', 0)
+                    ->when($roleId, function ($query) use ($roleId) {
+                        return $query->whereHas('roles', function ($q) use ($roleId) {
+                            $q->where('roles.id', $roleId);
+                        });
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('first_name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'role_id' => $roleId,
+                        'search' => $search
+                    ]);
 
             } else {
-                $users = User::where('state', 0)->paginate(10);
+                $users = User::where('state', [0])->paginate(10);
             }
 
+            $roles = Role::all();
+            $courses = Courses::all();
+            $sections = Sections::all();
             $degrees = Degree::all();
 
             return view('user.trashUsers', [
-               'users' => $users,
+                'roles' => $roles,
+                'users' => $users,
+                'courses' => $courses,
+                'sections' => $sections,
                 'degrees' => $degrees,
             ]);
-
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema.');
+            return redirect('/users')->with('error', 'Ocurrió un problema.');
         }
-
     }
 }
