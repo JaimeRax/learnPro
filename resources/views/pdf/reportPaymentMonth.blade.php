@@ -91,7 +91,10 @@
 
 @section('content')
     @include('styles.partials.title', ['title' => 'Corte de Caja Mensual'])
-    <h1> Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</h1>
+    <h1 style="margin: 0;">Desde: {{ $fecha_inicio }}</h1>
+    <h1 style="margin: 0;">Hasta: {{ $fecha_fin }}</h1>
+
+
     <div style="padding: 10px; background-color: #fff; border-radius: 8px; margin: 10px 0;">
         <!-- Primera Tabla -->
         <h3 style="text-align: center; font-size: 15px;" class="roboto-thin">Detalles de Cuotas Pagadas</h3>

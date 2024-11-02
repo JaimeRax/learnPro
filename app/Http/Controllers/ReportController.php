@@ -79,6 +79,8 @@ class ReportController extends Controller
             'uuid' => $uuid,
             'fecha_inicio' => $request->input('fecha_inicio'),
             'fecha_fin' => $request->input('fecha_fin'),
+            'fecha_inicio' => $request->input('fecha_inicio'), // Pasar la fecha de inicio
+            'fecha_fin' => $request->input('fecha_fin'),
         ]);
 
         return $pdf->download('Recorte_caja_mensual.pdf');
