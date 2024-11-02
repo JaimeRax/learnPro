@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Student;
+
 class Payments extends Model
 {
     use HasFactory;
@@ -30,7 +32,7 @@ class Payments extends Model
 
     public function student()
     {
-        return $this->belongsTo('tb_student', 'student_id', 'id');
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
 

@@ -25,11 +25,11 @@
             {{-- filtro por seleccion de grado --}}
             <form method="GET" action="/student" id="degreeForm" class="flex items-center mt-6 space-x-4">
                 <!-- Selector de Grado -->
-                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()" :selected="request('degree_id')"
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required />
 
                 <!-- Selector de Sección -->
-                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()"
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()"
                     :selected="request('section_id')" required />
 
                 <!-- Botón de Búsqueda -->
@@ -64,7 +64,6 @@
                     <x-tablas.th>Codigo Estudiantil</x-tablas.th>
                     <x-tablas.th>Grado</x-tablas.th>
                     <x-tablas.th>Seccion</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -74,31 +73,13 @@
             @endphp
 
             <x-slot name="tbody">
-                @php $i = 1; @endphp
-                @foreach ($student as $studens)
+                @foreach ($students as $studens)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
-
-                        @php
-                            // Obtener la última asignación
-                            $lastAssignment = $studens->assignments->last();
-                            // Comprobar si hay una asignación y si tiene grado y sección
-                            $degreeName =
-                                $lastAssignment && $lastAssignment->degree
-                                    ? $lastAssignment->degree->name
-                                    : 'Sin grado';
-                            $sectionName =
-                                $lastAssignment && $lastAssignment->section
-                                    ? $lastAssignment->section->name
-                                    : 'Sin sección';
-                        @endphp
-
-                        <x-tablas.td>{{ strtoupper($degreeName) }}</x-tablas.td> <!-- Grado -->
-                        <x-tablas.td>{{ strtoupper($sectionName) }}</x-tablas.td> <!-- Sección -->
-                        <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
-
+                        <x-tablas.td>{{ $studens->degree_name }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->section_name }}</x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al estudiante?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
@@ -141,7 +122,7 @@
 
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $students->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 

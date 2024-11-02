@@ -27,15 +27,15 @@ Route::get('/', function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'listUsers'])->name('users.index');
 
-Route::get('/register', [UserController::class, 'show']);
-Route::post('/register', [UserController::class, 'register']);
-Route::get('/viewForm', [UserController::class, 'showCreateForm'])->middleware('can:admin');
-Route::post('/newUser', [UserController::class, 'createUser'])->middleware('can:admin');
-Route::get('/showForm/{id}', [UserController::class, 'showEdit'])->middleware('can:admin');
-Route::post('/delete/{id}', [UserController::class, 'disableUser'])->middleware('can:admin');
-Route::post('/edit/{user}', [UserController::class, 'editUsers'])->middleware('can:admin');
-Route::get('/trash', [UserController::class, 'trashUsers'])->middleware('can:admin');
-Route::post('/restore/{id}', [UserController::class, 'activeUser'])->middleware('can:admin');
+    Route::get('/register', [UserController::class, 'show']);
+    Route::post('/register', [UserController::class, 'register']);
+    Route::get('/viewForm', [UserController::class, 'showCreateForm'])->middleware('can:admin');
+    Route::post('/newUser', [UserController::class, 'createUser'])->middleware('can:admin');
+    Route::get('/showForm/{id}', [UserController::class, 'showEdit'])->middleware('can:admin');
+    Route::post('/delete/{id}', [UserController::class, 'disableUser'])->middleware('can:admin');
+    Route::post('/edit/{user}', [UserController::class, 'editUsers'])->middleware('can:admin');
+    Route::get('/trash', [UserController::class, 'trashUsers'])->middleware('can:admin');
+    Route::post('/restore/{id}', [UserController::class, 'activeUser'])->middleware('can:admin');
 });
 
 
@@ -101,7 +101,8 @@ Route::prefix('payments')->group(function () {
     Route::get('/', [paymentsController::class, 'listPayments'])->middleware('can:admin');
     Route::get('/new/{id}', [paymentsController::class, 'ShowcreatePayments'])->middleware('can:admin');
     Route::post('/newForm/{id}', [paymentsController::class, 'createPayments'])->middleware('can:admin')->name('payments.list');
-
+    Route::get('/listPaymentStudent/{id}', [paymentsController::class, 'listPaymentStudent'])->middleware('can:admin')->name('payments.listPaymentStudent');
+    Route::post('/delete/{id}', [PaymentsController::class, 'destroy'])->middleware('can:admin');
 });
 
 //ROUTES ASSIGNMENTO

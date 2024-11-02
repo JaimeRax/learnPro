@@ -23,41 +23,51 @@ class paymentsController extends Controller
             $degreeId = request()->query('degree_id');
             $search = request()->query('search');
 
-            // if ($degreeId || $search) {
-            //     $student = Student::whereIn('state', [0,1, 2])
-            //         ->when($degreeId, function ($query) use ($degreeId) {
-            //             return $query->where('degree_id', $degreeId);
-            //         })
-            //         ->when($search, function ($query) use ($search) {
-            //             return $query->where('first_name', 'LIKE', "%{$search}%");
-            //         })
-            //         ->with(['degree', 'section', 'payments' => function ($query) {
-            //             $query->where('year', date('Y'));
-            //         }])
-            //         ->paginate(10)
-            //         ->appends([
-            //             'degree_id' => $degreeId,
-            //             'search' => $search
-            //         ]);
-            // } else {
-            $student = Student::whereIn('state', [0, 1])
-                // ->with(['degree', 'section', 'payments' => function ($query) {
-                //     $query->where('year', date('Y'));
-                // }])
-                ->paginate(10);
-            // }
-
-            $collaborations = Collaborations::where('state', 1)->get();
-
             $degrees = Degree::all();
             $sections = Sections::all();
             $users = User::all();
 
-            // dd($student->toArray());
+            $students = Student::whereIn('state', [0, 1])
+                ->when($degreeId, function ($query) use ($degreeId) {
+                    // Filtra por grado solo si degreeId no es null
+                    return $query->whereHas('assignments', function ($query) use ($degreeId) {
+                        $query->where('degrees_id', $degreeId);
+                    });
+                })
+            ->when($search, function ($query) use ($search) {
+                // Filtra por nombre solo si search no es null
+                return $query->where(function ($query) use ($search) {
+                    $query->where('first_name', 'LIKE', "%{$search}%")
+                          ->orWhere('second_name', 'LIKE', "%{$search}%")
+                          ->orWhere('first_lastname', 'LIKE', "%{$search}%")
+                          ->orWhere('second_lastname', 'LIKE', "%{$search}%");
+                });
+            })
+                ->with('assignments')
+                ->paginate(10)
+            ->appends([
+                'degree_id' => $degreeId,
+                'search' => $search,
+            ]);
+
+            foreach ($students as $student) {
+                if ($student && $student->assignments->isNotEmpty()) {
+                    $firstAssignment = $student->assignments->first();
+
+                    // Buscamos el nombre del degree y section usando los IDs
+                    $degreeName = $degrees->firstWhere('id', $firstAssignment['degrees_id'])->name ?? 'N/A';
+                    $sectionName = $sections->firstWhere('id', $firstAssignment['section_id'])->name ?? 'N/A';
+
+                    $student->degree_name = $degreeName;
+                    $student->section_name = $sectionName;
+                }
+            }
+
+            $collaborations = Collaborations::where('state', 1)->get();
             $months = Constants::MONTHS;
 
             return view('payments.listPayments', [
-                'student' => $student,
+                'students' => $students,
                 'degrees' => $degrees,
                 'sections' => $sections,
                 'users' => $users,
@@ -70,7 +80,7 @@ class paymentsController extends Controller
         }
     }
 
-    public function ShowcreatePayments(Request $request, $id)
+    public function ShowcreatePayments($id)
     {
         $collaborations = Collaborations::where('state', 1)->get();
 
@@ -109,9 +119,7 @@ class paymentsController extends Controller
 
             $today = Carbon::now();
             $currentYear = $today->year;
-
             $validatedData['payment_date'] = Carbon::parse($validatedData['payment_date'])->format('Y-m-d');
-
             $paymentsCollection = collect();
 
             // Verificar si month está presente en la solicitud
@@ -173,20 +181,49 @@ class paymentsController extends Controller
                 'uuid' => $uuid,
             ];
 
-
             // Generar el PDF
             $pdf = PDF::loadView('pdf.myPDF', $data);
-            return $pdf->download('comprobante_pago.pdf');
+            $pdfPath = storage_path("app/public/comprobantes/comprobante_pago_{$uuid}.pdf");
+            $pdf->save($pdfPath);
 
-            // if($student->state == 1) {
-            // return redirect('/payments')->with('message', 'El pago se registró con éxito.');
-            // } else {
-            //     return redirect('/assignment/student')->with('message', 'El pago se registró con éxito.')->with('swal', true);
-            // }
+            // Guardar la ruta y el estado del botón de asignación en la sesión
+            session()->flash('pdf_url', asset("storage/comprobantes/comprobante_pago_{$uuid}.pdf"));
+            session()->flash('show_assignment_button', $validatedData['type_payment'] === 'inscripcion');
+            session()->flash('payment_created', true); // Indica que el pago fue creado
+            session()->flash('paid_student_id', $validatedData['student_id']);
+
+
+            return redirect('/payments')->with('message', 'El pago se registró con éxito.');
 
         } catch (\Exception $e) {
             Log::error('Error al crear el pago o actualizar el estudiante: ' . $e->getMessage());
             return redirect('/payments')->with('error', 'Ocurrió un problema al crear el pago. ' . $e->getMessage());
         }
     }
+
+    public function listPaymentStudent($id)
+    {
+        $payments = Payments::where('student_id', $id)->with('student')->get();
+
+        return view('payments.paymentStudent', [
+                'payments' => $payments,
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $payment = Payments::find($id);
+
+        if (!$payment) {
+            return redirect()->back()->with('error', 'Pago no encontrado.');
+        }
+
+        try {
+            $payment->delete();
+            return redirect('/payments/')->with('message', 'Pago eliminado con éxito.');
+        } catch (\Exception $e) {
+            return redirect('/payments')->with('error', 'Ocurrió un error al eliminar el pago: ');
+        }
+    }
+
 }

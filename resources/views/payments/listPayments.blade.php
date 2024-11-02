@@ -35,7 +35,6 @@
                     <x-tablas.th>Nombre</x-tablas.th>
                     <x-tablas.th>Grado</x-tablas.th>
                     <x-tablas.th>Sección</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
@@ -44,22 +43,22 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($student as $studens)
+                @foreach ($students as $student)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
-                        <x-tablas.td>solvente quemado</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $student->degree_name ? strtoupper($student->degree_name) : '--- ----' }}</x-tablas.td>
+                        <x-tablas.td>{{ $student->section_name ? strtoupper($student->section_name) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
+                            {{-- Botón de pagos --}}
+                            <x-modal id="createPayment-{{ $student->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                                 <x-slot name="button">
                                     <x-iconos.pago />
                                 </x-slot>
                                 <x-slot name="body">
                                     @include('payments.newPayment', [
-                                        'student' => $studens,
+                                        'student' => $student,
                                         'user' => $users,
                                         'degree' => $degrees,
                                         'sections' => $sections,
@@ -67,16 +66,55 @@
                                     ])
                                 </x-slot>
                             </x-modal>
+
+                            {{-- Botón de listado de pagos --}}
+                            <button onclick="window.location='{{ route('payments.listPaymentStudent', $student->id) }}'"
+                                class="btn btn-success">
+                                <i class="fas fa-list"></i> <!-- Ícono de listado -->
+                            </button>
+
+
+                            @if (session('paid_student_id') == $student->id)
+                                {{-- Botón de asignación --}}
+                                @if (session('show_assignment_button'))
+                                    <a href="{{ url('assignment/student') }}" class="btn btn-success">
+                                        Asignar
+                                    </a>
+                                @endif
+
+                                {{-- Botón de descargar PDF --}}
+                                @if (session('pdf_url') && session('payment_created'))
+                                    <button onclick="window.open('{{ session('pdf_url') }}', '_blank');"
+                                        class="btn btn-danger">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </button>
+                                @endif
+                            @endif
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
             </x-slot>
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $students->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function redirectToAssignment(studentId) {
+            // Redirige a la página de asignación para el estudiante
+            window.location.href = `/assignment/student/`;
+        }
+
+        function downloadPDF(pdfUrl) {
+            // Redirige a la URL del PDF para descarga
+            window.location.href = pdfUrl;
+
+            // Desactivar el botón de descarga después de hacer clic
+            document.getElementById('downloadPdfButton').disabled = true;
+            document.getElementById('downloadPdfButton').classList.add('opacity-50'); // Cambia el estilo si lo deseas
+        }
+    </script>

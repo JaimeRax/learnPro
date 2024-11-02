@@ -22,29 +22,55 @@ class StudentController extends Controller
             $sectionId = request()->query('section_id'); // Nueva variable para la sección
             $search = request()->query('search');
 
-            // Realizar la consulta con filtros de grado, sección y nombre
-            $students = Student::with(['studentAssignments.degree', 'studentAssignments.section'])
-                ->whereIn('state', [1, 2]) // Filtrar por estado 1 o 2
-                ->when($degreeId || $sectionId, function ($query) use ($degreeId, $sectionId) {
-                    $query->whereHas('studentAssignments', function ($subQuery) use ($degreeId, $sectionId) {
-                        if ($degreeId) {
-                            $subQuery->where('degrees_id', $degreeId);
-                        }
-                        if ($sectionId) {
-                            $subQuery->where('section_id', $sectionId);
-                        }
+            $degrees = Degree::all();
+            $sections = Sections::all();
+
+            $students = Student::whereIn('state', [1, 2])
+                ->when($degreeId, function ($query) use ($degreeId) {
+                    // Filtrar por grado si degree_id tiene valor
+                    $query->whereHas('assignments', function ($query) use ($degreeId) {
+                        $query->where('degrees_id', $degreeId);
+                    });
+                })
+                ->when($sectionId, function ($query) use ($sectionId) {
+                    // Filtrar por sección si section_id tiene valor
+                    $query->whereHas('assignments', function ($query) use ($sectionId) {
+                        $query->where('section_id', $sectionId);
                     });
                 })
                 ->when($search, function ($query) use ($search) {
-                    return $query->where('first_name', 'LIKE', "%{$search}%");
+                    // Filtrar por búsqueda en nombre si search tiene valor
+                    $query->where(function ($query) use ($search) {
+                        $query->where('first_name', 'LIKE', "%{$search}%")
+                            ->orWhere('second_name', 'LIKE', "%{$search}%")
+                            ->orWhere('first_lastname', 'LIKE', "%{$search}%")
+                            ->orWhere('second_lastname', 'LIKE', "%{$search}%");
+                    });
                 })
-                ->paginate(10);
+                ->with('assignments')
+                ->paginate(10)
+                ->appends([
+                    'degree_id' => $degreeId,
+                    'section_id' => $sectionId,
+                    'search' => $search,
+                ]);
 
-            // Obtener grados y secciones para el formulario de selección
-            $degrees = Degree::all();
-            $sections = Sections::all(); // Asegúrate de que la clase esté correctamente nombrada
+            // Agregar nombres de grado y sección a cada estudiante
+            foreach ($students as $student) {
+                if ($student && $student->assignments->isNotEmpty()) {
+                    $firstAssignment = $student->assignments->first();
+
+                    // Obtener nombres de grado y sección basados en los IDs
+                    $degreeName = $degrees->firstWhere('id', $firstAssignment['degrees_id'])->name ?? 'N/A';
+                    $sectionName = $sections->firstWhere('id', $firstAssignment['section_id'])->name ?? 'N/A';
+
+                    $student->degree_name = $degreeName;
+                    $student->section_name = $sectionName;
+                }
+            }
+
             return view('student.listStudent', [
-                'student' => $students,
+                'students' => $students,
                 'degrees' => $degrees,
                 'sections' => $sections
             ]);
