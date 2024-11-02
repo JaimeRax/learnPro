@@ -182,9 +182,9 @@ class UserController extends Controller
             }
 
             if (in_array('administracion', $roleNames)) {
-                return redirect('/users')->with('success', 'Usuario creado correctamente');
+                return redirect('/users')->with('message', 'Usuario editado correctamente');
             } else {
-                return redirect('/teachers')->with('success', 'Usuario creado correctamente');
+                return redirect('/teachers')->with('message', 'Usuario editado correctamente');
             }
 
         } catch (\Exception $e) {

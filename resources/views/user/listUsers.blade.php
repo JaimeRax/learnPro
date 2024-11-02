@@ -123,11 +123,10 @@
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
+                <x-alert-message />
 
             </x-slot>
 
-
-            <x-alert-message />
         </x-tablas.table>
         <div>
             {{ $users->appends(['search' => request()->query('search')])->links('components.pagination') }}
