@@ -25,13 +25,11 @@
             {{-- filtro por seleccion de grado --}}
             <form method="GET" action="/student" id="degreeForm" class="flex items-center mt-6 space-x-4">
                 <!-- Selector de Grado -->
-                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id"
-                    :options="$degrees->pluck('name', 'id')->toArray()"
-                    :selected="request('degree_id')" required />
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                    required />
 
                 <!-- Selector de Sección -->
-                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id"
-                    :options="$sections->pluck('name', 'id')->toArray()"
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()"
                     :selected="request('section_id')" required />
 
                 <!-- Botón de Búsqueda -->
@@ -65,7 +63,6 @@
                     <x-tablas.th>Codigo Estudiantil</x-tablas.th>
                     <x-tablas.th>Grado</x-tablas.th>
                     <x-tablas.th>Seccion</x-tablas.th>
-                    <x-tablas.th>Estado</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
 
                 </x-tablas.tr>
@@ -75,12 +72,13 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($student as $studens)
+                @foreach ($students as $studens)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->degree_name }}</x-tablas.td>
+                        <x-tablas.td>{{ $studens->section_name }}</x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
@@ -91,7 +89,8 @@
                                 <x-slot name="body">
                                     <form action="/student/delete/{{ $studens->id }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        <button type="submit"
+                                            class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                             Aceptar
                                         </button>
                                     </form>
@@ -113,7 +112,7 @@
 
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $students->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 
