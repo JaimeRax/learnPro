@@ -203,7 +203,7 @@ class paymentsController extends Controller
 
     public function listPaymentStudent($id)
     {
-        $payments = Payments::where('student_id', $id)->get();
+        $payments = Payments::where('student_id', $id)->with('student')->get();
 
         return view('payments.paymentStudent', [
                 'payments' => $payments,

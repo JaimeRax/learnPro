@@ -29,13 +29,14 @@
         {{-- Lista de Pagos --}}
         <div class="mt-4">
             <h2 class="text-xl font-semibold"><strong>Pagos</strong></h2>
+
             {{-- Botón de Volver alineado a la derecha --}}
             <div class="text-right mb-4">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
             </div>
-            <br>
+
             @if ($payments->isEmpty())
                 <p>No hay pagos registrados para este estudiante.</p>
             @else
@@ -79,7 +80,7 @@
                                                 @csrf
                                                 <div class="flex justify-center mb-4">
                                                     <button type="button"
-                                                        onclick="confirmDelete('{{ $payment->type_payment }}', '{{ $payment->id }}')"
+                                                        onclick="confirmDelete('{{ $payment->student->first_name . $payment->student->first_lastname }}', '{{ $payment->type_payment }}', '{{ $payment->id }}')"
                                                         class="px-5 py-2 mt-5 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                                         Eliminar
                                                     </button>
@@ -102,11 +103,14 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmDelete(paymentDescription, paymentId) {
+    function confirmDelete(nameStudent, paymentDescription, paymentId) {
+        const confirmationText = `${nameStudent}/${paymentDescription}`;
+
         Swal.fire({
             title: "Confirmación de Eliminación",
             html: "Recuerda que esta acción es irreversible y no podrás recuperar la información eliminada.<br><br>" +
-                "Para confirmar, escribe la descripción del pago: <strong>" + paymentDescription + "</strong>",
+                "Para confirmar, escribe la descripción del pago: <strong>" + nameStudent + "/" +
+                paymentDescription + "</strong>",
             input: 'text',
             inputPlaceholder: 'Descripción del pago',
             showCancelButton: true,
@@ -114,7 +118,7 @@
             cancelButtonText: 'Cancelar',
             icon: 'warning',
             preConfirm: (inputValue) => {
-                if (inputValue !== paymentDescription) {
+                if (inputValue !== confirmationText) {
                     Swal.showValidationMessage(
                         'La descripción no coincide. Por favor, inténtalo de nuevo.');
                 }
