@@ -41,7 +41,7 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        margin-bottom: 20px; /* Espacio después de cada tabla */
     }
 
     td,
@@ -58,7 +58,7 @@
     }
 
     tbody tr:nth-child(even) {
-        background-color: #f9fafb;
+        background-color: #ececec;
     }
 
     tbody tr:hover {
@@ -87,35 +87,62 @@
         margin-top: 10px;
         margin-bottom: 20px;
     }
+
+    .page-break {
+        page-break-after: always;
+    }
 </style>
 
 @section('content')
-    @include('styles.partials.title', ['title' => 'Reporte de Corte de Caja Diario'])
+    @include('styles.partials.title', ['title' => ' Corte de Caja Diario'])
 
     <div style="padding: 10px; background-color: #fff; border-radius: 8px; margin: 10px 0;">
-        <h1> Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</h1>
-        <h1> Recibo: </h1>
-
-        <table class="table">
+        <!-- Primera Tabla -->
+        <h3 style="text-align: center; font-size: 15px;" class="roboto-thin">Detalles de Cuotas Pagadas</h3>
+        <table>
             <thead>
-                <tr>
-                    <th class="nameColumn">Grado</th>
-                    <th class="nameColumn">Seccion</th>
-                    <th class="nameColumn">Cuotas Pagadas</th>
-                    <th class="nameColumn">Total Recaudado</th>
+                <tr class="nameColumn">
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Grado</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Sección</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Cuotas Pagadas</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Recaudado</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($payments as $payment)
+                @foreach ($resultados as $result)
                     <tr>
-                        <td>{{ $payment->degree }}</td>
-                        <td>{{ $payment->section }}</td>
-                        <td class="text-right">{{ $payment->cuotas }}</td>
-                        <td class="text-right">{{ number_format($payment->total, 2) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($result->degree_name) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($result->section_name) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ $result->total_records }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Q.{{ number_format($result->total_amount, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
+        <!-- Segunda Tabla -->
+        <h3 style="text-align: center; font-size: 15px; margin-top: 80px;" class="roboto-thin">Totales por grado</h3>
+        <table style="margin-top: 10px;">
+            <thead>
+                <tr class="nameColumn">
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Grado</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Cuotas Pagadas</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Recaudado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($totalesPorGrado as $grado => $totales)
+                    <tr>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($grado) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ $totales['total_records'] }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Q.{{ number_format($totales['total_amount'], 2) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+
+    @if (count($resultados) % 2 == 0)
+        <div class="page-break"></div>
+    @endif
 @endsection

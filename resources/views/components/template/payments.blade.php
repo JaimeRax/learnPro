@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>@yield('title', 'Voucher Pago')</title>
-
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:wght@100&display=swap');
 
@@ -24,14 +23,13 @@
             .contact-info {
                 float: right;
                 text-align: right;
-                font-size: 0.5rem;
                 line-height: 0.5;
                 margin: 0;
                 padding: 0;
             }
 
             .logo {
-                width: 130px;
+                width: 90px;
                 display: inline-block;
                 vertical-align: middle;
                 margin-top: -15px;
@@ -40,17 +38,18 @@
             .text-container {
                 display: inline-block;
                 vertical-align: middle;
-                font-size: 1rem;
-                line-height: 0.3;
+                font-size: 0.6rem; /* Reducido el tamaño de la fuente */
+                line-height: 1; /* Ajustado para mayor claridad */
                 margin: 0;
+                line-height: 0.1;
                 padding: 0;
             }
 
             .text-container .title {
                 display: inline-block;
                 vertical-align: middle;
-                font-size: 0.5rem;
-                line-height: 0.5;
+                font-size: 0.7rem; /* Tamaño reducido para títulos */
+                line-height: 1;
                 margin: 0;
                 padding: 0;
             }
@@ -101,7 +100,7 @@
                 <p class="roboto-thin">INSTITUTO DE EDUCACION BASICA</p>
                 <p class="roboto-thin">POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
                 <p class="roboto-thin" style="font-size: 12px;">Autorizado por Acuerdo Ministerial
-                    NO. 475
+                    No. 475
                 </p>
                 <p class="roboto-thin">4ta. Ave 0-37 zona 4, Finca Municipal Sesbiché</p>
                 <p class="roboto-thin">San Juan Chamelco Alta Verapaz</p>
@@ -116,14 +115,13 @@
         </div>
 
         <div class="footer">
-
             <div>
-                <p class="roboto-thin">{{ $username }} - {{ $uuid }} -
+                <p class="roboto-thin" style="word-spacing: 50px;">{{ $username }}  {{ $uuid }}
                     {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
-
             </div>
             <div style="clear: both;"></div>
         </div>
+
 
     </body>
 </html>
