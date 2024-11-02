@@ -19,6 +19,24 @@ class In_charge extends Model
         'charge_address',
         'charge_relationship',
         'charge_comment',
+        'charge_first_name_2',
+        'charge_second_name_2',
+        'charge_first_lastname_2',
+        'charge_second_lastname_2',
+        'charge_dpi_2',
+        'charge_phone_2',
+        'charge_address_2',
+        'charge_relationship_2',
+        'charge_comment_2',
+        'charge_first_name_3',
+        'charge_second_name_3',
+        'charge_first_lastname_3',
+        'charge_second_lastname_3',
+        'charge_dpi_3',
+        'charge_phone_3',
+        'charge_address_3',
+        'charge_relationship_3',
+        'charge_comment_3',
         'student_id',
     ];
 
@@ -38,4 +56,5 @@ class In_charge extends Model
         $this->state = 1;
         $this->save();
     }
+
 }

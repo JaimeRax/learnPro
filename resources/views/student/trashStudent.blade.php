@@ -13,10 +13,9 @@
         <div class="grid items-center justify-center grid-cols-1 gap-2 md:grid-cols-3 lg:flex">
 
             {{-- filtro por busqueda de nombre --}}
-
             <form class="input-group" action="/student/trash" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
+                    value="{{ request()->query('search') }}" class="mt-14" />
 
                 <div class="input-group-addon">
                     <button type="submit" class="input-group-text">
@@ -68,6 +67,8 @@
                                     value="Restaurar"
                                     onclick="return confirm('¿Está completamente seguro de querer restaurar al estudiante?')">
                             </form>
+                            <x-alert-message />
+
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach

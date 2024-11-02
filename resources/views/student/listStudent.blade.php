@@ -25,24 +25,12 @@
             {{-- filtro por seleccion de grado --}}
             <form method="GET" action="/student" id="degreeForm" class="flex items-center mt-6 space-x-4">
                 <!-- Selector de Grado -->
-                <x-inputs.select-option
-                    id="degree_id"
-                    titulo="Grado"
-                    name="degree_id"
-                    :options="$degrees->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()"
-                    :selected="request('degree_id')"
-                    required
-                />
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()" :selected="request('degree_id')"
+                    required />
 
                 <!-- Selector de Sección -->
-                <x-inputs.select-option
-                    id="section_id"
-                    titulo="Sección"
-                    name="section_id"
-                    :options="$sections->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()"
-                    :selected="request('section_id')"
-                    required
-                />
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()"
+                    :selected="request('section_id')" required />
 
                 <!-- Botón de Búsqueda -->
                 <x-button type="submit" class="text-white mt-9 bg-cyan-600">
@@ -107,7 +95,7 @@
                                     : 'Sin sección';
                         @endphp
 
-                        <x-tablas.td>{{strtoupper( $degreeName ) }}</x-tablas.td> <!-- Grado -->
+                        <x-tablas.td>{{ strtoupper($degreeName) }}</x-tablas.td> <!-- Grado -->
                         <x-tablas.td>{{ strtoupper($sectionName) }}</x-tablas.td> <!-- Sección -->
                         <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
 
@@ -125,10 +113,12 @@
                                             Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
-                            <x-button-link href="/student/edit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
+                            <x-button-link href="/student/formEdit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
                                 <x-iconos.editar />
                             </x-button-link>
 
@@ -141,14 +131,13 @@
                                 <x-slot name="body">
                                     @include('student.infoStudent', ['studentId' => $studens->id]) <!-- Aquí pasas el objeto usuario -->
                                 </x-slot>
+
                             </x-modal>
 
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
             </x-slot>
-
-
 
         </x-tablas.table>
         <div>
@@ -158,3 +147,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

@@ -90,7 +90,8 @@ Route::prefix('student')->group(function () {
     Route::get('/viewForm', [StudentController::class, 'showCreateForm'])->middleware('can:admin');
     Route::post('/newStudent', [StudentController::class, 'createStudent'])->middleware('can:admin');
     Route::post('/delete/{id}', [StudentController::class, 'disableStudent'])->middleware('can:admin');
-    Route::get('/edit/{id}', [StudentController::class, 'editStudent'])->middleware('can:admin');
+    Route::post('/edit/{id}', [StudentController::class, 'editStudent'])->middleware('can:admin');
+    Route::get('/formEdit/{id}', [StudentController::class, 'formEditStudent'])->middleware('can:admin');
     Route::post('/restore/{id}', [StudentController::class, 'activeStudent'])->middleware('can:admin');
     Route::get('/trash', [StudentController::class, 'trashStudent'])->middleware('can:admin');
 });

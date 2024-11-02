@@ -2,17 +2,7 @@
     <!-- Información del cliente -->
     <div class="container">
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <div class="form-control">
-                    <label class="mb-0 font-bold label " for="dpi">
-                        <span class="label-text">
-                            Nombre de Usuario
-                        </span>
-                    </label>
-                    <input readonly="" id="name" name="name" class="w-full shadow-sm input" type="text"
-                        value="{{ strtoupper("{$studens->username} ") }}"> <!-- Cambiado aquí -->
-                </div>
-            </div>
+
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <div class="form-control">
@@ -33,8 +23,8 @@
                             Codigo Personal
                         </span>
                     </label>
-                    <input readonly="" id="personal_code" name="personal_code" class="w-full shadow-sm input" type="text"
-                    value="{{ $studens->personal_code }}">
+                    <input readonly="" id="personal_code" name="personal_code" class="w-full shadow-sm input"
+                        type="text" value="{{ $studens->personal_code }}">
                 </div>
             </div>
             <div class="form-group col-md-4">
