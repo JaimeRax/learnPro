@@ -3,176 +3,268 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Voucher Pago</title>
+        <title>Recibo de Pago</title>
         <style>
-            @page {
-                margin-top: 1cm;
-                margin-left: 1.5cm;
-                margin-bottom: 1cm;
-                margin-right: 1.5cm;
-                font-size: 12px;
-                font-family: 'Montserrat', sans-serif;
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                display: flex;
+                justify-content: center;
             }
 
-            .titulo {
+            .container {
+                width: 90%;
+                border: 1px solid #ccc;
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .header {
+                line-height: 0.3;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .contact-info {
+                float: right;
+                text-align: right;
+                font-size: 0.5rem;
+                line-height: 0.5;
+                margin: 0;
+                padding: 0;
+            }
+
+            .logo {
+                width: 110px;
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -15px;
+            }
+
+            .text-container {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 10px;
+                line-height: 0.2;
+                margin: 0;
+                padding: 0;
+            }
+
+            .text-container .title {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 0.5rem;
+                line-height: 0.5;
+                margin: 0;
+                padding: 0;
+            }
+
+            .receipt-number {
                 text-align: center;
-                font-size: 12px;
-                background: #151819;
-                color: #FFFFFF;
-                height: 20px;
-                border-radius: 3px;
-                margin-bottom: 10px;
-            }
-
-            .nameColumn {
-                background: #151819;
-                color: white;
-                line-height: 20px;
-            }
-
-            table {
-                width: 100%;
-                background-color: #FFFFFF;
-                color: #2c2e35;
-                text-align: center;
-                border-collapse: collapse;
-                margin-bottom: 10px;
-            }
-
-            td,
-            th {
-                height: 18px;
-                font-weight: normal;
-                text-transform: capitalize;
-                font-size: 9px;
-                border: 1px solid #2c2e35;
-            }
-
-            .campo {
+                display: inline-block;
                 font-weight: bold;
-                padding-top: 3px;
+                font-size: 16px;
+                border: 1px solid #000;
+                {{-- padding: 10px; --}} width: 20%;
+                border-radius: 10px;
+            }
+
+            .section-title {
+                text-align: center;
+                background-color: #2c3e50;
+                color: #fff;
+                padding: 8px;
+                font-weight: bold;
+                font-size: 14px;
+                margin: 15px 0;
+                border-radius: 5px;
             }
 
             .content {
-                font-size: 9px;
-                text-align: left;
-                padding-left: 5px;
-                line-height: 1.2;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .field {
+                margin: 10px 0;
+            }
+
+            .field span {
+                display: inline-block;
+            }
+
+            .field p {
+                display: inline-block;
+            }
+
+            .field-value {
+                display: inline-block;
+                margin-left: 10px;
+                color: #333;
+            }
+
+            .signature {
+                margin-top: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
 
 
-            .hr-firma {
+            .total {
+                font-size: 14px;
+                font-weight: bold;
+                text-align: right;
+                color: red;
+            }
+
+            .footer {
+                text-align: center;
+                font-size: 10px;
                 margin-top: 15px;
-            }
-
-            .voucher {
-                width: 100%;
-                border: 1px solid #2c2e35;
-                padding: 5px;
-                margin-bottom: 20px;
-            }
-
-            .page-break {
-                page-break-after: always;
+                color: #666;
             }
         </style>
     </head>
     <body>
+        @php
+            function getMonthName($monthNumber)
+            {
+                $months = [
+                    1 => 'ENERO',
+                    2 => 'FEBRERO',
+                    3 => 'MARZO',
+                    4 => 'ABRIL',
+                    5 => 'MAYO',
+                    6 => 'JUNIO',
+                    7 => 'JULIO',
+                    8 => 'AGOSTO',
+                    9 => 'SEPTIEMBRE',
+                    10 => 'OCTUBRE'
+                ];
+
+                return $months[$monthNumber] ?? '---'; // Para números fuera del rango
+            }
+        @endphp
         @if ($payments->first()->type_payment === 'mensualidad')
             @foreach ($payments as $pays)
-                <div class="voucher">
-
-                    <div style=" font-size: 0.8rem;">
-                        <p class=" lato-bold">No. </p>
-                    </div>
-                    <h4 class="titulo" style=" font-size: 0.7rem;">
-                        Datos Generales del Pago
-                    </h4>
-                    <table class="table mt-5 table-offset" style=" margin-top: 10px;">
-                        <thead>
-                            <tr>
-                                <th scope="col" style=" font-size: 0.5rem;">Cuota Escolar Mensual</th>
-                                <th scope="col" style=" font-size: 0.5rem;">Couta Computaciòn Mneusal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style=" font-size: 0.6rem;">Q55.00</td>
-                                <td style=" font-size: 0.6rem;">q20.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div>
-                        <div style="flex-direction: column;">
-                            <div style="flex-direction:row; margin-top: 15px;">
-                                <span class="campo" style=" font-size: 0.8rem;">Nombre:</span>
-                                <span class="content" style="width:35.5%">
-                                    {{ $student->first_lastname }} {{ $student->second_lastname }}
-                                    {{ $student->first_name }}
-                                    {{ $student->second_name }}
-                                </span>
-                                <span class="campo" style=" font-size: 0.8rem; margin-left: 35.5px;">Fecha:</span>
-                                <span class="content"
-                                    style="width:41.5%">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</span>
-                            </div>
-                            <div style="flex-direction:row; margin-top: 1px;">
-                                <span class="campo" style=" font-size: 0.8rem;">Grado:</span>
-                                <span class="content" style="width:37% "> primero quemado </span>
-                                <span class="campo" style="font-size: 0.8rem; margin-left: 35.3px;"> A quemado
-                                </span>
-                                <span class="content" style="width:40%"> A </span>
-                            </div>
-                            <div style="flex-direction:row; margin-top: 1px;">
-                                <span class="campo" style="font-size: 0.8rem;">Mes de pago: </span>
-                                <span class="content" style="width:31%"> {{ $pays->paid_month }} </span>
-                                <span class="campo" style=" font-size: 0.8rem; margin-left: 31px;"> Tipo de
-                                    pago:</span>
-                                <span class="content" style="width:35.8%"> {{ $pays->type_payment }}</span>
-                            </div>
-                            <div style="flex-direction:row; margin-top: 10px;">
-                                <span class="campo" style=" font-size: 0.8rem;"> Observaciones</span>
-                                <span class="content" style="width:84.2%; font-size: 0.8rem;"> {{ $pays->comment }}
-                                </span>
-                            </div>
-                            <div style="flex-direction:row; margin-top: 10px;">
-                                <span class="campo" style=" font-size: 0.8rem;"> Total:</span>
-                                <span class="" style="width:94.5%; font-size: 0.7rem;"> Q. {{ $pays->amount }}
-                                </span>
-                            </div>
-                            <div class="mt-3 mb-3 text-center">
-                                <div>
-                                    <hr class="hr-firma" style="width: 50%;">
-                                    <p style=" margin-left: 280px; font-size: 0.7rem;">Firma de Direcciòn</p>
-                                </div>
-                            </div>
+                <div class="container">
+                    <div class="header">
+                        <div class="contact-info">
+                            <img class="logo" src="{{ public_path('Imagenes/jv-logo.png') }}" alt="jv-logo" />
+                        </div>
+                        <div class="text-container">
+                            <p>INSTITUTO DE EDUCACION BASICA POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
+                            <p>AUTORIZADO POR EL ACUERDO MINISTERIAL No. 475</p>
+                            <p>4ta. Ave 0-37 zona 4, Finca Municipal Sesbiché</p>
+                            <p>San Juan Chamelco, Alta Verapaz</p>
+                            <p>institutobasicojv.chamelco@gmail.com</p>
+                            <p>Tel. (+502) 5991 0548</p>
                         </div>
                     </div>
+
+                    <div class="section-title">DATOS DEL ESTUDIANTE</div>
+                    <div class="content">
+                        <div class="field">
+                            <span><strong>Nombre: </strong>{{ $student->first_lastname }}
+                                {{ $student->second_lastname }}
+                                {{ $student->first_name }} {{ $student->second_name }}</span>
+                            <span style="float: right;"><strong>Grado: </strong>{{ $student->degree_name }}
+                                {{ $student->section_name }}</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title">DETALLES DEL PAGO</div>
+                    <div class="content">
+                        <div class="field">
+                            <span><strong>Tipo Pago: </strong>
+                                {{ $pays->type_payment }}</span>
+                            <span style="float: right;"><strong>Fecha pago: </strong>
+                                {{ $pays->payment_date }}</span>
+                        </div>
+                        <div class="field">
+                            <span><strong>Método Pago: </strong>
+                                {{ $pays->mood_payment }}</span>
+                            <span style="float: right;"><strong>Mes a pagar: </strong>
+                                {{ getMonthName($pays->paid_month) }}</span>
+                        </div>
+                        <div class="field">
+                            <span><strong>Observaciones: </strong>
+                                {{ $pays->comment }}</span>
+                        </div>
+                    </div>
+
+                    <div class="signature">
+                        <div class="signature-line">f.____________________</div>
+                        <div class="total">Total pagado: Q {{ $pays->amount }}</div>
+                    </div>
+
+                    <div class="footer">
+                        {{ $username }} - {{ $pays->uuid }} -
+                        {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+                    </div>
+                    @if ($loop->iteration % 2 == 0)
+                        <div class="page-break"></div>
+                    @endif
                 </div>
-                @if ($loop->iteration % 2 == 0)
-                    <div class="page-break"></div>
-                @endif
+                <br>
             @endforeach
         @else
-            <div class="voucher">
-
-                <h4 class="titulo">Datos Generales del Pago</h4>
-                <div>
-                    <p><span class="campo">Nombre:</span> <span class="content">{{ $student->first_lastname }}
-                            {{ $student->second_lastname }} {{ $student->first_name }}
-                            {{ $student->second_name }}</span></p>
-                    <p><span class="campo">Grado:</span> <span class="content">{{ $student->grade }}
-                            {{ $student->section }}</span></p>
-                    <p><span class="campo">Fecha:</span> <span
-                            class="content">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</span></p>
-                    <p><span class="campo">Tipo de pago:</span> <span
-                            class="content">{{ $payments->first()->type_payment }}</span></p>
-                    <p><span class="campo">Observaciones:</span> <span
-                            class="content">{{ $payments->first()->comment }}</span></p>
-                    <p><span class="campo">Total:</span> <span class="content">Q.
-                            {{ $payments->first()->amount }}</span></p>
+            <div class="container">
+                <div class="header">
+                    <div class="contact-info">
+                        <img class="logo" src="{{ public_path('Imagenes/jv-logo.png') }}" alt="jv-logo" />
+                    </div>
+                    <div class="text-container">
+                        <p>INSTITUTO DE EDUCACION BASICA POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
+                        <p>AUTORIZADO POR EL ACUERDO MINISTERIAL No. 475</p>
+                        <p>4ta. Ave 0-37 zona 4, Finca Municipal Sesbiché</p>
+                        <p>San Juan Chamelco, Alta Verapaz</p>
+                        <p>institutobasicojv.chamelco@gmail.com</p>
+                        <p>Tel. (+502) 5991 0548</p>
+                    </div>
                 </div>
-            </div>
+
+                <div class="section-title">DATOS DEL ESTUDIANTE</div>
+                <div class="content">
+                    <div class="field">
+                        <span><strong>Nombre: </strong>{{ $student->first_lastname }}
+                            {{ $student->second_lastname }}
+                            {{ $student->first_name }} {{ $student->second_name }}</span>
+                        <span style="float: right;"><strong>Grado: </strong>{{ $student->degree_name }}
+                            {{ $student->section_name }}</span>
+                    </div>
+
+                    <div class="section-title">DETALLES DEL PAGO</div>
+                    <div class="content">
+                        <div class="field">
+                            <span><strong>Tipo Pago: </strong>
+                                {{ $singlePayment->type_payment }}</span>
+                            <span style="float: right;"><strong>Fecha pago: </strong>
+                                {{ $singlePayment->payment_date }}</span>
+                        </div>
+                        <div class="field">
+                            <span><strong>Método Pago: </strong>
+                                {{ $singlePayment->mood_payment }}</span>
+                            <span style="float: right;"><strong>Mes a pagar: </strong>
+                                {{ getMonthName($singlePayment->paid_month) }}</span>
+                        </div>
+                        <div class="field">
+                            <span><strong>Observaciones: </strong>
+                                {{ $singlePayment->comment }}</span>
+                        </div>
+                    </div>
+
+                    <div class="signature">
+                        <div class="signature-line">f.____________________</div>
+                        <div class="total">Total pagado: Q {{ $singlePayment->amount }}</div>
+                    </div>
+
+                    <div class="footer">
+                        {{ $username }} - {{ $singlePayment->uuid }} -
+                        {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+                    </div>
         @endif
     </body>
 </html>
