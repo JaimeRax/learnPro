@@ -76,18 +76,18 @@
                 color: #fff;
                 padding: 8px;
                 font-weight: bold;
-                font-size: 14px;
-                margin: 15px 0;
+                font-size: 12px;
+                margin: 8px 0;
                 border-radius: 5px;
             }
 
             .content {
-                font-size: 14px;
-                line-height: 1.6;
+                font-size: 12px;
+                line-height: 1.4;
             }
 
             .field {
-                margin: 10px 0;
+                margin: 8px 0;
             }
 
             .field span {
@@ -204,8 +204,11 @@
                     </div>
 
                     <div class="signature">
-                        <div class="signature-line">f.____________________</div>
-                        <div class="total">Total pagado: Q {{ $pays->amount }}</div>
+                        <br>
+                        <br>
+                        <br>
+                        <span>f.____________________</span>
+                        <span class="total" style="float: right;">Total pagado: Q {{ $pays->amount }}</span>
                     </div>
 
                     <div class="footer">
@@ -273,8 +276,11 @@
                     </div>
 
                     <div class="signature">
-                        <div class="signature-line">f.____________________</div>
-                        <div class="total">Total pagado: Q {{ $singlePayment->amount }}</div>
+                        <br>
+                        <br>
+                        <br>
+                        <span>f.____________________</span>
+                        <span class="total" style="float: right;">Total pagado: Q {{ $singlePayment->amount }}</span>
                     </div>
 
                     <div class="footer">
