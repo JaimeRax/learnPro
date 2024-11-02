@@ -23,40 +23,51 @@ class paymentsController extends Controller
             $degreeId = request()->query('degree_id');
             $search = request()->query('search');
 
-            // if ($degreeId || $search) {
-            //     $student = Student::whereIn('state', [0,1, 2])
-            //         ->when($degreeId, function ($query) use ($degreeId) {
-            //             return $query->where('degree_id', $degreeId);
-            //         })
-            //         ->when($search, function ($query) use ($search) {
-            //             return $query->where('first_name', 'LIKE', "%{$search}%");
-            //         })
-            //         ->with(['degree', 'section', 'payments' => function ($query) {
-            //             $query->where('year', date('Y'));
-            //         }])
-            //         ->paginate(10)
-            //         ->appends([
-            //             'degree_id' => $degreeId,
-            //             'search' => $search
-            //         ]);
-            // } else {
-            $student = Student::whereIn('state', [0, 1])
-                // ->with(['degree', 'section', 'payments' => function ($query) {
-                //     $query->where('year', date('Y'));
-                // }])
-                ->paginate(10);
-            // }
-
-            $collaborations = Collaborations::where('state', 1)->get();
-
             $degrees = Degree::all();
             $sections = Sections::all();
             $users = User::all();
 
+            $students = Student::whereIn('state', [0, 1])
+                ->when($degreeId, function ($query) use ($degreeId) {
+                    // Filtra por grado solo si degreeId no es null
+                    return $query->whereHas('assignments', function ($query) use ($degreeId) {
+                        $query->where('degrees_id', $degreeId);
+                    });
+                })
+            ->when($search, function ($query) use ($search) {
+                // Filtra por nombre solo si search no es null
+                return $query->where(function ($query) use ($search) {
+                    $query->where('first_name', 'LIKE', "%{$search}%")
+                          ->orWhere('second_name', 'LIKE', "%{$search}%")
+                          ->orWhere('first_lastname', 'LIKE', "%{$search}%")
+                          ->orWhere('second_lastname', 'LIKE', "%{$search}%");
+                });
+            })
+                ->with('assignments')
+                ->paginate(10)
+            ->appends([
+                'degree_id' => $degreeId,
+                'search' => $search,
+            ]);
+
+            foreach ($students as $student) {
+                if ($student && $student->assignments->isNotEmpty()) {
+                    $firstAssignment = $student->assignments->first();
+
+                    // Buscamos el nombre del degree y section usando los IDs
+                    $degreeName = $degrees->firstWhere('id', $firstAssignment['degrees_id'])->name ?? 'N/A';
+                    $sectionName = $sections->firstWhere('id', $firstAssignment['section_id'])->name ?? 'N/A';
+
+                    $student->degree_name = $degreeName;
+                    $student->section_name = $sectionName;
+                }
+            }
+
+            $collaborations = Collaborations::where('state', 1)->get();
             $months = Constants::MONTHS;
 
             return view('payments.listPayments', [
-                'student' => $student,
+                'students' => $students,
                 'degrees' => $degrees,
                 'sections' => $sections,
                 'users' => $users,
@@ -179,6 +190,8 @@ class paymentsController extends Controller
             session()->flash('pdf_url', asset("storage/comprobantes/comprobante_pago_{$uuid}.pdf"));
             session()->flash('show_assignment_button', $validatedData['type_payment'] === 'inscripcion');
             session()->flash('payment_created', true); // Indica que el pago fue creado
+            session()->flash('paid_student_id', $validatedData['student_id']);
+
 
             return redirect('/payments')->with('message', 'El pago se registró con éxito.');
 

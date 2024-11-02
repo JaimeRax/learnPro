@@ -43,22 +43,22 @@
             @endphp
 
             <x-slot name="tbody">
-                @foreach ($student as $studens)
+                @foreach ($students as $student)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
-                        <x-tablas.td>{{ $studens->degree_id ? strtoupper($studens->section_id) : '--- ----' }}</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}</x-tablas.td>
+                        <x-tablas.td>{{ $student->degree_name ? strtoupper($student->degree_name) : '--- ----' }}</x-tablas.td>
+                        <x-tablas.td>{{ $student->section_name ? strtoupper($student->section_name) : '--- ----' }}</x-tablas.td>
                         <x-tablas.td>
                             {{-- Botón de pagos --}}
-                            <x-modal id="createPayment-{{ $studens->id }}" title="PAGOS"
+                            <x-modal id="createPayment-{{ $student->id }}" title="PAGOS"
                                 bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                                 <x-slot name="button">
                                     <x-iconos.pago />
                                 </x-slot>
                                 <x-slot name="body">
                                     @include('payments.newPayment', [
-                                        'student' => $studens,
+                                        'student' => $student,
                                         'user' => $users,
                                         'degree' => $degrees,
                                         'sections' => $sections,
@@ -68,24 +68,27 @@
                             </x-modal>
 
                             {{-- Botón de listado de pagos --}}
-                            <button onclick="window.location='{{ route('payments.listPaymentStudent', $studens->id) }}'"
+                            <button onclick="window.location='{{ route('payments.listPaymentStudent', $student->id) }}'"
                                 class="btn btn-success">
                                 <i class="fas fa-list"></i> <!-- Ícono de listado -->
                             </button>
 
 
-                            {{-- Botón de asignación --}}
-                            @if (session('show_assignment_button'))
-                                <a href="{{ url('assignment/student') }}" class="btn btn-success">
-                                    Asignar
-                                </a>
-                            @endif
+                            @if (session('paid_student_id') == $student->id)
+                                {{-- Botón de asignación --}}
+                                @if (session('show_assignment_button'))
+                                    <a href="{{ url('assignment/student') }}" class="btn btn-success">
+                                        Asignar
+                                    </a>
+                                @endif
 
-                            {{-- Botón de descargar PDF --}}
-                            @if (session('pdf_url') && session('payment_created'))
-                                <button onclick="window.open('{{ session('pdf_url') }}', '_blank');" class="btn btn-danger">
-                                    <i class="fas fa-file-pdf"></i>
-                                </button>
+                                {{-- Botón de descargar PDF --}}
+                                @if (session('pdf_url') && session('payment_created'))
+                                    <button onclick="window.open('{{ session('pdf_url') }}', '_blank');"
+                                        class="btn btn-danger">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </button>
+                                @endif
                             @endif
                         </x-tablas.td>
                     </x-tablas.tr>
@@ -93,7 +96,7 @@
             </x-slot>
         </x-tablas.table>
         <div>
-            {{ $student->appends(['search' => request()->query('search')])->links('components.pagination') }}
+            {{ $students->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
     @endsection
 

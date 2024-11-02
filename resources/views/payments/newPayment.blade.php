@@ -24,7 +24,9 @@
                 <label>Grado y Sección: </label>
                 <x-inputs.payment id="grade_id{{ $student->id }}" name="degree_id" readonly
                     style="text-align: center; font-weight: bold;"
-                    value="{{ $studens->section_id ? strtoupper($studens->section_id) : '--- ----' }}" required />
+                    value="{{ $student->degree_name ? strtoupper($student->degree_name . ' ' . $student->section_name) : '--- ----' }}"
+                    required />
+
             </div>
             <div>
                 <label>Fecha: </label>

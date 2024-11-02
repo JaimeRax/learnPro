@@ -29,6 +29,12 @@
         {{-- Lista de Pagos --}}
         <div class="mt-4">
             <h2 class="text-xl font-semibold"><strong>Pagos</strong></h2>
+            {{-- Botón de Volver alineado a la derecha --}}
+            <div class="text-right mb-4">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
             <br>
             @if ($payments->isEmpty())
                 <p>No hay pagos registrados para este estudiante.</p>
