@@ -25,13 +25,11 @@
             {{-- filtro por seleccion de grado --}}
             <form method="GET" action="/student" id="degreeForm" class="flex items-center mt-6 space-x-4">
                 <!-- Selector de Grado -->
-                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id"
-                    :options="$degrees->pluck('name', 'id')->toArray()"
-                    :selected="request('degree_id')" required />
+                <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()" :selected="request('degree_id')"
+                    required />
 
                 <!-- Selector de Sección -->
-                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id"
-                    :options="$sections->pluck('name', 'id')->toArray()"
+                <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->map(fn($name) => strtoupper($name))->toArray()"
                     :selected="request('section_id')" required />
 
                 <!-- Botón de Búsqueda -->
@@ -39,6 +37,7 @@
                     Buscar
                 </x-button>
             </form>
+
 
 
             {{-- BOTON PARA AGREGAR --}}
@@ -75,41 +74,70 @@
             @endphp
 
             <x-slot name="tbody">
+                @php $i = 1; @endphp
                 @foreach ($student as $studens)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->personal_code }}</x-tablas.td>
+
+                        @php
+                            // Obtener la última asignación
+                            $lastAssignment = $studens->assignments->last();
+                            // Comprobar si hay una asignación y si tiene grado y sección
+                            $degreeName =
+                                $lastAssignment && $lastAssignment->degree
+                                    ? $lastAssignment->degree->name
+                                    : 'Sin grado';
+                            $sectionName =
+                                $lastAssignment && $lastAssignment->section
+                                    ? $lastAssignment->section->name
+                                    : 'Sin sección';
+                        @endphp
+
+                        <x-tablas.td>{{ strtoupper($degreeName) }}</x-tablas.td> <!-- Grado -->
+                        <x-tablas.td>{{ strtoupper($sectionName) }}</x-tablas.td> <!-- Sección -->
                         <x-tablas.td>{{ $studens->paymentStatus }}</x-tablas.td>
+
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al estudiante?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
                                 </x-slot>
-
                                 <x-slot name="body">
                                     <form action="/student/delete/{{ $studens->id }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                        <button type="submit"
+                                            class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
                                             Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
-                            <x-button-link href="/student/edit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
-
+                            <x-button-link href="/student/formEdit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
                                 <x-iconos.editar />
-
                             </x-button-link>
+
+                            <x-modal id="createPayment-{{ $studens->id }}" title="Informacion"
+                                bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
+                                <x-slot name="button">
+                                    <x-iconos.ver />
+                                </x-slot>
+
+                                <x-slot name="body">
+                                    @include('student.infoStudent', ['studentId' => $studens->id]) <!-- Aquí pasas el objeto usuario -->
+                                </x-slot>
+
+                            </x-modal>
 
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
-
             </x-slot>
-
 
         </x-tablas.table>
         <div>
@@ -119,3 +147,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

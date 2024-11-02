@@ -55,7 +55,7 @@
                 @foreach ($sections as $section)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $section->name }}</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$section->name }")}}</x-tablas.td>
                         <x-tablas.td>
                             <form action="/sections/restore/{{ $section->id }}" method="POST">
                                 @csrf

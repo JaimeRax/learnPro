@@ -8,17 +8,22 @@
 
         <details>
 
-        <summary><i class="fa-solid fa-people-arrows"></i> Recursos</summary>
+        <summary><i class="fa-solid fa-briefcase"></i>
+            Recursos</summary>
 
         <ul>
 
-        <li><a href="{{ '/sections' }}"><i class="fa-solid fa-users-line"></i> Secciones</a></li>
+        <li><a href="{{ '/sections' }}"><i class="fa-solid fa-folder"></i>
+            Secciones</a></li>
 
-        <li><a href="{{ '/degrees' }}"><i class="fa-solid fa-users-line"></i> Grados</a></li>
+        <li><a href="{{ '/degrees' }}"><i class="fa-solid fa-graduation-cap"></i>
+            Grados</a></li>
 
-        <li><a href="{{ '/courses' }}"><i class="fa-solid fa-users-line"></i> Cursos</a></li>
+        <li><a href="{{ '/courses' }}"><i class="fa-solid fa-chalkboard-teacher"></i>
+            Cursos</a></li>
 
-        <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-map-location-dot"></i> Colaboraciones</a></li>
+        <li><a href="{{ '/collaborations' }}"><i class="fa-solid fa-coins"></i>
+            Colaboraciones</a></li>
 
 
         </li>
@@ -36,26 +41,31 @@
 
     <li><a href="{{ '/student' }}"><i class="fa-solid fa-user-plus"></i> Estudiantes</a></li>
 
-    <li><a href="{{ '/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Pagos</a></li>
+    <li><a href="{{ '/payments' }}"><i class="fa-solid fa-money-bill-wave"></i>
+        Pagos</a></li>
 
     <li>
 
         <details>
 
-        <summary><i class="fa-solid fa-people-arrows"></i> Asignaciones generales</summary>
+        <summary><i class="fa-solid fa-tasks"></i>
+            Asignaciones generales</summary>
 
         <ul>
-            <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-plus"></i> Asignaciones de Docentes</a></li>
+            <li><a href="{{ '/teachers' }}"><i class="fa-solid fa-user-check"></i>
+                Asignaciones de Docentes</a></li>
 
 
-            <li><a href="{{ '/assignment/student' }}"><i class="fa-solid fa-map-location-dot"></i> Asignaciones de estudiantes</a></li>
+            <li><a href="{{ '/assignment/student' }}"><i class="fa-solid fa-clipboard-list"></i>
+                Asignaciones de estudiantes</a></li>
         </ul>
 
         </details>
 
     </li>
 
-    <li><a href="{{ '/users' }}"><i class="fa-solid fa-user-plus"></i> Usuarios</a></li>
+    <li><a href="{{ '/users' }}"><i class="fa-solid fa-users"></i>
+        Usuarios</a></li>
 
     <li><a href="{{ '/report/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Reportes</a></li>
 
