@@ -67,7 +67,8 @@
     <li><a href="{{ '/users' }}"><i class="fa-solid fa-users"></i>
         Usuarios</a></li>
 
-    <li><a href="{{ '/report/payments' }}"><i class="fa-solid fa-map-location-dot"></i> Reportes</a></li>
+    <li><a href="{{ '/report/payments' }}"><i class="fa-solid fa-file-alt"></i>
+        Reportes</a></li>
 
 
     @endcan
