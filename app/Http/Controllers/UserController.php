@@ -198,23 +198,28 @@ class UserController extends Controller
 
     public function disableUser($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::findOrFail($id);
+            $user->disable();
 
-        if ($user) {
-            $user->disable(); // Llama al método `disable` del modelo User
+            return redirect('/users')->with('message', 'Usuario deshabilitado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('error', 'No se pudo deshabilitar el usuario. ' . $e->getMessage());
         }
-
-        return redirect('/users'); // Redirecciona a la lista de usuarios
     }
-
-
 
     public function activeUser($id)
     {
-        $user = User::find($id);
-        $user->enable();
-        return redirect('/users');
+        try {
+            $user = User::findOrFail($id);
+            $user->enable();
+
+            return redirect('/users')->with('message', 'Usuario habilitado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('error', 'No se pudo habilitar el usuario. ' . $e->getMessage());
+        }
     }
+
 
     public function trashUsers()
     {

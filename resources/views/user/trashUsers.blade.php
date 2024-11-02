@@ -21,17 +21,6 @@
                 </div>
             </form>
 
-
-            {{-- filtro por seleccion de grado --}}
-
-            {{-- <form method="GET" action="/student" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form> --}}
-
-
-            {{-- BOTON PARA AGREGAR --}}
-
         </div>
 
         <div class="flex justify-end col-md-2">
@@ -68,38 +57,43 @@
                         <x-tablas.td>{{ $user->dpi }}</x-tablas.td>
                         <x-tablas.td>{{ $user->email }}</x-tablas.td>
                         <x-tablas.td>{{ $user->phone }}</x-tablas.td>
-                        <x-tablas.td> @forelse ($user->roles as $role)
-                            <span class="badge badge-info">{{ $role->name }}</span>
-                          @empty
-                            <span class="badge badge-danger">No roles</span>
-                          @endforelse</x-tablas.td>
+                        <x-tablas.td>
+                            @forelse ($user->roles as $role)
+                                <span class="badge badge-info">{{ $role->name }}</span>
+                            @empty
+                                <span class="badge badge-danger">No roles</span>
+                            @endforelse
+                        </x-tablas.td>
                         <x-tablas.td>
                             <x-modal id="delete{{ Str::random(16) }}" title="¿Desea restaurar al usuario?"
-                            bstyle="border-none bg-red-600 text-white hover:bg-red-800">
-                            <x-slot name="button">
-                                <x-iconos.restaurar />
-                            </x-slot>
+                                bstyle="border-none bg-red-600 text-white hover:bg-red-800">
+                                <x-slot name="button">
+                                    <x-iconos.restaurar />
+                                </x-slot>
 
-                            <x-slot name="body">
-                                <form action="/users/restore/{{ $user->id }}" method="POST">
-                                    @csrf
-                                    <button type="submit"
-                                    class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
-                                    Aceptar
-                                </button>
-                                </form>
-                            </x-slot>
-                        </x-modal>
+                                <x-slot name="body">
+                                    <form action="/users/restore/{{ $user->id }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                            Aceptar
+                                        </button>
+                                    </form>
+                                    <x-alert-message />
 
-                        <x-modal id="createPayment-{{ $user->id }}" title="Informacion" bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
-                            <x-slot name="button">
-                                <x-iconos.ver />
-                            </x-slot>
+                                </x-slot>
+                            </x-modal>
 
-                            <x-slot name="body">
-                                @include('user.infoUsers', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
-                            </x-slot>
-                        </x-modal>
+                            <x-modal id="createPayment-{{ $user->id }}" title="Informacion"
+                                bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
+                                <x-slot name="button">
+                                    <x-iconos.ver />
+                                </x-slot>
+
+                                <x-slot name="body">
+                                    @include('user.infoUsers', ['teacherId' => $user->id]) <!-- Aquí pasas el objeto usuario -->
+                                </x-slot>
+                            </x-modal>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
@@ -114,3 +108,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
