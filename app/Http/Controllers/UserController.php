@@ -182,9 +182,9 @@ class UserController extends Controller
             }
 
             if (in_array('administracion', $roleNames)) {
-                return redirect('/users')->with('success', 'Usuario creado correctamente');
+                return redirect('/users')->with('message', 'Usuario editado correctamente');
             } else {
-                return redirect('/teachers')->with('success', 'Usuario creado correctamente');
+                return redirect('/teachers')->with('message', 'Usuario editado correctamente');
             }
 
         } catch (\Exception $e) {
@@ -198,59 +198,70 @@ class UserController extends Controller
 
     public function disableUser($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::findOrFail($id);
+            $user->disable();
 
-        if ($user) {
-            $user->disable(); // Llama al método `disable` del modelo User
+            return redirect('/users')->with('message', 'Usuario deshabilitado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('error', 'No se pudo deshabilitar el usuario. ' . $e->getMessage());
         }
-
-        return redirect('/users'); // Redirecciona a la lista de usuarios
     }
-
-
 
     public function activeUser($id)
     {
-        $user = User::find($id);
-        $user->enable();
-        return redirect('/users');
+        try {
+            $user = User::findOrFail($id);
+            $user->enable();
+
+            return redirect('/users')->with('message', 'Usuario habilitado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('error', 'No se pudo habilitar el usuario. ' . $e->getMessage());
+        }
     }
+
 
     public function trashUsers()
     {
         try {
-            $degreeId = request()->query('degree_id');
+            $roleId = request()->query('role_id');
             $search = request()->query('search');
 
-            if ($degreeId || $search) {
-                $users = User::where('state', 0)
-                ->when($degreeId, function ($query) use ($degreeId) {
-                    return $query->where('degree_id', $degreeId);
-                })
-                ->when($search, function ($query) use ($search) {
-                    return $query->where('name', 'LIKE', "%{$search}%");
-                })
-                ->paginate(10)
-                ->appends([
-                    'degree_id' => $degreeId,
-                    'search' => $search
-                ]);
+            if ($roleId || $search) {
 
+                $users = User::where('state', 0)
+                    ->when($roleId, function ($query) use ($roleId) {
+                        return $query->whereHas('roles', function ($q) use ($roleId) {
+                            $q->where('roles.id', $roleId);
+                        });
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('first_name', 'LIKE', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->appends([
+                        'role_id' => $roleId,
+                        'search' => $search
+                    ]);
 
             } else {
-                $users = User::where('state', 0)->paginate(10);
+                $users = User::where('state', [0])->paginate(10);
             }
 
+            $roles = Role::all();
+            $courses = Courses::all();
+            $sections = Sections::all();
             $degrees = Degree::all();
 
             return view('user.trashUsers', [
-               'users' => $users,
+                'roles' => $roles,
+                'users' => $users,
+                'courses' => $courses,
+                'sections' => $sections,
                 'degrees' => $degrees,
             ]);
-
         } catch (\Exception $e) {
-            return redirect('/courses')->with('error', 'Ocurrió un problema.');
+            return redirect('/users')->with('error', 'Ocurrió un problema.');
         }
-
     }
 }

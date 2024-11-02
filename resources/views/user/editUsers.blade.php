@@ -41,9 +41,8 @@
                                                     Email *
                                                 </span>
                                             </label>
-                                            <input id="email" required name="email"
-                                                class="w-full shadow-sm input" type="text"
-                                                value="{{ old('email', $user->email) }}">
+                                            <input id="email" required name="email" class="w-full shadow-sm input"
+                                                type="text" value="{{ old('email', $user->email) }}">
                                         </div>
                                     </div>
 
@@ -128,7 +127,8 @@
                                                 </span>
                                             </label>
                                             <input id="phone" name="phone" class="w-full shadow-sm input"
-                                                type="number" maxlength="8" value="{{ old('phone', $user->phone) }}" required>
+                                                type="number" maxlength="8" value="{{ old('phone', $user->phone) }}"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="group">
@@ -172,7 +172,8 @@
                                             <div class="flex items-center">
                                                 <label class="flex items-center mr-4">
                                                     <input class="mr-2 form-check-input" type="checkbox" name="roles[]"
-                                                        value="{{ $id }}" {{ $user->roles->contains($id) ? 'checked' : '' }}>
+                                                        value="{{ $id }}"
+                                                        {{ $user->roles->contains($id) ? 'checked' : '' }}>
                                                     <span class="form-check-sign">
                                                         <span class="check" value=""></span>
                                                     </span>
@@ -195,7 +196,10 @@
                         </section>
                     </div>
                 </ol>
+
             </form>
+            <x-alert-message />
+
         </div>
 
         <style>
@@ -206,6 +210,8 @@
     @endsection
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         function redirectToRole() {
             const checkboxes = document.querySelectorAll('input[name="roles[]"]:checked');

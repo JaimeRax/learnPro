@@ -85,6 +85,7 @@
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
+                <x-alert-message />
 
             </x-slot>
             <div>
@@ -96,3 +97,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

@@ -93,10 +93,13 @@
                                 <x-slot name="body">
                                     <form action="/users/delete/{{ $user->id }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn-error">
-                                            Dar de Baja al usuario
+                                        <button type="submit"
+                                            class="px-5 py-2 mt-10 text-sm font-bold bg-blue-700 rounded text-gray-50">
+                                            Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
@@ -122,11 +125,10 @@
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
+                <x-alert-message />
 
             </x-slot>
 
-
-            <x-alert-message />
         </x-tablas.table>
         <div>
             {{ $users->appends(['search' => request()->query('search')])->links('components.pagination') }}
