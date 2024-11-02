@@ -14,7 +14,7 @@
 
             <form class="input-group" action="/collaborations" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
+                                  value="{{ request()->query('search') }}" class="mt-6" />
 
                 <div class="input-group-addon">
                     <button type="submit" class="input-group-text">
@@ -22,6 +22,7 @@
                     </button>
                 </div>
             </form>
+
 
             {{-- Boton para agregar --}}
 
@@ -84,6 +85,8 @@
                                             Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
@@ -110,6 +113,8 @@
                                             Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
@@ -118,6 +123,7 @@
                 @endforeach
             </x-slot>
         </x-tablas.table>
+
         <div>
             {{ $collaborations->appends(['search' => request()->query('search')])->links('components.pagination') }}
         </div>
@@ -125,3 +131,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

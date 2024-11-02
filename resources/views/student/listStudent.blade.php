@@ -39,6 +39,7 @@
             </form>
 
 
+
             {{-- BOTON PARA AGREGAR --}}
 
             <x-button-link href="student/viewForm" class="mt-11 btn-primary">
@@ -80,12 +81,11 @@
                         <x-tablas.td>{{ $studens->degree_name }}</x-tablas.td>
                         <x-tablas.td>{{ $studens->section_name }}</x-tablas.td>
                         <x-tablas.td>
-                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al Grado?"
+                            <x-modal id="delete{{ Str::random(16) }}" title="¿Desea dar de baja al estudiante?"
                                 bstyle="border-none bg-red-600 text-white hover:bg-red-800">
                                 <x-slot name="button">
                                     <x-iconos.basurero />
                                 </x-slot>
-
                                 <x-slot name="body">
                                     <form action="/student/delete/{{ $studens->id }}" method="POST">
                                         @csrf
@@ -94,21 +94,31 @@
                                             Aceptar
                                         </button>
                                     </form>
+                                    <x-alert-message />
+
                                 </x-slot>
                             </x-modal>
 
-                            <x-button-link href="/student/edit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
-
+                            <x-button-link href="/student/formEdit/{{ $studens->id }}" class="mt-2 text-white bg-orange-500">
                                 <x-iconos.editar />
-
                             </x-button-link>
+
+                            <x-modal id="createPayment-{{ $studens->id }}" title="Informacion"
+                                bstyle="border-none bg-purple-600 text-white hover:bg-purple-800">
+                                <x-slot name="button">
+                                    <x-iconos.ver />
+                                </x-slot>
+
+                                <x-slot name="body">
+                                    @include('student.infoStudent', ['studentId' => $studens->id]) <!-- Aquí pasas el objeto usuario -->
+                                </x-slot>
+
+                            </x-modal>
 
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
-
             </x-slot>
-
 
         </x-tablas.table>
         <div>
@@ -118,3 +128,4 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

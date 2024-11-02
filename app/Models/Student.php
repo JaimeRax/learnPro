@@ -10,20 +10,16 @@ class Student extends Model
     use HasFactory;
     protected $table = 'tb_student';
 
-    protected $fillable = [
-        'first_name',
-        'second_name',
-        'first_lastname',
-        'second_lastname',
-        'personal_code',
-        'gender',
-        'birthdate',
-        'town_ethnicity',
-    ];
+    protected $fillable = ['first_name', 'second_name', 'first_lastname', 'second_lastname', 'personal_code', 'gender', 'birthdate', 'town_ethnicity'];
 
     public function in_charge()
     {
-        return $this->hasMany('tb_in_charge', 'student_id', 'id');
+        return $this->hasMany(In_charge::class, 'student_id', 'id');
+    }
+
+    public function inCharge()
+    {
+        return $this->hasOne(In_charge::class); // Ajusta el tipo de relación según tu estructura de base de datos
     }
 
     public function payments()
@@ -35,7 +31,6 @@ class Student extends Model
     {
         return $this->hasMany(StudentAssignment::class, 'student_id', 'id');
     }
-
 
     public function ratings()
     {
@@ -54,8 +49,23 @@ class Student extends Model
         $this->save();
     }
 
-    public function studentAssignments() {
+    public function studentAssignments()
+    {
         return $this->hasMany(StudentAssignment::class);
     }
 
+    public function degrees()
+    {
+        return $this->belongsToMany(Degree::class, 'tb_student_assignment', 'student_id', 'degree_id');
+    }
+
+    public function sections()
+    {
+        return $this->belongsToMany(Sections::class, 'tb_student_assignment', 'student_id', 'section_id');
+    }
+
+    public function inCharges()
+    {
+        return $this->hasMany(In_charge::class, 'student_id', 'id');
+    }
 }

@@ -30,6 +30,15 @@ class StudentAssignment extends Model
         return $this->belongsTo(GeneralAssignment::class, 'general_assignment_id');
     }
 
+    public function degree()
+    {
+        return $this->belongsTo(Degree::class, 'degrees_id', 'id'); // Cambiado 'degrees_' a 'degrees_id'
+    }
 
+
+    public function section()
+    {
+        return $this->belongsTo(Sections::class, 'section_id', 'id');
+    }
 
 }

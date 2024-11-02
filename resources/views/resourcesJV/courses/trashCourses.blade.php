@@ -59,7 +59,7 @@
                 @foreach ($courses as $course)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
-                        <x-tablas.td>{{ $course->name }}</x-tablas.td>
+                        <x-tablas.td>{{ strtoupper("{$course->name}") }}</x-tablas.td>
                         <x-tablas.td>
 
                             {{-- modal para restaurar un curso --}}
