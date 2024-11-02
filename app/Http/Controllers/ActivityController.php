@@ -119,6 +119,7 @@ class ActivityController extends Controller
     public function createActivity(Request $request)
     {
         try {
+
             $activities = $request->input('activities', []);
             Log::info('Iniciando proceso de creación de actividades.', ['total_activities' => count($activities)]);
 
@@ -135,6 +136,7 @@ class ActivityController extends Controller
                     'degree' => 'required|integer',
                     'section' => 'required|integer',
                     'course' => 'required|integer',
+                    'state' => $activityData['state'] ?? '1',
                 ]);
 
                 if ($validator->fails()) {
@@ -165,6 +167,7 @@ class ActivityController extends Controller
                     'bimester' => $activityData['bimester'],
                     'year' => $activityData['year'],
                     'general_assignment_id' => $generalAssignment->id,
+                    'state' => '1',
                 ]);
 
                 Log::info('Actividad creada correctamente.', [
