@@ -13,6 +13,7 @@ class Activity extends Model
 
     protected $fillable = [
         'name',
+        'state',
         'plucking',
         'date_entity',
         'bimester',
