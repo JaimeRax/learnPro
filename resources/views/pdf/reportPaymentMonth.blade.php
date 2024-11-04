@@ -103,17 +103,23 @@
                 <tr class="nameColumn">
                     <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Grado</th>
                     <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Sección</th>
-                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Cuotas Pagadas</th>
-                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Recaudado</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Cuotas Pagadas
+                    </th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total
+                        Recaudado</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($resultados as $result)
                     <tr>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($result->degree_name) }}</td>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($result->section_name) }}</td>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ $result->total_records }}</td>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Q.{{ number_format($result->total_amount, 2) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            {{ strtoupper($result->degree_name) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            {{ strtoupper($result->section_name) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            {{ $result->total_records }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            Q.{{ number_format($result->total_amount, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -125,19 +131,39 @@
             <thead>
                 <tr class="nameColumn">
                     <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Grado</th>
-                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Cuotas Pagadas</th>
-                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Recaudado</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Cuotas
+                        Pagadas</th>
+                    <th class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total
+                        Recaudado</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($totalesPorGrado as $grado => $totales)
                     <tr>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ strtoupper($grado) }}</td>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">{{ $totales['total_records'] }}</td>
-                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Q.{{ number_format($totales['total_amount'], 2) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            {{ strtoupper($grado) }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            {{ $totales['total_records'] }}</td>
+                        <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                            Q.{{ number_format($totales['total_amount'], 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
+        </table>
+
+        <table style="margin-top: 10px;">
+            <tr>
+                <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Cuotas
+                    Pagadas</td>
+                <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                    {{ $totalCuotasPagadas }}</td>
+            </tr>
+            <tr>
+                <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">Total Recaudado
+                </td>
+                <td class="roboto-thin" style="text-align: center; padding: 5px; border: 1px solid #ddd;">
+                    Q.{{ number_format($totalRecaudado, 2) }}</td>
+            </tr>
         </table>
     </div>
 @endsection

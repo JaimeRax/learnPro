@@ -36,93 +36,109 @@ class ReportController extends Controller
     }
 
     public function pdfReportMonth(Request $request)
-    {
-        // Validar las fechas de entrada
-        $request->validate([
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-        ]);
+{
+    // Validar las fechas de entrada
+    $request->validate([
+        'fecha_inicio' => 'required|date',
+        'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+    ]);
 
-        // Llamar al procedimiento almacenado con las fechas
-        $resultados = DB::select('CALL corte_caja_mensual(?, ?)', [
-            $request->input('fecha_inicio'),
-            $request->input('fecha_fin'),
-        ]);
+    // Llamar al procedimiento almacenado con las fechas
+    $resultados = DB::select('CALL corte_caja_mensual(?, ?)', [
+        $request->input('fecha_inicio'),
+        $request->input('fecha_fin'),
+    ]);
 
-        $username = Auth::user()->username;
-        $uuid = Str::uuid();
+    $username = Auth::user()->username;
+    $uuid = Str::uuid();
 
-        // Inicializar un arreglo para almacenar los totales por grado
-        $totalesPorGrado = [];
+    // Inicializar un arreglo para almacenar los totales por grado
+    $totalesPorGrado = [];
+    $totalCuotasPagadas = 0;
+    $totalRecaudado = 0.0;
 
-        foreach ($resultados as $result) {
-            // Extraer el nombre del grado
-            $grado = $result->degree_name;
+    foreach ($resultados as $result) {
+        // Extraer el nombre del grado
+        $grado = $result->degree_name;
 
-            // Si el grado no existe en el arreglo, inicializarlo
-            if (!isset($totalesPorGrado[$grado])) {
-                $totalesPorGrado[$grado] = [
-                    'total_records' => 0,
-                    'total_amount' => 0.0,
-                ];
-            }
-
-            // Sumar los registros y los montos al grado correspondiente
-            $totalesPorGrado[$grado]['total_records'] += $result->total_records;
-            $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
+        // Si el grado no existe en el arreglo, inicializarlo
+        if (!isset($totalesPorGrado[$grado])) {
+            $totalesPorGrado[$grado] = [
+                'total_records' => 0,
+                'total_amount' => 0.0,
+            ];
         }
-        // Generar el PDF con los resultados y totales
-        $pdf = Pdf::loadView('pdf.reportPaymentMonth', [
-            'resultados' => $resultados,
-            'totalesPorGrado' => $totalesPorGrado,
-            'username' => $username,
-            'uuid' => $uuid,
-            'fecha_inicio' => $request->input('fecha_inicio'),
-            'fecha_fin' => $request->input('fecha_fin'),
-            'fecha_inicio' => $request->input('fecha_inicio'), // Pasar la fecha de inicio
-            'fecha_fin' => $request->input('fecha_fin'),
-        ]);
 
-        return $pdf->download('Recorte_caja_mensual.pdf');
+        // Sumar los registros y los montos al grado correspondiente
+        $totalesPorGrado[$grado]['total_records'] += $result->total_records;
+        $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
+
+        // Acumular totales generales
+        $totalCuotasPagadas += $result->total_records;
+        $totalRecaudado += $result->total_amount;
     }
+
+    // Generar el PDF con los resultados y los totales generales
+    $pdf = Pdf::loadView('pdf.reportPaymentMonth', [
+        'resultados' => $resultados,
+        'totalesPorGrado' => $totalesPorGrado,
+        'totalCuotasPagadas' => $totalCuotasPagadas,
+        'totalRecaudado' => $totalRecaudado,
+        'username' => $username,
+        'uuid' => $uuid,
+        'fecha_inicio' => $request->input('fecha_inicio'),
+        'fecha_fin' => $request->input('fecha_fin'),
+    ]);
+
+    return $pdf->download('Recorte_caja_mensual.pdf');
+}
+
 
 
     public function pdfReportDiary()
-    {
-        $resultados = DB::select('CALL corte_caja_diario()');
-        $username = Auth::user()->username;
-        $uuid = Str::uuid();
+{
+    $resultados = DB::select('CALL corte_caja_diario()');
+    $username = Auth::user()->username;
+    $uuid = Str::uuid();
 
-        // Inicializar un arreglo para almacenar los totales por grado
-        $totalesPorGrado = [];
+    // Inicializar un arreglo para almacenar los totales por grado
+    $totalesPorGrado = [];
+    $totalCuotasPagadas = 0;
+    $totalRecaudado = 0.0;
 
-        foreach ($resultados as $result) {
-            // Extraer el nombre del grado
-            $grado = $result->degree_name;
+    foreach ($resultados as $result) {
+        // Extraer el nombre del grado
+        $grado = $result->degree_name;
 
-            // Si el grado no existe en el arreglo, inicializarlo
-            if (!isset($totalesPorGrado[$grado])) {
-                $totalesPorGrado[$grado] = [
-                    'total_records' => 0,
-                    'total_amount' => 0.0,
-                ];
-            }
-
-            // Sumar los registros y los montos al grado correspondiente
-            $totalesPorGrado[$grado]['total_records'] += $result->total_records;
-            $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
+        // Si el grado no existe en el arreglo, inicializarlo
+        if (!isset($totalesPorGrado[$grado])) {
+            $totalesPorGrado[$grado] = [
+                'total_records' => 0,
+                'total_amount' => 0.0,
+            ];
         }
 
-        // Puedes convertir el arreglo a un formato que te convenga o pasarlo a la vista
-        $pdf = Pdf::loadView('pdf.reportPaymentDiary', [
-            'resultados' => $resultados,
-            'totalesPorGrado' => $totalesPorGrado, // Pasar el total por grado
-            'username' => $username,
-            'uuid' => $uuid,
-        ]);
+        // Sumar los registros y los montos al grado correspondiente
+        $totalesPorGrado[$grado]['total_records'] += $result->total_records;
+        $totalesPorGrado[$grado]['total_amount'] += $result->total_amount;
 
-        return $pdf->download('Recorte_caja_diario.pdf');
+        // Acumular totales generales
+        $totalCuotasPagadas += $result->total_records;
+        $totalRecaudado += $result->total_amount;
     }
+
+    // Generar el PDF con los totales
+    $pdf = Pdf::loadView('pdf.reportPaymentDiary', [
+        'resultados' => $resultados,
+        'totalesPorGrado' => $totalesPorGrado, // Pasar el total por grado
+        'totalCuotasPagadas' => $totalCuotasPagadas,
+        'totalRecaudado' => $totalRecaudado,
+        'username' => $username,
+        'uuid' => $uuid,
+    ]);
+
+    return $pdf->download('Recorte_caja_diario.pdf');
+}
 
 
     public function pdfReportStatusMonth(Request $request)
