@@ -165,6 +165,7 @@ class ActivityController extends Controller
                     'bimester' => $activityData['bimester'],
                     'year' => $activityData['year'],
                     'general_assignment_id' => $generalAssignment->id,
+                    'state' => '1',
                 ]);
 
                 Log::info('Actividad creada correctamente.', [

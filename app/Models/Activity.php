@@ -18,6 +18,7 @@ class Activity extends Model
         'bimester',
         'year',
         'general_assignment_id',
+        'state',
     ];
 
     public function disable()

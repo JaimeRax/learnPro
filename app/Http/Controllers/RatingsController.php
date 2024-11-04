@@ -91,10 +91,13 @@ class RatingsController extends Controller
                 }
             }
 
-            return redirect('/ratings')->with('message', 'Calificaciones actualizadas correctamente.');
+            // Enviar respuesta JSON en caso de éxito
+            return response()->json(['success' => true, 'message' => 'Calificaciones actualizadas correctamente.']);
         } catch (\Exception $e) {
             Log::error('editRatings - Error: ' . $e->getMessage());
-            return redirect('/ratings')->with('error', 'Ocurrió un problema al actualizar las calificaciones.');
+
+            // Enviar respuesta JSON en caso de error
+            return response()->json(['success' => false, 'message' => 'Ocurrió un problema al actualizar las calificaciones.'], 500);
         }
     }
 
