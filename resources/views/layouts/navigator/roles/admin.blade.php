@@ -76,12 +76,12 @@
 
     @can('teacher')
 
-    <li><a href="{{ '/teachers/myCourses' }}"><i class="fa-solid fa-map-location-dot"></i> Mis cursos</a></li>
+    <li><a href="{{ '/teachers/myCourses' }}"><i class="fa-solid fa-book"></i> Mis cursos</a></li>
 
-    <li><a href="{{ '/ratings' }}"><i class="fa-solid fa-map-location-dot"></i> Mis notas</a></li>
+    <li><a href="{{ '/ratings' }}"><i class="fa-solid fa-clipboard-check"></i> Mis notas</a></li>
 
-    <li><a href="{{ '/activity' }}"><i class="fa-solid fa-map-location-dot"></i> Mis actividades</a></li>
-    <li><a href="{{ '/report/report' }}"><i class="fa-solid fa-map-location-dot"></i> Reportes</a></li>
+    <li><a href="{{ '/activity' }}"><i class="fa-solid fa-calendar-alt"></i>  Mis actividades</a></li>
+    <li><a href="{{ '/report/report' }}"><i class="fa-solid fa-file-alt"></i> Reportes</a></li>
 
 
     @endcan
