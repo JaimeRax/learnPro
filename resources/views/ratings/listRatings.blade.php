@@ -18,6 +18,22 @@
             </form>
         </div>
 
+        <div class="mt-6">
+            <div class="flex flex-wrap items-center justify-center gap-4 p-4 bg-white border rounded-lg">
+                @if(request('degree_id') && $degree = $degrees->find(request('degree_id')))
+                    <span class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $degree->name }}</span>
+                @endif
+                @if(request('section_id') && $section = $sections->find(request('section_id')))
+                    <span class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $section->name }}</span>
+                @endif
+                @if(request('course_id') && $course = $courses->find(request('course_id')))
+                    <span class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $course->name }}</span>
+                @endif
+            </div>
+        </div>
+
+
+
         <form method="POST" action="{{ route('ratings.update') }}">
             @csrf
             @method('POST')
