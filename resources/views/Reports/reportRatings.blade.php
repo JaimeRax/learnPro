@@ -16,43 +16,32 @@
         <div class="container mx-auto">
             <h1 class="mb-4 text-xl font-bold">Generar Reporte de Calificaciones</h1>
 
-            <form method="GET" action="{{ url('ratings/generateRatingsPDF') }}" id="pdfForm">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <div>
-                        <label for="grado" class="block text-sm font-medium text-gray-700">Grado</label>
-                        <select id="grado" name="grado" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Seleccione un grado</option>
-                            @foreach ($degree as $grado)
-                                <option value="{{ $grado->id }}">{{ $grado->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+            <form method="GET" action="{{ url('ratings/generateRatingsPDF') }}" id="pdfForm" class="flex items-center mt-6 space-x-4">
+                <!-- Selector de Grado -->
+                <x-inputs.select-option id="grado" titulo="Grado" name="grado"
+                    :options="$degree->pluck('name', 'id')->toArray()"
+                    :selected="request('grado')"
+                    placeholder="Seleccione un grado" />
 
-                    <div>
-                        <label for="seccion" class="block text-sm font-medium text-gray-700">Sección</label>
-                        <select id="seccion" name="seccion" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Seleccione una sección</option>
-                            @foreach ($section as $seccion)
-                                <option value="{{ $seccion->id }}">{{ $seccion->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <!-- Selector de Sección -->
+                <x-inputs.select-option id="seccion" titulo="Sección" name="seccion"
+                    :options="$section->pluck('name', 'id')->toArray()"
+                    :selected="request('seccion')"
+                    placeholder="Seleccione una sección" />
 
-                    <div>
-                        <label for="curso" class="block text-sm font-medium text-gray-700">Curso</label>
-                        <select id="curso" name="curso" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Seleccione un curso</option>
-                            @foreach ($course as $curso)
-                                <option value="{{ $curso->id }}">{{ $curso->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                <!-- Selector de Curso -->
+                <x-inputs.select-option id="curso" titulo="Curso" name="curso"
+                    :options="$course->pluck('name', 'id')->toArray()"
+                    :selected="request('curso')"
+                    placeholder="Seleccione un curso" />
 
-                <div class="flex justify-end mt-4">
-                    <x-button type="submit" class="text-white bg-blue-600">Generar PDF</x-button>
-                </div>
+                <!-- Botón de Generar PDF -->
+                <x-button type="submit" class="text-white mt-9 bg-blue-600">
+                    Generar PDF
+                </x-button>
             </form>
+
+
         </div>
     </div>
 @endsection
