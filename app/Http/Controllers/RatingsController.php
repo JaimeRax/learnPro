@@ -9,6 +9,7 @@ use App\Models\Ratings;
 use App\Models\Student;
 use App\Models\Activity;
 use App\Models\Sections;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\GeneralAssignment;
@@ -111,12 +112,27 @@ class RatingsController extends Controller
         ]);
 
         try {
+            Log::info('Iniciando generación de PDF de calificaciones.', [
+                'grado' => $request->grado,
+                'seccion' => $request->seccion,
+                'curso' => $request->curso
+            ]);
+
             // Obtener los IDs de grado, sección y curso
             $degreeId = $request->grado;
             $sectionId = $request->seccion;
             $courseId = $request->curso;
 
+            // Obtener el nombre del grado y de la sección usando los IDs ya conocidos
+            $gradoNombre = Degree::find($degreeId)->name;
+            $seccionNombre = Sections::find($sectionId)->name;
+            $cursoNombre = Courses::find($courseId)->name;
+
             $user = Auth::user();
+            $username = $user->username;
+            $fullName = "{$user->first_name} {$user->second_name} {$user->first_lastname} {$user->second_lastname}";
+            $uuid = Str::uuid();
+            Log::info('Usuario autenticado', ['user_id' => $user->id]);
 
             // Obtener las asignaciones generales del docente
             $generalAssignments = GeneralAssignment::where('teachers_id', $user->id)
@@ -124,6 +140,7 @@ class RatingsController extends Controller
                 ->where('section_id', $sectionId)
                 ->where('course_id', $courseId)
                 ->pluck('id');
+            Log::info('Asignaciones generales obtenidas', ['generalAssignments' => $generalAssignments]);
 
             // Obtener actividades relacionadas
             $activities = Activity::whereIn('general_assignment_id', $generalAssignments)
@@ -131,31 +148,43 @@ class RatingsController extends Controller
                     $query->where('degrees_id', $degreeId)->where('section_id', $sectionId)->where('course_id', $courseId);
                 })
                 ->get();
+            Log::info('Actividades obtenidas', ['activities' => $activities->pluck('id')]);
 
             // Obtener estudiantes relacionados
             $students = Student::whereHas('studentAssignments', function ($query) use ($generalAssignments) {
                 $query->whereIn('general_assignment_id', $generalAssignments);
             })->get();
+            Log::info('Estudiantes obtenidos', ['students' => $students->pluck('id')]);
 
-            $ratings = Ratings::whereIn('activity_id', $activities->pluck('id'))
-            ->whereIn('student_id', $students->pluck('id'))
-            ->get()
-            ->groupBy('student_id')
-            ->map(fn($studentRatings) => $studentRatings->keyBy('activity_id'));
+            // Obtener calificaciones
+            $ratings = Ratings::whereIn('activity_id', $activities->pluck('id'))->whereIn('student_id', $students->pluck('id'))->get()->groupBy('student_id')->map(fn($studentRatings) => $studentRatings->keyBy('activity_id'));
+            Log::info('Calificaciones obtenidas', ['ratings_count' => $ratings->count()]);
 
-        // Pasar los datos a la vista PDF
-        $pdf = PDF::loadView('pdf.reportRatings', [
-            'students' => $students,
-            'activities' => $activities,
-            'ratings' => $ratings, // Asegúrate de pasar las calificaciones
-            'degreeId' => $degreeId,
-            'sectionId' => $sectionId,
-            'courseId' => $courseId
-        ]);
+            // Pasar los datos a la vista PDF
+            $pdf = PDF::loadView('pdf.reportRatings', [
+                'students' => $students,
+                'activities' => $activities,
+                'ratings' => $ratings,
+                'gradoNombre' => $gradoNombre,
+                'seccionNombre' => $seccionNombre,
+                'cursoNombre' => $cursoNombre,
+                'courseId' => $courseId,
+                'username' => $username,
+                'uuid' => $uuid,
+                'fullName' => $fullName
+            ]);
+
+            Log::info('PDF generado con éxito.');
 
             // Generar el PDF y descargarlo
             return $pdf->download('calificaciones.pdf');
         } catch (\Exception $e) {
+            // Registrar el error en los logs
+            Log::error('Error al generar el PDF de calificaciones', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return redirect('/ratings')->with('error', 'Ocurrió un problema al generar el PDF.');
         }
     }
