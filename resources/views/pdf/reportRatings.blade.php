@@ -1,7 +1,6 @@
 @extends('components.template.payments')
 
 @section('title', 'Calificaciones')
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Roboto:wght@100;400&display=swap');
 
@@ -16,6 +15,31 @@
         margin: 0;
         padding: 0;
     }
+    @media print {
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #000;
+        z-index: 1000;
+        height: 60px; /* Ajusta según el tamaño del encabezado */
+    }
+    .content,
+    table {
+        margin-top: 250px; /* Ajustar según el tamaño del encabezado */
+    }
+}
+
+    .page-break {
+        page-break-after: always;
+        margin-top: 60px; /* Ajustar el espacio al principio de cada página */
+    }
+
+
 
     .titulo {
         text-align: center;
@@ -45,6 +69,7 @@
         overflow: hidden;
         border-collapse: collapse;
         margin-bottom: 20px;
+        page-break-inside: avoid; /* Evitar romper la tabla dentro */
     }
 
     th {
@@ -88,73 +113,75 @@
     }
 
     h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    color: #2c2e35;
-    border-left: 5px solid #1866c6;
-    padding-left: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: #2c2e35;
-    border-left: 5px solid #1866c6;
-    padding-left: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        color: #2c2e35;
+        border-left: 5px solid #1866c6;
+        padding-left: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
+    h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2c2e35;
+        border-left: 5px solid #1866c6;
+        padding-left: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
     .page-break {
-        page-break-after: always;
+        page-break-after: always; /* Asegúrate de que haya un salto de página después */
     }
 </style>
 
 @section('content')
+
     @include('styles.partials.title', ['title' => 'Calificaciones'])
 
-    <h1 style="margin: 0;">DOCENTE: {{ strtoupper($fullName) }} </h1>
-    <h2 style="margin: 0;">{{ strtoupper("{$gradoNombre} {$seccionNombre}  {$cursoNombre}") }} </h2>
+    @foreach ($results as $key => $activities)
+        @php
+            $parts = explode('-', $key);
+            $grado = $parts[0] ?? 'Desconocido';
+            $seccion = $parts[1] ?? 'Desconocida';
+            $curso = $parts[2] ?? 'Desconocido';
+        @endphp
 
+        <!-- Encabezado que se repetirá para cada tabla -->
+        <h1 style="margin: 0;">DOCENTE: {{ strtoupper($fullName) }} </h1>
+        <h2 style="margin: 0;">{{ strtoupper("{$grado} {$seccion}  {$curso}") }} </h2>
 
-
-    <div style="padding: 15px; background-color: #fff; border-radius: 8px; margin: 15px 0;">
-        <!-- Tabla de Calificaciones -->
         <table>
             <thead>
                 <tr>
                     <th>Estudiante</th>
-                    @foreach ($activities as $activity)
-                        <th>{{ $activity->name }}</th>
+                    @foreach (array_keys($activities[array_key_first($activities)]['actividades'] ?? []) as $actividad)
+                        <th>{{ $actividad }}</th>
                     @endforeach
-                    <th>Nota Final</th>
+                    <th>Calificación Total</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($students as $student)
+                @foreach ($activities as $studentActivity)
                     <tr>
-                        <td>{{ $student->first_name }} {{ $student->last_name }} {{ $student->first_lastname }} {{ $student->second_lastname }}</td>
-                        @php $totalScore = 0; @endphp
-                        @foreach ($activities as $activity)
-                            @php
-                                $score = $ratings[$student->id][$activity->id]->score_obtained ?? 0;
-                                $totalScore += $score;
-                            @endphp
-                            <td>{{ $score }}</td>
+                        <td>{{ $studentActivity['estudiante'] }}</td> <!-- Nombre del estudiante -->
+
+                        @foreach (array_keys($activities[array_key_first($activities)]['actividades'] ?? []) as $actividad)
+                            <td>{{ $studentActivity['actividades'][$actividad] ?? '-' }}</td>
+                            <!-- Calificaciones -->
                         @endforeach
-                        <td class="total">{{ $totalScore }}</td>
+
+                        <td>{{ array_sum($studentActivity['actividades'] ?? []) }}</td>
+                        <!-- Suma de calificaciones -->
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-    </div>
-
-    @if (isset($resultados) && count($resultados ?? []) % 2 == 0)
-        <div class="page-break"></div>
-    @endif
+        <div class="page-break"></div> <!-- Saltar a la siguiente página -->
+    @endforeach
 @endsection

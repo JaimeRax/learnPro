@@ -28,4 +28,10 @@ class GeneralAssignment extends Model
         return $this->hasMany(Activity::class, 'general_assignment_id');
     }
 
+    public function course()
+{
+    return $this->belongsTo(Courses::class, 'course_id');
+}
+
+
 }
