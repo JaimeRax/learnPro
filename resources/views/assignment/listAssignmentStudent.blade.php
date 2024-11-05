@@ -64,13 +64,20 @@
                                     @csrf
                                     <input type="hidden" name="student_id" value="{{ $student->id }}">
 
-                                    <div class="flex items-center justify-end pb-1 space-x-4 border-b-2 border-gray-300">
+                                    <div class="flex items-center justify-between pb-1 space-x-4 border-b-2 border-gray-300">
                                         <label><b>Año Escolar: </b></label>
                                         <x-inputs.general id="year" name="year" readonly style="text-align: center; font-weight: bold;" value="{{ \Carbon\Carbon::now()->format('Y') }}" required />
                                     </div>
 
-                                    <x-inputs.select-option id="degrees_id" titulo="Grado" name="degrees_id" :options="$degrees->pluck('name', 'id')->toArray()" required />
-                                    <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()" required />
+                                    <x-inputs.select-option id="degrees_id" titulo="Grado" name="degrees_id" :options="$degrees->pluck('name', 'id')->toArray()" required onchange="updateGenderCounts({{ $student->id }})" />
+                                    <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()" required onchange="updateGenderCounts({{ $student->id }})" />
+
+                                    {{-- Mostrar conteos de estudiantes --}}
+                                    <div id="gender-counts-{{ $student->id }}" class="pb-1">
+                                        <label class="text-base"><b>Conteo de Estudiantes:</b></label>
+                                        <div class="text-sm" id="male-count-{{ $student->id }}">HOMBRES: 0</div>
+                                        <div class="text-sm" id="female-count-{{ $student->id }}">MUJERES: 0</div>
+                                    </div>
 
                                     <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                         Agregar
@@ -79,6 +86,7 @@
                             </x-slot>
                         </x-modal>
                     </x-tablas.td>
+
                 </x-tablas.tr>
             @endforeach
 
@@ -95,3 +103,29 @@
 
 
     <script src="{{ asset('js/reloadPage.js') }}"></script>
+    <script>
+        function updateGenderCounts(studentId) {
+            const degreeId = document.getElementById('degrees_id').value;
+            const sectionId = document.getElementById('section_id').value;
+
+            if (degreeId && sectionId) {
+                fetch(`/gender-counts?degree_id=${degreeId}&section_id=${sectionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let maleCount = 0;
+                        let femaleCount = 0;
+
+                        data.forEach(item => {
+                            if (item.gender === 'MASCULINO') {
+                                maleCount = item.total_estudiantes;
+                            } else if (item.gender === 'FEMENINO') {
+                                femaleCount = item.total_estudiantes;
+                            }
+                        });
+
+                        document.getElementById(`male-count-${studentId}`).innerText = `HOMBRES: ${maleCount}`;
+                        document.getElementById(`female-count-${studentId}`).innerText = `MUJERES: ${femaleCount}`;
+                    });
+            }
+        }
+    </script>
