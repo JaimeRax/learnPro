@@ -25,23 +25,6 @@
                 </div>
             </form>
 
-
-            {{-- filtro por seleccion de grado --}}
-
-               <form method="GET" action="/student" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
-                    required onchange="document.getElementById('degreeForm').submit()" />
-            </form>
-
-
-            {{-- BOTON PARA AGREGAR --}}
-
-            <x-button-link href="student/viewForm" class="mt-2 btn-primary">
-
-                <x-iconos.agregar /> Inscripciòn
-
-            </x-button-link>
-
         </div>
 
         <div class="flex justify-end col-md-2">
