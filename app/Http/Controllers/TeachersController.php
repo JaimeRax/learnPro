@@ -7,51 +7,58 @@ use App\Models\Degree;
 use App\Models\Courses;
 use App\Models\Sections;
 use Illuminate\Http\Request;
+use App\Models\GeneralAssignment;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class TeachersController extends Controller
 {
-    public function listCoursesTeacher()
+    public function listCoursesTeacher(Request $request)
     {
         try {
-            $user = Auth::user(); // Obtén el usuario autenticado
-            $degreeId = request()->query('degrees_id'); // Captura el parámetro degrees_id de la solicitud
-            $search = request()->query('search');
+            $user = Auth::user(); // Usuario autenticado
 
-            if ($user && $user->hasRole('docente')) {
-                // Verifica si el usuario tiene el rol de "docente"
-                $courses = $user
-                    ->courses() // Relación con los cursos asignados al usuario
-                    ->when($degreeId, function ($query) use ($degreeId) {
-                        return $query->where('degrees_id', $degreeId); // Filtra por degree_id si se proporciona
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->paginate(10)
-                    ->appends([
-                        'degrees_id' => $degreeId,
-                        'search' => $search
-                    ]);
+            // Obtener el grado seleccionado (si existe)
+            $selectedDegreeId = $request->input('degrees_id');
 
-                $degrees = Degree::all();
-                $sections = Sections::all();
+            // Obtener todos los registros de 'tb_general_assignment' donde 'teachers_id' sea el ID del usuario
+            $assignmentsQuery = GeneralAssignment::where('teachers_id', $user->id);
 
-                return view('teachers.myCourses', [
-                    'user' => $user,
-                    'courses' => $courses,
-                    'sections' => $sections,
-                    'degrees' => $degrees
-                ]);
+            // Filtrar por grado si se selecciona uno en el formulario
+            if ($selectedDegreeId) {
+                $assignmentsQuery->where('degrees_id', $selectedDegreeId);
             }
 
-            return redirect('/teachers/myCourses')->with('error', 'No tiene el rol necesario o no está autenticado.');
+            $assignments = $assignmentsQuery->get();
+
+            // Obtener todos los cursos asignados, incluyendo sus grados y secciones desde las relaciones
+            $courses = $assignments->map(function ($assignment) {
+                $course = Courses::with(['degree', 'sections'])
+                    ->where('id', $assignment->course_id)
+                    ->first();
+
+                return [
+                    'course' => $course,
+                    'degree' => Degree::find($assignment->degrees_id),
+                    'section' => Sections::find($assignment->section_id)
+                ];
+            });
+
+            // Obtener todos los grados para el select del formulario
+            $degrees = Degree::all();
+
+            return view('teachers.myCourses', [
+                'user' => $user,
+                'courses' => $courses,
+                'degrees' => $degrees, // Pasar la lista de grados a la vista
+                'selectedDegreeId' => $selectedDegreeId, // Pasar el grado seleccionado
+            ]);
         } catch (\Exception $e) {
-            return redirect('/teachers/myCourses')->with('error', 'Ocurrió un problema.');
+            return redirect('/teachers/myCourses')->with('error', 'Ocurrió un problema al cargar los cursos.');
         }
     }
+
 
     public function listTeachers()
     {

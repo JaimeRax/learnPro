@@ -18,6 +18,23 @@
             </form>
         </div>
 
+        <div class="mt-6">
+            <div class="flex flex-wrap items-center justify-center gap-4 p-4 bg-white border rounded-lg">
+                @if (request('degree_id') && ($degree = $degrees->find(request('degree_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $degree->name }}</span>
+                @endif
+                @if (request('section_id') && ($section = $sections->find(request('section_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $section->name }}</span>
+                @endif
+                @if (request('course_id') && ($course = $courses->find(request('course_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $course->name }}</span>
+                @endif
+            </div>
+        </div>
+
         <form method="POST" action="{{ route('ratings.update') }}">
             @csrf
             @method('POST')
@@ -33,7 +50,6 @@
                         @endforeach
 
                         <x-tablas.th>Nota Final</x-tablas.th>
-                        <x-tablas.th>Acciones</x-tablas.th>
                     </x-tablas.tr>
                 </x-slot>
 
@@ -60,22 +76,17 @@
                                     class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 text-black"
                                     required />
                             </x-tablas.td>
-                            <x-tablas.td>
-                                <x-button id="createPayment-{{ $student->id }}"
-                                    href="{{ url('ratings/pdf_generator', $student->id) }}" class="mt-2 btn-primary">
-                                    <x-iconos.editar />
-                                </x-button>
-                            </x-tablas.td>
+
                         </x-tablas.tr>
                     @endforeach
-
-
-
                 </x-slot>
-            </x-tablas.table>
 
+            </x-tablas.table>
             <div class="flex justify-end mt-4">
-                <x-button type="submit" class="text-white bg-blue-600">Guardar Calificaciones</x-button>
+                <!-- Cambiamos el botón para que edite todas las calificaciones -->
+                <x-button type="button" class="text-white bg-blue-600" onclick="editAllRatings()">
+                    Guardar Calificaciones
+                </x-button>
             </div>
         </form>
     </div>
@@ -90,20 +101,49 @@
         @endforeach
     });
 
-
     function calculateFinalGrade(studentId) {
-        // Obtener todos los inputs de las calificaciones para el estudiante específico
         const inputs = document.querySelectorAll(`input[name^="ratings[${studentId}]"]`);
         let total = 0;
 
-        // Sumar los valores de los inputs
         inputs.forEach(input => {
-            const value = parseFloat(input.value) || 0; // Usar 0 si el valor no es un número
+            const value = parseFloat(input.value) || 0;
             total += value;
         });
 
-        // Actualizar el campo de Nota Final
         const finalGradeInput = document.getElementById(`notaFinal-${studentId}`);
-        finalGradeInput.value = total; // Asignar la suma total al input de Nota Final
+        finalGradeInput.value = total;
+    }
+
+    function editAllRatings() {
+        const formData = new FormData();
+        const students = @json($students);
+
+        students.forEach(student => {
+            const inputs = document.querySelectorAll(`input[name^="ratings[${student.id}]"]`);
+            inputs.forEach(input => {
+                const activityId = input.name.match(/ratings\[(\d+)\]\[(\d+)\]/)[2];
+                formData.append(`ratings[${student.id}][${activityId}][score_obtained]`, input.value);
+            });
+        });
+
+        fetch('{{ route('ratings.update') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert('Ocurrió un error al actualizar las calificaciones.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocurrió un error al enviar la solicitud.');
+        });
     }
 </script>

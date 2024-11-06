@@ -54,6 +54,12 @@ class Student extends Model
         return $this->hasMany(StudentAssignment::class);
     }
 
+    public function studentAssignmentsReport()
+    {
+        return $this->hasMany(StudentAssignment::class);
+    }
+
+
     public function degrees()
     {
         return $this->belongsToMany(Degree::class, 'tb_student_assignment', 'student_id', 'degree_id');

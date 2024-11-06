@@ -164,3 +164,6 @@ Route::prefix('activity')->group(function () {
     Route::post('/restore/{id}', [ActivityController::class, 'activeActivity'])->middleware('can:teacher');
     Route::get('/trash', [ActivityController::class, 'trashActivity'])->middleware('can:teacher');
 });
+
+// COUNT STUDENT
+Route::get('/gender-counts', [assignmentController::class, 'getGenderCounts']);
