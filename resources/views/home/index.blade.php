@@ -2,6 +2,7 @@
 
 @section('main')
     @auth
+
         <div class="flex flex-col items-center justify-start rounded-lg shadow-lg bg-gray-100 mt-14">
             <!-- Imagen en la parte superior -->
             <div class="flex flex-col items-center mb-8 mt-4">
