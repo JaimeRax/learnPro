@@ -2,7 +2,7 @@
 
 @section('main')
     @auth
-    <div class="flex flex-col items-center justify-start p-16 bg-white">
+    <div class="flex flex-col items-center justify-start p-10 bg-white">
         <!-- Imagen en la parte superior -->
         <div class="flex flex-col items-center mb-20">
             <img class="w-40 h-auto" src="/Imagenes/jv-logo.png" alt="jv-logo" />

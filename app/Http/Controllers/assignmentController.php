@@ -63,6 +63,37 @@ class assignmentController extends Controller
         }
     }
 
+    public function getGenderCounts(Request $request)
+    {
+        // Validar los datos de entrada
+        $request->validate([
+            'degree_id' => 'required|integer|exists:tb_student_assignment,degrees_id',
+            'section_id' => 'required|integer|exists:tb_student_assignment,section_id',
+        ]);
+
+        // Obtener el ID del grado y sección de la solicitud
+        $degreeId = $request->input('degree_id');
+        $sectionId = $request->input('section_id');
+
+        // Realizar la consulta para contar los estudiantes por género
+        $results = StudentAssignment::select(
+                'tb_student.gender',
+                DB::raw('COUNT(DISTINCT tb_student_assignment.student_id) AS total_estudiantes')
+            )
+            ->join('tb_student', 'tb_student_assignment.student_id', '=', 'tb_student.id')
+            ->where('tb_student.state', 1)
+            ->whereIn('tb_student.gender', ['MASCULINO', 'FEMENINO'])
+            ->where('tb_student_assignment.degrees_id', $degreeId)
+            ->where('tb_student_assignment.section_id', $sectionId)
+            ->groupBy('tb_student.gender')
+            ->orderBy('tb_student.gender')
+            ->get();
+
+        // Devolver los resultados como una respuesta JSON
+        return response()->json($results);
+    }
+
+
 
 
     //CREAR ASIGNACION PARA ESTUDIANTES

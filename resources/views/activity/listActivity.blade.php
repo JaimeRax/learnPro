@@ -17,9 +17,12 @@
 
                 {{-- filtro por busqueda de nombre --}}
                 <form method="GET" action="/activity" id="filtersForm" class="flex items-center mt-6 space-x-4">
-                    <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')" required />
-                    <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()" :selected="request('section_id')" required />
-                    <x-inputs.select-option id="course_id" titulo="Curso" name="course_id" :options="$courses->pluck('name', 'id')->toArray()" :selected="request('course_id')" required />
+                    <x-inputs.select-option id="degree_id" titulo="Grado" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+                        required />
+                    <x-inputs.select-option id="section_id" titulo="Sección" name="section_id" :options="$sections->pluck('name', 'id')->toArray()"
+                        :selected="request('section_id')" required />
+                    <x-inputs.select-option id="course_id" titulo="Curso" name="course_id" :options="$courses->pluck('name', 'id')->toArray()"
+                        :selected="request('course_id')" required />
                     <x-button type="submit" class="text-white mt-9 bg-cyan-600">Buscar</x-button>
                 </form>
 
@@ -42,6 +45,26 @@
             <x-button-link href="/activity/trash" class="text-white bg-green-600">
                 <x-iconos.basurero /> Papelera
             </x-button-link>
+        </div>
+
+
+        {{-- INDICARDOR DE LOS PARAMETROS DE BUSQUEDA --}}
+
+        <div>
+            <div class="flex flex-wrap items-center justify-center gap-4 p-4 bg-white border rounded-lg">
+                @if (request('degree_id') && ($degree = $degrees->find(request('degree_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $degree->name }}</span>
+                @endif
+                @if (request('section_id') && ($section = $sections->find(request('section_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $section->name }}</span>
+                @endif
+                @if (request('course_id') && ($course = $courses->find(request('course_id'))))
+                    <span
+                        class="p-2 text-sm font-semibold text-gray-800 uppercase bg-gray-100 rounded">{{ $course->name }}</span>
+                @endif
+            </div>
         </div>
 
 

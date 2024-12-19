@@ -1,201 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Notas de Estudiantes</title>
-    <style>
-        @page {
-            margin-top: 1cm;
-            margin-left: 1.8cm;
-            margin-bottom: 1cm;
-            margin-right: 1.8cm;
-            line-height: 1.5;
-            font-size: 12px;
-            text-align: justify;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
-            color: #2c3532;
-        }
+@extends('components.template.payments')
 
-        h1 {
-            text-align: center;
-            font-size: 18px;
-            background: #1bb1e2;
-            color: #FFFFFF;
-            height: 24px;
-            border-radius: 3px;
-            padding: 5px;
-            margin-bottom: 20px;
-        }
+@section('title', 'Calificaciones')
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Roboto:wght@100;400&display=swap');
 
-        h2 {
-            text-align: center;
-            font-size: 10px;
-            color: #000000;
-            margin-bottom: 20px;
-        }
+    .roboto-light {
+        font-family: "Roboto", sans-serif;
+        font-weight: 300;
+    }
 
-        h3 {
-            text-align: center;
-            font-size: 10px;
-            color: #000000;
-            margin-bottom: 20px;
-        }
+    body {
+        font-family: 'Montserrat', sans-serif;
+        color: #2c2e35;
+        margin: 0;
+        padding: 0;
+    }
+    @media print {
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #000;
+        z-index: 1000;
+        height: 60px; /* Ajusta según el tamaño del encabezado */
+    }
+    .content,
+    table {
+        margin-top: 250px; /* Ajustar según el tamaño del encabezado */
+    }
+}
 
-        table {
-            width: 100%;
-            background-color: #FFFFFF;
-            color: #2d352c;
-            text-align: center;
-            border-collapse: collapse;
-            border: 1px solid #2c2e35;
-            border-radius: 11px;
-        }
-
-        th {
-            background: #29a4ce;
-            color: white;
-            padding: 8px;
-            font-size: 10px;
-        }
-
-        td {
-            padding: 8px;
-            font-size: 10px;
-            border-top: 0.5px solid #2c2e35;
-            text-transform: capitalize;
-        }
-
-        .encabezado {
-                width: 60%;
-                float: right;
-                text-align: right;
-                font-size: 22px;
-                padding-top: 7px;
-                font-weight: bold;
-                font-family: 'Montserrat', sans-serif;
-            }
-
-            .content {
-                border-bottom: 0.7px solid #2c2e35;
-                display: inline-block;
-                font-weight: normal;
-                line-height: 1;
-                text-align: center;
-                padding-top: 8px;
-            }
-
-            .header {
-                line-height: 0.3;
-            }
-
-            .logo {
-                width: 60px;
-                display: inline-block;
-                vertical-align: middle;
-                margin-top: -10;
-            }
-
-            .title {
-                font-size: 18px;
-                vertical-align: middle;
-                display: inline-block;
-            }
-
-            .contact-info {
-                float: right;
-                /* Mantiene el flotado a la derecha */
-                text-align: right;
-                /* Alinea el texto a la derecha */
-                font-size: 0.5rem;
-                /* Tamaño de fuente más pequeño */
-                line-height: 0.5;
-                /* Reduce el espacio entre líneas */
-                margin: 0;
-                /* Elimina márgenes si los hay */
-                padding: 0;
-                /* Elimina padding si es necesario */
-            }
+    .page-break {
+        page-break-after: always;
+        margin-top: 60px; /* Ajustar el espacio al principio de cada página */
+    }
 
 
-            .text-container {
-                display: inline-block;
-                /* Mantiene el comportamiento de inline-block */
-                vertical-align: middle;
-                /* Alinea verticalmente al medio */
-                font-size: 0.6rem;
-                /* Ajusta el tamaño de fuente a un valor más pequeño */
-                line-height: 0.7;
-                /* Reduce el espaciado entre líneas */
-                margin: 0;
-                /* Elimina márgenes si los hay */
-                padding: 0;
-                /* Elimina padding si es necesario */
-            }
 
-            .text-container .title {
-                display: inline-block;
-                /* Mantiene el comportamiento de inline-block */
-                vertical-align: middle;
-                /* Alinea verticalmente al medio */
-                font-size: 0.5rem;
-                /* Ajusta el tamaño de fuente a un valor más pequeño */
-                line-height: 1.1;
-                /* Reduce el espaciado entre líneas */
-                margin: 0;
-                /* Elimina márgenes si los hay */
-                padding: 0;
-                /* Elimina padding si es necesario */
-            }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div class="contact-info lato-regular">
-            <p>4ta. Ave 0-37 zona 4, Finca Municipal Sesbiché San Juan Chamelco Alta Verapaz</p>
-            <p>institutobasicojv.chamelco@gmail.com</p>
-            <p>Tel. (+502) 5991 0548</p>
-        </div>
-        <img class="logo" src="{{ public_path('Imagenes/jv-logo.png') }}" alt="jv-logo" />
-        <div class="text-container" >
-            <p class="lato-bold">INSTITUTO DE EDUCACION BASICA</p>
-            <p class="lato-bold">POR EL SISTEMA DE COOPERATIVA DE ENSEÑANZA</p>
-            <p class="lato-regular-italic">Autorizado por Acuerdo Ministerial NO. 475</p>
-        </div>
-    </div>
+    .titulo {
+        text-align: center;
+        font-size: 10px;
+        background: #3a3d42;
+        color: #FFFFFF;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
 
-    <h1>Reporte de Notas de Estudiantes</h1>
-    <h2>PRIMERO A MATEMATICA</h2>
-    <h3>DOCENTE: VICTOR TUN</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Estudiante</th>
-                @foreach ($activities as $activity)
-                    <th>{{ $activity->name }}</th>
-                @endforeach
-                <th>Nota Final</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($students as $student)
+    .nameColumn {
+        background: #1866c6;
+        color: white;
+        font-weight: 500;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        background-color: #FFFFFF;
+        color: #4a4a4a;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        page-break-inside: avoid; /* Evitar romper la tabla dentro */
+    }
+
+    th {
+        font-size: 8px;
+        background-color: #0b3f62;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    td {
+        font-size: 8px;
+        padding: 6px;
+        text-align: center;
+        border-bottom: 1px solid #e1e4e8;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #e5e3e3;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    .total {
+        text-align: center;
+        font-weight: bold;
+        background-color: #f0f2f4;
+    }
+
+    .voucher {
+        width: 100%;
+        padding: 15px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        color: #2c2e35;
+        border-left: 5px solid #1866c6;
+        padding-left: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2c2e35;
+        border-left: 5px solid #1866c6;
+        padding-left: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .page-break {
+        page-break-after: always; /* Asegúrate de que haya un salto de página después */
+    }
+</style>
+
+@section('content')
+
+    @include('styles.partials.title', ['title' => 'Calificaciones'])
+
+    @foreach ($results as $key => $activities)
+        @php
+            $parts = explode('-', $key);
+            $grado = $parts[0] ?? 'Desconocido';
+            $seccion = $parts[1] ?? 'Desconocida';
+            $curso = $parts[2] ?? 'Desconocido';
+        @endphp
+
+        <!-- Encabezado que se repetirá para cada tabla -->
+        <h1 style="margin: 0;">DOCENTE: {{ strtoupper($fullName) }} </h1>
+        <h2 style="margin: 0;">{{ strtoupper("{$grado} {$seccion}  {$curso}") }} </h2>
+
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ $student->first_name }} {{ $student->last_name }} {{ $student->first_lastname }} {{ $student->second_lastname }} </td>
-                    @php $totalScore = 0; @endphp <!-- Inicializar totalScore -->
-                    @foreach ($activities as $activity)
-                        @php
-                            $score = $ratings[$student->id][$activity->id]->score_obtained ?? 0; // Obtener calificación
-                            $totalScore += $score; // Sumar calificación al total
-                        @endphp
-                        <td>
-                            {{ $score }}
-                        </td>
+                    <th>Estudiante</th>
+                    @foreach (array_keys($activities[array_key_first($activities)]['actividades'] ?? []) as $actividad)
+                        <th>{{ $actividad }}</th>
                     @endforeach
-                    <td>{{ $totalScore }}</td> <!-- Mostrar la suma total -->
+                    <th>Calificación Total</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
-</html>
+            </thead>
+            <tbody>
+                @foreach ($activities as $studentActivity)
+                    <tr>
+                        <td>{{ $studentActivity['estudiante'] }}</td> <!-- Nombre del estudiante -->
+
+                        @foreach (array_keys($activities[array_key_first($activities)]['actividades'] ?? []) as $actividad)
+                            <td>{{ $studentActivity['actividades'][$actividad] ?? '-' }}</td>
+                            <!-- Calificaciones -->
+                        @endforeach
+
+                        <td>{{ array_sum($studentActivity['actividades'] ?? []) }}</td>
+                        <!-- Suma de calificaciones -->
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <div class="page-break"></div> <!-- Saltar a la siguiente página -->
+    @endforeach
+@endsection

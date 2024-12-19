@@ -9,6 +9,7 @@ use App\Models\Ratings;
 use App\Models\Student;
 use App\Models\Activity;
 use App\Models\Sections;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\GeneralAssignment;
@@ -25,7 +26,6 @@ class RatingsController extends Controller
             $degreeId = request()->query('degree_id');
             $sectionId = request()->query('section_id');
             $courseId = request()->query('course_id'); // Agregado para filtrar por curso
-            $search = request()->query('search');
 
             if ($user && $user->hasRole('docente')) {
                 // Obtener las asignaciones generales del docente
@@ -91,69 +91,81 @@ class RatingsController extends Controller
                 }
             }
 
-            return redirect('/ratings')->with('message', 'Calificaciones actualizadas correctamente.');
+            // Enviar respuesta JSON en caso de éxito
+            return response()->json(['success' => true, 'message' => 'Calificaciones actualizadas correctamente.']);
         } catch (\Exception $e) {
             Log::error('editRatings - Error: ' . $e->getMessage());
-            return redirect('/ratings')->with('error', 'Ocurrió un problema al actualizar las calificaciones.');
+
+            // Enviar respuesta JSON en caso de error
+            return response()->json(['success' => false, 'message' => 'Ocurrió un problema al actualizar las calificaciones.'], 500);
         }
     }
 
     public function generateRatingsPDF(Request $request)
     {
-        // Validar los datos de entrada
-        $request->validate([
-            'grado' => 'required|exists:degrees,id',
-            'seccion' => 'required|exists:sections,id',
-            'curso' => 'required|exists:courses,id'
-        ]);
+        $grado = $request->grado;
+        $seccion = $request->seccion;
 
-        try {
-            // Obtener los IDs de grado, sección y curso
-            $degreeId = $request->grado;
-            $sectionId = $request->seccion;
-            $courseId = $request->curso;
+        $user = Auth::user();
+        $uuid = Str::uuid();
 
-            $user = Auth::user();
-
-            // Obtener las asignaciones generales del docente
-            $generalAssignments = GeneralAssignment::where('teachers_id', $user->id)
-                ->where('degrees_id', $degreeId)
-                ->where('section_id', $sectionId)
-                ->where('course_id', $courseId)
-                ->pluck('id');
-
-            // Obtener actividades relacionadas
-            $activities = Activity::whereIn('general_assignment_id', $generalAssignments)
-                ->whereHas('generalAssignment', function ($query) use ($degreeId, $sectionId, $courseId) {
-                    $query->where('degrees_id', $degreeId)->where('section_id', $sectionId)->where('course_id', $courseId);
-                })
-                ->get();
-
-            // Obtener estudiantes relacionados
-            $students = Student::whereHas('studentAssignments', function ($query) use ($generalAssignments) {
-                $query->whereIn('general_assignment_id', $generalAssignments);
-            })->get();
-
-            $ratings = Ratings::whereIn('activity_id', $activities->pluck('id'))
-            ->whereIn('student_id', $students->pluck('id'))
+        // Realiza la consulta para obtener las actividades y calificaciones agrupadas por grado, sección y curso
+        $results = DB::table('tb_student_assignment as sa')
+            ->select(
+                'sa.student_id AS estudiante_id',
+                's.first_name AS estudiante', // Nombre del estudiante
+                'ga.course_id AS curso_id',
+                'c.name AS curso_nombre', // Nombre del curso
+                'ga.degrees_id AS grado_id',
+                'd.name AS grado_nombre', // Nombre del grado
+                'sa.section_id AS seccion_id',
+                'sec.name AS seccion_nombre', // Nombre de la sección
+                'a.name AS actividad',
+                'r.score_obtained AS calificacion'
+            )
+            ->join('tb_general_assignment as ga', 'sa.general_assignment_id', '=', 'ga.id')
+            ->join('tb_activity as a', 'ga.id', '=', 'a.general_assignment_id')
+            ->join('tb_ratings as r', 'a.id', '=', 'r.activity_id')
+            ->join('tb_student as s', 'sa.student_id', '=', 's.id')
+            ->join('users as u', 'ga.teachers_id', '=', 'u.id')
+            ->join('degrees as d', 'ga.degrees_id', '=', 'd.id') // Join para obtener nombre del grado
+            ->join('sections as sec', 'sa.section_id', '=', 'sec.id') // Join para obtener nombre de la sección
+            ->join('courses as c', 'ga.course_id', '=', 'c.id') // Join para obtener nombre del curso
+            ->where('u.id', $user->id)
+            ->when($grado, function ($query, $grado) {
+                return $query->where('ga.degrees_id', $grado);
+            })
+            ->when($seccion, function ($query, $seccion) {
+                return $query->where('sa.section_id', $seccion);
+            })
+            ->orderBy('ga.degrees_id')  // Ordenar por grado
+            ->orderBy('sa.section_id')  // Luego por sección
+            ->orderBy('s.first_name')
             ->get()
-            ->groupBy('student_id')
-            ->map(fn($studentRatings) => $studentRatings->keyBy('activity_id'));
+            ->groupBy(function ($item) {
+                return "{$item->grado_nombre}-{$item->seccion_nombre}-{$item->curso_nombre}";
+            });
+
+        // Transformar resultados a la estructura adecuada
+        $formattedResults = [];
+        foreach ($results as $key => $activities) {
+            foreach ($activities as $activity) {
+                $formattedResults[$key][$activity->estudiante]['estudiante'] = $activity->estudiante;
+                $formattedResults[$key][$activity->estudiante]['actividades'][$activity->actividad] = $activity->calificacion;
+            }
+        }
 
         // Pasar los datos a la vista PDF
         $pdf = PDF::loadView('pdf.reportRatings', [
-            'students' => $students,
-            'activities' => $activities,
-            'ratings' => $ratings, // Asegúrate de pasar las calificaciones
-            'degreeId' => $degreeId,
-            'sectionId' => $sectionId,
-            'courseId' => $courseId
+            'results' => $formattedResults,
+            'uuid' => $uuid,
+            'username' => $user->username,
+            'fullName' => "{$user->first_name} {$user->second_name} {$user->first_lastname} {$user->second_lastname}",
         ]);
 
-            // Generar el PDF y descargarlo
-            return $pdf->download('calificaciones.pdf');
-        } catch (\Exception $e) {
-            return redirect('/ratings')->with('error', 'Ocurrió un problema al generar el PDF.');
-        }
+        return $pdf->download('calificaciones.pdf');
     }
+
+
+
 }
