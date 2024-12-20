@@ -2,7 +2,7 @@
 
 
 @section('header')
-    {{-- <x-route route="/" previousRouteName="Inicio" currentRouteName="clientes" /> --}}
+    <x-route route="/" previousRouteName="Inicio" currentRouteName="clientes" />
 @endsection
 
 
@@ -42,7 +42,6 @@
                     <x-tablas.th>No.</x-tablas.th>
                     <x-tablas.th>Secciones</x-tablas.th>
                     <x-tablas.th>Acciones</x-tablas.th>
-
                 </x-tablas.tr>
             </x-slot>
 
@@ -51,20 +50,34 @@
             @endphp
 
             <x-slot name="tbody">
-
                 @foreach ($sections as $section)
                     <x-tablas.tr>
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$section->name }")}}</x-tablas.td>
-                        <x-tablas.td>
-                            <form action="/sections/restore/{{ $section->id }}" method="POST">
-                                @csrf
-                                {{ @method_field('POST') }}
-                                <input type="submit"
-                                    class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
-                                    value="Restaurar"
-                                    onclick="return confirm('¿Está completamente seguro de querer restaurar esta seccion?')">
-                            </form>
+                         <x-tablas.td>
+                            <x-modal id="delete{{ Str::random(16) }}" title="Restaurar"
+                                bstyle="border-none bg-yellow-400 text-white hover:bg-yellow-600">
+                                <x-slot name="button">
+                                    restaurar
+                                </x-slot>
+                                <x-slot name="body">
+                                    <p class="text-sm text-center mt-5 mb-8">
+                                        <span class="text-yellow-500 text-lg mr-2">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                                        ¿Está seguro de restaurar la sección <strong>{{ $section->name }}</strong>?
+                                    </p>
+                                    <form action="/sections/restore/{{ $section->id }}" method="POST">
+                                        @csrf
+                                        <div class="text-left ">
+                                            <button type="submit"
+                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                Aceptar
+                                            </button>
+                                        </div>
+                                    </form>
+                                </x-slot>
+                            </x-modal>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
@@ -73,6 +86,5 @@
         <div>
             {{ $sections->links('components.pagination') }}
         </div>
-
     </div>
 @endsection

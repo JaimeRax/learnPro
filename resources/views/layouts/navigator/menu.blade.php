@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,11 +34,9 @@
                 <label for="main-drawer" aria-label="close sidebar" class="w-full drawer-overlay"></label>
                 <ul class="min-h-full p-4 menu bg-neutral text-neutral-content w-80">
                     @include('layouts.navigator.roles.admin')
-
                 </ul>
             </div>
         </div>
         @yield('js')
     </body>
-
 </html>

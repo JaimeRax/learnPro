@@ -26,9 +26,9 @@
             @endisset
 
             <!-- Button to close modal -->
-            <label for="{{ $id }}" style="background-color: #ef4444; color:white;"
+            <label for="{{ $id }}" style="background-color: #F9C54C; color:white;"
                 class="{{ $closeButtonStyle }}">
-                Cerrar
+                X
             </label>
         </div>
     </div>

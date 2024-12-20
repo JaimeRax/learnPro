@@ -46,7 +46,7 @@ Route::get('/logout', [logoutController::class, 'logout']);
 
 
 //ROUTES MENU
-Route::get('/home', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index'])->name('admin.index');
 Route::get('/pagos', [HomeController::class, 'menu2'])->middleware('can:admin');
 Route::get('/caja', [HomeController::class, 'menu3'])->middleware('can:admin');
 Route::get('/reporteria', [HomeController::class, 'menu4']);

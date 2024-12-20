@@ -1,5 +1,5 @@
-<td {{ $attributes->merge(['class' => 'py-1 px-2 text-xs border-none']) }}>
+<td {{ $attributes->merge(['class' => '']) }}>
 
     {{ $slot ?? '' }}
 
-    </td>
+</td>
