@@ -36,12 +36,12 @@
         </div>
 
 
-        <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
+        <x-tablas.table wire:loading.remove id="table" data-name="listSectionDelete">
             <x-slot name="thead">
                 <x-tablas.tr>
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Secciones</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
+                    <x-tablas.th>NO.</x-tablas.th>
+                    <x-tablas.th>SECCIONES</x-tablas.th>
+                    <x-tablas.th>ACCIONES</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
 
@@ -55,6 +55,7 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{ strtoupper("{$section->name }")}}</x-tablas.td>
                          <x-tablas.td>
+                            {{-- modal para restaurar una sección --}}
                             <x-modal id="delete{{ Str::random(16) }}" title="Restaurar"
                                 bstyle="border-none bg-yellow-400 text-white hover:bg-yellow-600">
                                 <x-slot name="button">

@@ -1,9 +1,8 @@
 @extends('layouts.base')
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="COLABORACIONES ELIMINADAS" />
 @endsection
-
 
 @section('main')
     <div class="grid grid-cols-1 gap-2">
@@ -41,9 +40,9 @@
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Nombre</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
+                    <x-tablas.th>NO.</x-tablas.th>
+                    <x-tablas.th>COLABORACIÓN</x-tablas.th>
+                    <x-tablas.th>ACCIONES</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
             @php
@@ -57,16 +56,27 @@
                         <x-tablas.td>{{ strtoupper("{$collaboration->name}") }}</x-tablas.td>
                         <x-tablas.td>
 
-                            {{-- modal para restaurar un curso --}}
-                            <form action="/collaborations/restore/{{ $collaboration->id }}" method="POST">
-                                @csrf
-                                {{ @method_field('POST') }}
-                                <input type="submit"
-                                    class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
-                                    value="Restaurar"
-                                    onclick="return confirm('¿Está completamente seguro de querer restaurar esta colaboraciòn?')">
-                            </form>
-                            <x-alert-message />
+                            {{-- modal para restaurar una colaboracion --}}
+                            <x-modal id="delete{{ Str::random(16) }}" title="Restaurar"
+                                bstyle="border-none bg-yellow-400 text-white hover:bg-yellow-600">
+                                <x-slot name="button">
+                                    restaurar
+                                </x-slot>
+                                <x-slot name="body">
+                                    <p class="text-sm text-center mt-5 mb-8">
+                                        <span class="text-yellow-500 text-lg mr-2">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                                        ¿Está seguro de restaurar la colaboración <strong>{{ $collaboration->name }}</strong>?
+                                    </p>
+                                    <form action="/collaborations/restore/{{ $collaboration->id }}" method="POST">
+                                        @csrf
+                                        <div class="text-left ">
+                                            <x-buttonAcept />
+                                        </div>
+                                    </form>
+                                </x-slot>
+                            </x-modal>
 
                         </x-tablas.td>
                     </x-tablas.tr>

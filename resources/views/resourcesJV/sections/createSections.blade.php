@@ -10,5 +10,7 @@
         </div>
         <x-buttonAcept />
     </form>
+
+    {{-- mensaje de exito o error al crear un curso --}}
     <x-alert-message />
 </div>

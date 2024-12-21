@@ -1,9 +1,8 @@
 @extends('layouts.base')
 
 
-
 @section('header')
-    {{-- <x-route route="/" previousRouteName="Inicio" currentRouteName="clientes" /> --}}
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="GRADOS ELIMINADOS" />
 @endsection
 
 
@@ -42,12 +41,12 @@
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
-
+                    <x-tablas.th>NO.</x-tablas.th>
+                    <x-tablas.th>GRADO</x-tablas.th>
+                    <x-tablas.th>ACCIONES</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
+
             @php
                 $i = 1;
             @endphp
@@ -58,18 +57,28 @@
                         <x-tablas.td>{{ $i++ }}</x-tablas.td>
                         <x-tablas.td>{{  strtoupper($degrees->name) }}</x-tablas.td>
                         <x-tablas.td>
+
+                            {{-- modal para restaurar grados  --}}
+                            <x-modal id="delete{{ Str::random(16) }}" title="Restaurar"
+                                bstyle="border-none bg-yellow-400 text-white hover:bg-yellow-600">
+                                <x-slot name="button">
+                                    restaurar
+                                </x-slot>
+                                <x-slot name="body">
+                                    <p class="text-sm text-center mt-5 mb-8">
+                                        <span class="text-yellow-500 text-lg mr-2">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                                        ¿Está seguro de restaurar el grado <strong>{{ $degrees->name }}</strong>?
+                                    </p>
                             <form action="/degrees/restore/{{ $degrees->id }}" method="POST">
-
-                                @csrf
-
-                                {{ @method_field('POST') }}
-
-                                <input type="submit"
-                                    class="w-40 px-2 py-1 text-sm text-white bg-green-400 border-none rounded-lg btn-xs"
-                                    value="Restaurar"
-                                    onclick="return confirm('¿Está completamente seguro de querer restaurar este grado?')">
-
-                            </form>
+                                        @csrf
+                                        <div class="text-left ">
+                                            <x-buttonAcept />
+                                        </div>
+                                    </form>
+                                </x-slot>
+                            </x-modal>
                         </x-tablas.td>
                     </x-tablas.tr>
                 @endforeach
