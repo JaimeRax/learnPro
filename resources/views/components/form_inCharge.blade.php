@@ -132,16 +132,14 @@
 
      </div>
      <div class="group">
-         <!--[if BLOCK]><![endif]--> <button class="justify-start mt-2 text-white btn bg-neutral prev-btn"
+         <button class="justify-start mt-2 text-white btn bg-neutral prev-btn"
              type="button" data-prev-step="step-2">
              Anterior
          </button>
-         <!--[if ENDBLOCK]><![endif]-->
-         <!--[if BLOCK]><![endif]--> <button class="justify-start mt-2 text-white btn bg-success next-btn"
+          <button class="justify-start mt-2 text-white btn bg-success next-btn"
              type="button" data-next-step="step-3">
              Siguiente
          </button>
-         <!--[if ENDBLOCK]><![endif]-->
      </div>
  </div>
 

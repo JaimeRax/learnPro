@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header')
-    <x-route route="/" previousRouteName="Inicio" currentRouteName="Secciones" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="SECCIONES" />
 @endsection
 
 @section('main')
@@ -18,9 +18,9 @@
                 </div>
             </form>
 
-            <x-modal id="createSections" title="Sección" bstyle="border-none bg-green-600 text-white hover:bg-green-800">
+            <x-modal id="createSections" title="Sección" bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
                 <x-slot name="button">
-                    Agregar
+                    AGREGAR
                     <x-iconos.agregar />
                 </x-slot>
                 <x-slot name="body">
@@ -31,16 +31,16 @@
 
         <div class="flex justify-end col-md-2">
             <x-button-link href="/sections/trash" class="text-white bg-orange-600">
-                <x-iconos.basurero /> Papelera
+                <x-iconos.basurero /> PAPELERA
             </x-button-link>
         </div>
 
-        <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
+        <x-tablas.table wire:loading.remove id="table" data-name="listSections">
             <x-slot name="thead">
                 <x-tablas.tr class="mt-4">
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Secciones</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
+                    <x-tablas.th>NO.</x-tablas.th>
+                    <x-tablas.th>SECCIONES</x-tablas.th>
+                    <x-tablas.th>ACCIONES</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
 
@@ -69,10 +69,7 @@
                                     <form action="/sections/delete/{{ $section->id }}" method="POST">
                                         @csrf
                                         <div class="text-left ">
-                                            <button type="submit"
-                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                                Aceptar
-                                            </button>
+                                            <x-buttonAcept/>
                                         </div>
                                     </form>
                                 </x-slot>
@@ -96,10 +93,7 @@
                                         </div>
 
                                         <div class="text-left ">
-                                            <button type="submit"
-                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                                Aceptar
-                                            </button>
+                                            <x-buttonAcept/>
                                         </div>
                                     </form>
                                 </x-slot>
