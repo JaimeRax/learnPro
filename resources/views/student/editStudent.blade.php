@@ -1,11 +1,11 @@
 @extends('layouts.base')
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="EDITAR INFORMACIÓN DE ESTUDIANTES" />
 @endsection
 
-
 @section('main')
+
     @if ($errors->any())
         <ul>
             @foreach ($errors->all() as $error)
@@ -13,11 +13,17 @@
             @endforeach
         </ul>
     @endif
-    <div class="grid grid-cols-1 gap-2">
+
+    <div class="flex justify-end col-md-2">
+        <x-button-link href="/student" class="mt-2 text-white bg-orange-400">
+            <x-iconos.volver /> Volver
+        </x-button-link>
+    </div>
+
+    <div class="grid grid-cols-1 gap-2 mt-8">
         <div class="container-sm">
             <form action="{{ url('student/edit/' . $studens->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-
                 <ol class="relative text-gray-500 border-gray-200 border-s dark:border-gray-700 dark:text-gray-400">
                     <div class="ms-6">
                         <span
@@ -26,6 +32,7 @@
                         </span>
                         <h3 class="font-medium leading-tight">INFORMACIÓN PERSONAL DEL ESTUDIANTE</h3>
                     </div>
+
                     <div class="col-span-2 ml-10 lg:ml-32">
                         <section class="steps activo step-1" id="step-1">
                             <div class="flex-col p-2">
@@ -39,6 +46,8 @@
                                             </label>
                                             <input id="first_name" required name="first_name" class="w-full shadow-sm input"
                                                 type="text" value="{{ old('first_name', $studens->first_name) }}">
+                                            <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                                campo es obligatorio</span>
                                         </div>
                                     </div>
                                     <div>
@@ -60,6 +69,8 @@
                                             <input id="first_lastname" required name="first_lastname"
                                                 class="w-full shadow-sm input" type="text"
                                                 value="{{ old('first_lastname', $studens->first_lastname) }}">
+                                            <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                                campo es obligatorio</span>
                                         </div>
                                     </div>
                                     <div>
@@ -81,6 +92,8 @@
                                             <input id="personal_code" required name="personal_code"
                                                 class="w-full shadow-sm input" type="text"
                                                 value="{{ old('personal_code', $studens->personal_code) }}">
+                                            <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                                campo es obligatorio</span>
                                         </div>
                                     </div>
                                     <div class="group">
@@ -92,6 +105,8 @@
                                             </label>
                                             <input id="birthdate" required name="birthdate" class="w-full shadow-sm input"
                                                 type="date" value="{{ old('birthdate', $studens->birthdate) }}">
+                                            <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                                campo es obligatorio</span>
                                         </div>
                                     </div>
                                     <div class="group">
@@ -111,6 +126,8 @@
                                                     Femenino</option>
                                             </select>
                                         </div>
+                                        <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                            campo es obligatorio</span>
                                     </div>
 
                                     <div class="group">
@@ -136,13 +153,15 @@
                                                     {{ old('town_ethnicity', $studens->town_ethnicity) == 'LADINO' ? 'selected' : '' }}>
                                                     Ladino</option>
                                             </select>
+                                            <span class="text-red-500 text-sm error-message" id="first_name_error">Este
+                                                campo es obligatorio</span>
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="group">
                                     <button class="justify-start mt-2 text-white btn bg-success next-btn" type="button"
-                                        data-next-step="step-2">
+                                        onclick="validateSection(1)" data-next-step="step-2">
                                         Siguiente
                                     </button>
                                 </div>
@@ -159,6 +178,7 @@
                         </span>
                         <h3 class="font-medium leading-tight">DATOS DEL PADRE/MADRE DE FAMILIA</h3>
                     </div>
+
                     <div class="col-span-2 ml-10 lg:ml-32">
                         <section class="hidden steps step-2" id="step-2">
                             <div class="flex-col p-2">
@@ -280,7 +300,6 @@
                                     </button>
                                 </div>
                             </div>
-                        </section>
                         </section>
                     </div>
 
@@ -415,7 +434,6 @@
                                 </div>
                             </div>
                         </section>
-                        </section>
                     </div>
 
                     {{-- TERCER ENCARGADO --}}
@@ -539,8 +557,9 @@
                                             value="{{ old('charge_comment_3', $inCharge->charge_comment_3 ?? '') }}">
                                     </div>
                                 </div>
+
                                 <div class="group">
-                                    <x-button-link href="/student" class="mt-2 text-white bg-cyan-700">
+                                    <x-button-link href="/student" class="mt-2 text-white bg-orange-400">
                                         Cancelar
                                     </x-button-link>
 
@@ -548,6 +567,7 @@
                                         data-prev-step="step-3">
                                         Anterior
                                     </button>
+
                                     <button class="justify-start mt-2 text-white btn bg-success" type="submit">
                                         Enviar
                                     </button>
@@ -557,17 +577,19 @@
                     </div>
                 </ol>
             </form>
+            {{-- mensaje de exito o error al crear un estudiante --}}
             <x-alert-message />
         </div>
+    </div>
 
-        <style>
-            .hidden {
-                display: none;
-            }
-        </style>
-        <script></script>
-    @endsection
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script></script>
+@endsection
 
-    <script src="{{ asset('js/reloadPage.js') }}"></script>
-    <script src="{{ asset('js/student/editStudent.js') }}"></script>
-
+<script src="{{ asset('js/reloadPage.js') }}"></script>
+<script src="{{ asset('js/student/editStudent.js') }}"></script>
+<script src="{{ asset('js/student/formCreate.js') }}"></script>

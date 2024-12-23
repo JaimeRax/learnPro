@@ -19,27 +19,27 @@ class StudentController extends Controller
     {
         try {
             $degreeId = request()->query('degree_id');
-            $sectionId = request()->query('section_id'); // Nueva variable para la sección
+            $sectionId = request()->query('section_id');
             $search = request()->query('search');
 
             $degrees = Degree::all();
             $sections = Sections::all();
 
             $students = Student::whereIn('state', [1, 2])
+                // Filtrar por grado si degree_id tiene valor
                 ->when($degreeId, function ($query) use ($degreeId) {
-                    // Filtrar por grado si degree_id tiene valor
                     $query->whereHas('assignments', function ($query) use ($degreeId) {
                         $query->where('degrees_id', $degreeId);
                     });
                 })
+                // Filtrar por sección si section_id tiene valor
                 ->when($sectionId, function ($query) use ($sectionId) {
-                    // Filtrar por sección si section_id tiene valor
                     $query->whereHas('assignments', function ($query) use ($sectionId) {
                         $query->where('section_id', $sectionId);
                     });
                 })
+                // Filtrar por búsqueda en nombre si search tiene valor
                 ->when($search, function ($query) use ($search) {
-                    // Filtrar por búsqueda en nombre si search tiene valor
                     $query->where(function ($query) use ($search) {
                         $query->where('first_name', 'LIKE', "%{$search}%")
                             ->orWhere('second_name', 'LIKE', "%{$search}%")
@@ -80,10 +80,9 @@ class StudentController extends Controller
                 'degree_id' => $degreeId,
                 'section_id' => $sectionId,
                 'search' => $search,
-                'trace' => $e->getTraceAsString() // Opcional: incluye el stack trace para más información
             ]);
 
-            return redirect('/student')->with('error', 'Ocurrió un problema: ' . $e->getMessage());
+            return redirect('/student')->with('error', 'Ocurrió un problema ');
         }
     }
 
@@ -166,11 +165,9 @@ class StudentController extends Controller
             // Redirigir a la vista de estudiantes con mensaje de éxito
             return redirect('/payments')->with('message', 'Estudiante y encargados creados correctamente');
         } catch (\Exception $e) {
-            Log::error('Error al crear el estudiante o el encargado' );
-            return redirect()
-                ->back()
-                ->with('error', 'Ocurrió un error al crear el estudiante o el encargado')
-                ->withInput();
+            Log::error('Error al crear el estudiante', $e->getMessage());
+            return redirect('student.listStudent')
+                ->with('error', 'Ocurrió un error al crear el estudiante o el encargado');
         }
     }
 

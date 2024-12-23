@@ -1,66 +1,57 @@
 <section>
-    <!-- Información del cliente -->
+    <!-- Información del estudiante -->
     <div class="container">
-        <div class="form-row">
 
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <div class="form-control">
-                        <label class="mb-0 font-bold label " for="nombres">
-                            <span class="label-text">
-                                Nombre Completo
-                            </span>
-                        </label>
-                        <input readonly="" id="nombres" name="nombres" class="w-full shadow-sm input" type="text"
-                            value="{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-md-4">
-                <div class="form-control">
-                    <label class="mb-0 font-bold label " for="nit">
-                        <span class="label-text">
-                            Codigo Personal
-                        </span>
-                    </label>
-                    <input readonly="" id="personal_code" name="personal_code" class="w-full shadow-sm input"
-                        type="text" value="{{ $studens->personal_code }}">
-                </div>
-            </div>
-            <div class="form-group col-md-4">
-                <div class="form-control">
-                    <label class="mb-0 font-bold label " for="telefono">
-                        <span class="label-text">
-                            Genero
-                        </span>
-                    </label>
-                    <input readonly="" id="gender" name="gender" class="w-full shadow-sm input" type="text"
-                        value="{{ $studens->gender }}">
-                </div>
-            </div>
+        <div class="space-y-6 p-6">
 
-            <div class="form-group col-md-4">
-                <div class="form-control">
-                    <label class="mb-0 font-bold label " for="correo">
-                        <span class="label-text">
-                            Fecha de nacimiento
-                        </span>
-                    </label>
-                    <input readonly="" id="birthdate" name="birthdate" class="w-full shadow-sm input" type="text"
-                        value="{{ $studens->birthdate }}">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group col-md-4">
-            <div class="form-control">
-                <label class="mb-0 font-bold label " for="profesion">
-                    <span class="label-text">
-                        Etnia
-                    </span>
+            <!-- Nombre Completo -->
+            <div class="flex flex-col text-left">
+                <label for="nombres" class="text-sm font-semibold text-gray-700 mb-2">
+                    NOMBRE COMPLETO:
                 </label>
-                <input readonly="" id="town_ethnicity" name="town_ethnicity" class="w-full shadow-sm input"
-                    type="text" value="{{ $studens->town_ethnicity }}">
+                <input type="text" id="nombres" name="nombres"
+                    class="w-full rounded-md border border-gray-400 bg-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-2 text-gray-800"
+                    readonly
+                    value="{{ strtoupper("{$studens->first_name} {$studens->second_name} {$studens->first_lastname} {$studens->second_lastname}") }}">
+            </div>
+
+            <!-- Código Personal -->
+            <div class="flex flex-col text-left">
+                <label for="personal_code" class="text-sm font-semibold text-gray-700 mb-2">
+                    CÓDIGO PERSONAL:
+                </label>
+                <input type="text" id="personal_code" name="personal_code"
+                    class="w-full rounded-md border border-gray-400 bg-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-2 text-gray-800"
+                    readonly value="{{ $studens->personal_code }}">
+            </div>
+
+            <!-- Género -->
+            <div class="flex flex-col text-left">
+                <label for="gender" class="text-sm font-semibold text-gray-700 mb-2">
+                    GÉNERO:
+                </label>
+                <input type="text" id="gender" name="gender"
+                    class="w-full rounded-md border border-gray-400 bg-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-2 text-gray-800"
+                    readonly value="{{ $studens->gender }}">
+            </div>
+
+            <!-- Fecha de Nacimiento -->
+            <div class="flex flex-col text-left">
+                <label for="birthdate" class="text-sm font-semibold text-gray-700 mb-2">
+                    FECHA DE NACIMIENTO:
+                </label>
+                <input type="text" id="birthdate" name="birthdate"
+                    class="w-full rounded-md border border-gray-400 bg-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-2 text-gray-800"
+                    readonly value="{{ $studens->birthdate }}">
+            </div>
+
+            <div class="flex flex-col text-left">
+                <label for="etnia" class="text-sm font-semibold text-gray-700 mb-2">
+                    ETNIA:
+                </label>
+                <input type="text" id="birthdate" name="birthdate"
+                    class="w-full rounded-md border border-gray-400 bg-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-2 text-gray-800"
+                    readonly value="{{ $studens->town_ethnicity }}">
             </div>
         </div>
     </div>
