@@ -1,12 +1,12 @@
 @extends('layouts.base')
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="INSCRIPCION DE ESTUDIANTES" />
 @endsection
 
 
 @section('main')
-    <div class="grid grid-cols-1 gap-2">
+    <div class="grid grid-cols-1 gap-2 mt-8">
         <div class="container-sm">
             <form action="{{ url('student/newStudent') }}" method="POST" enctype="multipart/form-data">
                 @csrf
