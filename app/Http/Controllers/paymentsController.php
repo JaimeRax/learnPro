@@ -21,6 +21,7 @@ class paymentsController extends Controller
     {
         try {
             $degreeId = request()->query('degree_id');
+            $sectionId = request()->query('section_id');
             $search = request()->query('search');
 
             $degrees = Degree::all();
@@ -32,6 +33,12 @@ class paymentsController extends Controller
                     // Filtra por grado solo si degreeId no es null
                     return $query->whereHas('assignments', function ($query) use ($degreeId) {
                         $query->where('degrees_id', $degreeId);
+                    });
+                })
+                ->when($sectionId, function ($query) use ($sectionId) {
+                    // Filtra por grado solo si degreeId no es null
+                    return $query->whereHas('assignments', function ($query) use ($sectionId) {
+                        $query->where('section_id', $sectionId);
                     });
                 })
             ->when($search, function ($query) use ($search) {
@@ -219,10 +226,12 @@ class paymentsController extends Controller
 
     public function listPaymentStudent($id)
     {
-        $payments = Payments::where('student_id', $id)->with('student')->get();
+        $payments = Payments::where('student_id', $id)->paginate(10);
+        $student = Student::where('id', $id)->firstOrFail();
 
         return view('payments.paymentStudent', [
                 'payments' => $payments,
+                'student' => $student
         ]);
     }
 

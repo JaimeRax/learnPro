@@ -1,1 +1,1 @@
-<i class="fas fa-plus"></i>
+<i class="fas fa-user-plus"></i>

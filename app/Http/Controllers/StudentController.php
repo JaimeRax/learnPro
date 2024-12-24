@@ -25,7 +25,7 @@ class StudentController extends Controller
             $degrees = Degree::all();
             $sections = Sections::all();
 
-            $students = Student::whereIn('state', [1, 2])
+            $students = Student::whereIn('state', [1])
                 // Filtrar por grado si degree_id tiene valor
                 ->when($degreeId, function ($query) use ($degreeId) {
                     $query->whereHas('assignments', function ($query) use ($degreeId) {
@@ -216,7 +216,7 @@ class StudentController extends Controller
 
             // Realizar la consulta con filtros de grado, sección y nombre
             $students = Student::with(['studentAssignments.degree', 'studentAssignments.section'])
-                ->where('state', 0)
+                ->where('state', 2)
                 ->when($degreeId || $sectionId, function ($query) use ($degreeId, $sectionId) {
                     $query->whereHas('studentAssignments', function ($subQuery) use ($degreeId, $sectionId) {
                         if ($degreeId) {

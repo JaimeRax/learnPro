@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="HISTORIAL DE PAGOS" />
 @endsection
 
 @section('main')
@@ -26,30 +26,38 @@
                 return $months[$monthNumber] ?? '---'; // Para números fuera del rango
             }
         @endphp
-        {{-- Lista de Pagos --}}
         <div class="mt-4">
-            <h2 class="text-xl font-semibold"><strong>Pagos</strong></h2>
 
             {{-- Botón de Volver alineado a la derecha --}}
             <div class="text-right mb-4">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </a>
+                <x-button-link href="/payments" class="mt-2 text-white bg-orange-400">
+                    <x-iconos.volver /> VOLVER
+                </x-button-link>
+            </div>
+
+            <div class="bg-blue-100 rounded-lg p-4 w-full text-center mb-8">
+                <span class="text-gray-600 text-lg">ESTUDIANTE:</span>
+                <strong class="text-black-800 text-xl font-bold">
+                    {{ strtoupper("{$student->first_name} {$student->second_name} {$student->first_lastname} {$student->second_lastname}") }}
+                </strong>
             </div>
 
             @if ($payments->isEmpty())
-                <p>No hay pagos registrados para este estudiante.</p>
+                <div class="bg-red-100 rounded-lg p-4 w-full text-center mb-8">
+                    <strong class="text-black-800 text-xl font-bold">
+                        <p>NO HAY PAGOS REGISTRADOS PARA ESTE ESTUDIANTE.</p>
+                    </strong>
+                </div>
             @else
-                <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
+                <x-tablas.table wire:loading.remove id="table" data-name="listPaymentsHistory">
                     <x-slot name="thead">
                         <x-tablas.tr>
-                            <x-tablas.th>Fecha</x-tablas.th>
-                            <x-tablas.th>Monto</x-tablas.th>
-                            <x-tablas.th>Descripción</x-tablas.th>
-                            <x-tablas.th>Metodo de Pago</x-tablas.th>
-                            <x-tablas.th>Mes Pagado</x-tablas.th>
-                            <x-tablas.th>Acciones</x-tablas.th>
-
+                            <x-tablas.th>FECHA</x-tablas.th>
+                            <x-tablas.th>MONTO</x-tablas.th>
+                            <x-tablas.th>DESCRIPCIÓN</x-tablas.th>
+                            <x-tablas.th>MÉTODO DE PAGO</x-tablas.th>
+                            <x-tablas.th>MES PAGADO</x-tablas.th>
+                            <x-tablas.th>ACCIONES</x-tablas.th>
                         </x-tablas.tr>
                     </x-slot>
 
@@ -63,17 +71,25 @@
                                 <x-tablas.td>{{ getMonthName($payment->paid_month) }}</x-tablas.td>
                                 <x-tablas.td>
                                     <x-modal id="delete{{ $payment->id }}" title="Eliminar"
-                                        bstyle="border-none bg-red-600 text-white hover:bg-red-800">
+                                        bstyle="border-none bg-yellow-400 text-white hover:bg-yellow-600">
                                         <x-slot name="button">
-                                            <x-iconos.basurero />
+                                            <div class="relative group">
+                                                <x-iconos.basurero />
+                                                <div
+                                                    class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                                    Eliminar Estudiante
+                                                </div>
+                                            </div>
                                         </x-slot>
-
                                         <x-slot name="body">
-                                            <br>
-                                            <strong>Advertencia:</strong> Esta acción es irreversible. Una vez que elimine
-
-                                            el pago, no podrá recuperarlo.
-
+                                            <p class="text-lg text-center mt-5 mb-8">
+                                                <span class="text-yellow-500 text-lg mr-2">
+                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                </span>
+                                                <strong>Advertencia:</strong>
+                                            </p>
+                                            <p>Esta acción es irreversible. Una vez que elimine el pago, no podrá
+                                                recuperarlo.</p>
                                             <p class="mt-5 mb-4 text-sm text-center">¿Está seguro de eliminar el pago ?</p>
                                             <form action="{{ url('/payments/delete/' . $payment->id) }}" method="POST"
                                                 id="delete-form{{ $payment->id }}">
@@ -88,11 +104,25 @@
                                             </form>
                                         </x-slot>
                                     </x-modal>
+
+                                    <button class="btn bg-red-400 hover:bg-red-600 text-white"
+                                        onclick="window.open('{{ session('pdf_url') }}', '_blank');">
+                                        <div class="relative group">
+                                            <x-iconos.pdf />
+                                            <div
+                                                class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                                descargar comprobante
+                                            </div>
+                                        </div>
+                                    </button>
                                 </x-tablas.td>
                             </x-tablas.tr>
                         @endforeach
                     </x-slot>
                 </x-tablas.table>
+                <div>
+                    {{ $payments->appends(['search' => request()->query('search')])->links('components.pagination') }}
+                </div>
             @endif
         </div>
     </div>

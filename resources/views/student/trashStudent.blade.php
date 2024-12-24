@@ -3,7 +3,7 @@
 
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="ESTUIANTES DE BAJA" />
 @endsection
 
 

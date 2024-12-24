@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header')
-    <route route="/" previousRouteName="Inicio" currentRouteName="degrees" />
+    <x-route route="/" previousRouteName="INICIO" currentRouteName="PAGOS" />
 @endsection
 
 @section('main')
@@ -12,7 +12,7 @@
             {{-- filtro por busqueda de nombre --}}
             <form class="input-group" action="/payments" method="get">
                 <x-inputs.general id="search" name="search" placeholder="Busque por cualquier campo..."
-                    value="{{ request()->query('search') }}" class="mt-6" />
+                    value="{{ request()->query('search') }}" class="mt-14" />
 
                 <div class="input-group-addon">
                     <button type="submit" class="input-group-text">
@@ -21,23 +21,35 @@
                 </div>
             </form>
 
-            {{-- filtro por seleccion de grado --}}
-            <form method="GET" action="/payments" id="degreeForm" class="mt-6">
-                <x-inputs.select-option id="degree_id" titulo="" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
+            <form method="GET" action="/payments" id="degreeForm" class="flex items-center mt-6 space-x-4">
+
+                <!-- filtro por grado -->
+                <x-inputs.select-option id="degree_id" titulo="Grado:" name="degree_id" :options="$degrees->pluck('name', 'id')->toArray()" :selected="request('degree_id')"
                     required onchange="document.getElementById('degreeForm').submit()" />
+
+                <!-- filtro por seccion -->
+                <x-inputs.select-option id="section_id" titulo="SECCIÓN" name="section_id" :options="$sections->pluck('name', 'id')->toArray()"
+                    :selected="request('section_id')" required />
+
+                <!-- Botón de Búsqueda -->
+                <x-button type="submit" class="text-white mt-9 bg-blue-600">
+                    <x-iconos.buscar />
+                    BUSCAR
+                </x-button>
             </form>
         </div>
 
         <x-tablas.table wire:loading.remove id="table" data-name="ReporteClientes">
             <x-slot name="thead">
                 <x-tablas.tr>
-                    <x-tablas.th>No.</x-tablas.th>
-                    <x-tablas.th>Nombre</x-tablas.th>
-                    <x-tablas.th>Grado</x-tablas.th>
-                    <x-tablas.th>Sección</x-tablas.th>
-                    <x-tablas.th>Acciones</x-tablas.th>
+                    <x-tablas.th>NO.</x-tablas.th>
+                    <x-tablas.th>NOMBRE</x-tablas.th>
+                    <x-tablas.th>GRADO</x-tablas.th>
+                    <x-tablas.th>SECCIÓN</x-tablas.th>
+                    <x-tablas.th>ACCIONES</x-tablas.th>
                 </x-tablas.tr>
             </x-slot>
+
             @php
                 $i = 1;
             @endphp
@@ -52,9 +64,15 @@
                         <x-tablas.td>
                             {{-- Botón de pagos --}}
                             <x-modal id="createPayment-{{ $student->id }}" title="PAGOS"
-                                bstyle="border-none bg-blue-600 text-white hover:bg-blue-800">
+                                bstyle="border-none bg-green-600 text-white hover:bg-green-800">
                                 <x-slot name="button">
-                                    <x-iconos.pago />
+                                    <div class="relative group">
+                                        <x-iconos.pago />
+                                        <div
+                                            class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                            Realizar pago
+                                        </div>
+                                    </div>
                                 </x-slot>
                                 <x-slot name="body">
                                     @include('payments.newPayment', [
@@ -69,24 +87,43 @@
 
                             {{-- Botón de listado de pagos --}}
                             <button onclick="window.location='{{ route('payments.listPaymentStudent', $student->id) }}'"
-                                class="btn btn-success">
-                                <i class="fas fa-list"></i> <!-- Ícono de listado -->
+                                class="btn bg-cyan-600 hover:bg-cyan-800 text-white">
+                                <div class="relative group">
+                                    <x-iconos.listado />
+                                    <div
+                                        class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                        Historial de pagos
+                                    </div>
+                                </div>
                             </button>
 
 
                             @if (session('paid_student_id') == $student->id)
-                                {{-- Botón de asignación --}}
                                 @if (session('show_assignment_button'))
-                                    <a href="{{ url('assignment/student') }}" class="btn btn-success">
-                                        Asignar
-                                    </a>
+                                    {{-- Botón de asignación --}}
+                                    <x-button-link href="{{ url('assignment/student') }}"
+                                        class="btn bg-yellow-400 hover:bg-yellow-600 text-white">
+                                        <div class="relative group">
+                                            <x-iconos.asignar />
+                                            <div
+                                                class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                                Asignar grado y sección
+                                            </div>
+                                        </div>
+                                    </x-button-link>
                                 @endif
 
-                                {{-- Botón de descargar PDF --}}
                                 @if (session('pdf_url') && session('payment_created'))
-                                    <button onclick="window.open('{{ session('pdf_url') }}', '_blank');"
-                                        class="btn btn-danger">
-                                        <i class="fas fa-file-pdf"></i>
+                                    {{-- Botón de descargar PDF --}}
+                                    <button class="btn bg-red-400 hover:bg-red-600 text-white"
+                                        onclick="window.open('{{ session('pdf_url') }}', '_blank');">
+                                        <div class="relative group">
+                                            <x-iconos.pdf />
+                                            <div
+                                                class="absolute bottom-full left-1/2 z-50 mb-2 hidden w-max rounded-md bg-white px-3 py-2 text-sm text-black shadow-lg group-hover:block transform -translate-x-1/2 font-normal">
+                                                descargar comprobante
+                                            </div>
+                                        </div>
                                     </button>
                                 @endif
                             @endif
