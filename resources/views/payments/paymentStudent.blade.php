@@ -105,8 +105,10 @@
                                         </x-slot>
                                     </x-modal>
 
+                                    {{-- TODO: cambiar ruta y obtenerla desde sw3  --}}
+                                    {{-- TODO: crear una funcion que genere el pdf sin guardarlo y consumir la funcion aca --}}
                                     <button class="btn bg-red-400 hover:bg-red-600 text-white"
-                                        onclick="window.open('{{ session('pdf_url') }}', '_blank');">
+                                        onclick="window.open('{{ url('storage/comprobantes/comprobante_pago_' . $payment->uuid . '.pdf') }}', '_blank');">
                                         <div class="relative group">
                                             <x-iconos.pdf />
                                             <div
